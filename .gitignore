@@ -1,0 +1,5 @@
+.DS_Store
+
+# Internal design and specification work stays local for this project.
+docs/
+prototypes/
