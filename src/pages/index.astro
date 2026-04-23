@@ -1,0 +1,223 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { homepageFr } from "../data/homepage.fr";
+
+const page = homepageFr;
+---
+
+<BaseLayout title={page.meta.title} description={page.meta.description}>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#top" aria-label={`Accueil ${page.topbar.brand}`}>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-copy">
+          <span class="brand-title">{page.topbar.brand}</span>
+          <span class="brand-meta">{page.topbar.meta}</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        {page.topbar.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+        <a class="button button-primary" href={page.topbar.cta.href}>{page.topbar.cta.label}</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="panel hero" id="top">
+      <div class="hero-copy">
+        <div class="stack">
+          <div class="eyebrow">{page.hero.eyebrow}</div>
+          <h1>{page.hero.title}</h1>
+          <p class="hero-text">{page.hero.body}</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href={page.hero.primaryCta.href}>
+              {page.hero.primaryCta.label}
+            </a>
+            <a class="button button-secondary" href={page.hero.secondaryCta.href}>
+              {page.hero.secondaryCta.label}
+            </a>
+          </div>
+        </div>
+
+        <div class="chips" aria-label="Pastilles de preuve">
+          {page.hero.chips.map((chip) => <span class="chip">{chip}</span>)}
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Visuel hero en attente">
+        <div class="visual-frame">
+          <div class="visual-tall">
+            <div class="slot-label">Visuel hero</div>
+            <div class="trace trace-one"></div>
+            <div class="trace trace-two"></div>
+            <div class="trace trace-three"></div>
+          </div>
+          <div class="visual-card">
+            <div>
+              <div class="meta">Couche signal</div>
+              <strong>Motifs d'observabilité, scan lumineux, tension de salle de contrôle.</strong>
+            </div>
+          </div>
+          <div class="visual-bar">
+            <div>
+              <div class="meta">Accent persona</div>
+              <strong>Réservé à un lien discret entre social et site.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel proof-band" id="proof">
+      <p class="proof-intro">{page.proof.intro}</p>
+      <div class="proof-rail">
+        {page.proof.items.map((item) => (
+          <div class="proof-item">
+            {item.label}
+            <span>{item.meta}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block" id="work">
+      <div class="section-heading">
+        <div class="stack">
+          <div class="section-tag">{page.work.tag}</div>
+          <h2 class="section-title">{page.work.title}</h2>
+        </div>
+        <p class="lede">{page.work.intro}</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="panel work-feature">
+          <div class="section-meta">
+            <span class="kicker">{page.work.featured.kicker}</span>
+            <span class="meta">{page.work.featured.meta}</span>
+          </div>
+          <h3 class="card-title">{page.work.featured.title}</h3>
+          <p class="card-copy">{page.work.featured.body}</p>
+        </article>
+
+        {page.work.cards.map((card) => (
+          <article class="panel work-card">
+            <span class="kicker">{card.kicker}</span>
+            <h3 class="card-title">{card.title}</h3>
+            <p class="card-copy">{card.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block" id="method">
+      <div class="section-heading">
+        <div class="stack">
+          <div class="section-tag">{page.method.tag}</div>
+          <h2 class="section-title">{page.method.title}</h2>
+        </div>
+        <p class="lede">{page.method.intro}</p>
+      </div>
+
+      <div class="method-grid">
+        {page.method.steps.map((step) => (
+          <article class="panel method-card">
+            <span class="method-index">{step.index}</span>
+            <h3 class="card-title">{step.title}</h3>
+            <p class="card-copy">{step.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block" id="editorial">
+      <div class="section-heading">
+        <div class="stack">
+          <div class="section-tag">{page.editorial.tag}</div>
+          <h2 class="section-title">{page.editorial.title}</h2>
+        </div>
+        <p class="lede">{page.editorial.intro}</p>
+      </div>
+
+      <div class="territory-grid">
+        <article class="panel territory-feature">
+          <div class="slot-label">{page.editorial.featureLabel}</div>
+        </article>
+
+        {page.editorial.cards.map((card) => (
+          <article class="panel territory-card">
+            <div class="mini-stack">
+              {card.labels.map((label) => <span class="mini-tag">{label}</span>)}
+            </div>
+            <p class="card-copy">{card.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block" id="testimonials">
+      <div class="section-heading">
+        <div class="stack">
+          <div class="section-tag">{page.testimonials.tag}</div>
+          <h2 class="section-title">{page.testimonials.title}</h2>
+        </div>
+        <p class="lede">{page.testimonials.intro}</p>
+      </div>
+
+      <div class="testimonial-grid">
+        {page.testimonials.cards.map((card) => (
+          <article class="panel testimonial-card">
+            <p class="quote">"{card.quote}"</p>
+            <div class="quote-byline">
+              <strong>{card.attribution}</strong>
+              <div class="meta">{card.meta}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block" id="insights">
+      <div class="section-heading">
+        <div class="stack">
+          <div class="section-tag">{page.insights.tag}</div>
+          <h2 class="section-title">{page.insights.title}</h2>
+        </div>
+        <p class="lede">{page.insights.intro}</p>
+      </div>
+
+      <div class="insight-grid">
+        {page.insights.cards.map((card) => (
+          <article class="panel insight-card">
+            <div class="thumb">
+              <div class="slot-label">Visuel note</div>
+            </div>
+            <span class="kicker">{card.kicker}</span>
+            <h3 class="card-title">{card.title}</h3>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="panel cta-panel" id="contact">
+      <div class="stack">
+        <div class="section-tag">{page.contact.tag}</div>
+        <h2 class="cta-title">{page.contact.title}</h2>
+      </div>
+      <div class="cta-side">
+        <ul class="list">
+          {page.contact.bullets.map((bullet) => <li>{bullet}</li>)}
+        </ul>
+        <div class="cta-actions">
+          <a class="button button-primary" href={page.contact.primaryCta.href}>
+            {page.contact.primaryCta.label}
+          </a>
+          <a class="button button-secondary" href={page.contact.secondaryCta.href}>
+            {page.contact.secondaryCta.label}
+          </a>
+        </div>
+        <p class="footer-note">{page.contact.note}</p>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

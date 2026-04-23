@@ -1,4 +1,7 @@
 .DS_Store
+node_modules/
+dist/
+.astro/
 
 # Internal design and specification work stays local for this project.
 docs/
