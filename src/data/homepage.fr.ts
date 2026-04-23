@@ -8,6 +8,11 @@ export type ProofItem = {
   meta: string;
 };
 
+export type PersonaSpec = {
+  label: string;
+  value: string;
+};
+
 export type WorkCard = {
   kicker: string;
   title: string;
@@ -29,6 +34,7 @@ export type TestimonialCard = {
 export type InsightCard = {
   kicker: string;
   title: string;
+  body: string;
 };
 
 export const homepageFr = {
@@ -39,36 +45,80 @@ export const homepageFr = {
   },
   topbar: {
     brand: "The Unreliable Engineer",
-    meta: "SRE / Observabilité / Stratégie Infra / IA pragmatique",
+    meta: "SRE / Observabilité / Stratégie infra / IA pragmatique",
     nav: [
       { label: "Missions", href: "#work" },
       { label: "Méthode", href: "#method" },
-      { label: "Notes", href: "#insights" },
       { label: "Références", href: "#proof" },
+      { label: "Notes", href: "#insights" },
     ] satisfies NavItem[],
     cta: {
-      label: "Discuter d'un projet",
+      label: "Prendre un rendez-vous",
       href: "#contact",
     },
   },
   hero: {
-    eyebrow: "SRE / Observabilité / Stratégie Infra",
-    title: "Des systèmes fiables dans des environnements instables.",
+    eyebrow: "SRE / Observabilité / Stratégie infra",
+    title: "Des systèmes plus fiables. Des décisions moins fragiles.",
     body:
-      "J'aide les tech leads, engineering managers, responsables infrastructure et CTO à prendre de meilleures décisions en fiabilité, observabilité, infrastructure et IA pragmatique quand le système est trop complexe pour des recettes génériques.",
+      "J'accompagne tech leads, engineering managers, responsables infrastructure et CTO sur les sujets SRE, observabilité, stratégie infra et IA pragmatique. Avec une approche sérieuse sur le fond, satirique sur la forme et toujours ancrée dans le réel.",
     primaryCta: {
-      label: "Discuter d'un projet",
+      label: "Prendre un rendez-vous",
       href: "#contact",
     },
     secondaryCta: {
-      label: "Voir les missions",
-      href: "#work",
+      label: "Voir les références",
+      href: "#proof",
     },
     chips: ["Orange", "Odigo", "SI énergie / 400+ projets", "Banque privée"],
+    bubble: {
+      kicker: "Bulle du moment",
+      body:
+        "Le dashboard n'est pas une stratégie. L'observabilité ne vaut quelque chose que si elle aide vraiment une équipe à décider.",
+    },
+    sticky: {
+      kicker: "Post-it",
+      title: "Premium sur le fond. Décalé sur la forme.",
+      body:
+        "Une voix éditoriale assumée pour parler de fiabilité, d'observabilité et de stratégie infra sans jargon de brochure.",
+    },
+    persona: {
+      title: "Personnage canonique",
+      caption: "The Unreliable Engineer, version éditoriale à illustrer.",
+      body:
+        "Le hero doit pouvoir accueillir ton personnage, ses bulles de dialogue et ses post-it sans casser la crédibilité premium du site.",
+      specs: [
+        {
+          label: "Silhouette",
+          value: "Homme, visage ovale et légèrement rond, expression sympathique.",
+        },
+        {
+          label: "Cheveux",
+          value: "Cheveux noirs tirés en arrière, man bun strict, front dégagé.",
+        },
+        {
+          label: "Visage",
+          value: "Barbe complète noire, moustache présente, lunettes rondes fines en métal.",
+        },
+        {
+          label: "Vêtement",
+          value: "Chemise en flanelle rouge et noir, parfois avec un tee-shirt geek.",
+        },
+      ] satisfies PersonaSpec[],
+    },
+    proofFlash: {
+      kicker: "Références",
+      title: "Orange, Odigo, SI énergie, banque privée.",
+      body:
+        "Des environnements sensibles où la clarté technique change directement le niveau de risque et la qualité de décision.",
+    },
   },
   proof: {
+    tag: "Références",
     intro:
-      "Contextes, références et signaux de preuve issus d'environnements techniques à fort niveau d'exigence.",
+      "J'interviens là où la fiabilité, la lisibilité du système et la qualité de décision ont un impact direct sur l'équipe et sur le business.",
+    callout:
+      "Grand compte, environnements sensibles, dette opérationnelle, responsabilités partagées: la preuve doit apparaître immédiatement.",
     items: [
       { label: "Orange", meta: "Contexte grand compte" },
       { label: "Odigo", meta: "Systèmes opérationnels" },
@@ -80,77 +130,90 @@ export const homepageFr = {
   },
   work: {
     tag: "Missions",
-    title: "La preuve avant le discours.",
+    title: "Ce que j'apporte aux équipes sous pression.",
     intro:
-      "Quelques interventions concrètes valent mieux qu'une grande galerie de cas clients flous. La homepage doit montrer le type de systèmes, de contraintes et de décisions que cette marque est amenée à traiter.",
+      "Quand la production devient illisible, que l'observabilité rassure plus qu'elle n'éclaire, ou que l'infrastructure grossit plus vite que sa clarté, j'interviens pour remettre du signal.",
     featured: {
       kicker: "Mission principale",
-      meta: "Problème / Intervention / Résultat",
-      title:
-        "Grands systèmes, environnements sensibles et décisions qui doivent survivre au réel.",
+      meta: "Terrain / Arbitrages / Livraison",
+      title: "Remettre du signal dans des systèmes qui ont appris à survivre dans le bruit.",
       body:
-        "La carte principale doit montrer comment le bruit opérationnel est réduit jusqu'à produire un système lisible et opérable. La structure doit rester concrète : problème, intervention, résultat, contexte.",
+        "Audit terrain, cadrage de l'observabilité, simplification des flux, arbitrages d'architecture et documentation utile. Le travail vise toujours un système plus lisible, plus opérable et moins dépendant de l'improvisation.",
     },
     cards: [
       {
         kicker: "SRE",
         title: "Fiabilité sous contraintes réelles",
-        body: "Carte focalisée sur une intervention contenue et un résultat visible.",
+        body:
+          "Résilience, incidents, niveaux de service, runbooks et décisions de fiabilité qui tiennent hors du slide deck.",
       },
       {
         kicker: "Observabilité",
         title: "Rendre le signal lisible",
-        body: "Une autre carte mission avec un avant-après plus net.",
+        body:
+          "Logs, metrics, traces et alerting remis au service du diagnostic plutôt que du théâtre des dashboards.",
       },
       {
         kicker: "Stratégie infra",
         title: "Clarifier le système avant de multiplier les outils",
-        body: "Un contexte confidentiel peut rester spécifique sans tout nommer.",
+        body:
+          "Architecture, outillage, coûts et responsabilités clarifiés avant d'ajouter une nouvelle couche de complexité.",
       },
     ] satisfies WorkCard[],
   },
   method: {
     tag: "Méthode",
-    title: "Assez structurée pour tenir. Assez pragmatique pour livrer.",
+    title: "Une méthode lisible, sans théâtre de cabinet.",
     intro:
-      "La méthode doit se lire comme un modèle opératoire, pas comme un framework de conseil. Le but est de montrer comment l'ambiguïté devient des décisions tractables et des artefacts réutilisables.",
+      "Le but n'est pas d'importer un framework de plus. Le but est de réduire l'ambiguïté, d'accélérer la décision et de laisser un système que d'autres peuvent reprendre.",
     steps: [
       {
-        index: "01 / Diagnostiquer",
-        title: "Lire le système réel",
-        body: "Séparer la réalité opérationnelle de l'abstraction, de la politique et du bruit outil.",
+        index: "01",
+        title: "Lire le terrain",
+        body:
+          "Identifier les contraintes réelles, la dette visible et les angles morts que les rituels ne montrent plus.",
       },
       {
-        index: "02 / Concevoir",
-        title: "Réduire la forme du problème",
-        body: "Transformer l'ambiguïté en système avec des arbitrages explicites.",
+        index: "02",
+        title: "Réduire le problème",
+        body:
+          "Transformer un système flou en arbitrages explicites, tractables et compréhensibles par l'équipe.",
       },
       {
-        index: "03 / Exécuter",
-        title: "Livrer avec les contraintes en vue",
-        body: "L'implémentation doit rester ancrée dans le réel, pas dans le théâtre framework.",
+        index: "03",
+        title: "Exécuter sans folklore",
+        body:
+          "Livrer des changements utiles, compatibles avec le contexte technique et politique qui existe réellement.",
       },
       {
-        index: "04 / Documenter",
+        index: "04",
         title: "Laisser une couche réutilisable",
-        body: "Les décisions, les artefacts et la connaissance doivent continuer à servir après la livraison.",
+        body:
+          "Documenter les décisions et les artefacts pour que la valeur du travail survive après l'intervention.",
       },
     ] satisfies MethodStep[],
   },
   editorial: {
-    tag: "Territoires éditoriaux",
-    title: "La parole publique doit renforcer la méthode.",
+    tag: "Contenu",
+    title: "Le contenu prolonge la méthode.",
     intro:
-      "C'est ici que le site relie l'offre premium à l'identité média : commentaire technique sérieux, recul stratégique et satire contrôlée.",
-    featureLabel: "Emplacement persona / poster",
+      "Conférences, posts, satire SRE, vulgarisation IA et réflexions de carrière servent la même promesse: produire du recul utile pour des équipes techniques en responsabilité.",
+    featureLabel: "Poster / vidéo / case BD",
+    featureTitle: "Le personnage devient un outil de lecture, pas un gimmick.",
+    featureBody:
+      "Le hero et les futures animations devront utiliser ton personnage pour créer de la tension visuelle, du contraste et des prises de parole mémorables.",
+    featureNote:
+      "Direction à tenir: ligne claire, humains uniquement, contours noirs nets, bulles, post-it jaunes et énergie éditoriale contrôlée.",
     cards: [
       {
-        labels: ["SRE", "Observabilité", "Stratégie infra"],
-        body: "Commentaire opérationnel à fort signal avec un angle satirique assumé.",
+        labels: ["SRE", "Observabilité", "Satire contrôlée"],
+        body:
+          "Des contenus qui font sourire assez pour qu'on écoute, mais surtout assez clairs pour faire évoluer une pratique.",
       },
       {
         labels: ["IA pragmatique", "Leadership", "Freelance premium"],
-        body: "IA pratique, posture d'ingénieur et positionnement sans papier peint buzzword.",
+        body:
+          "Une parole publique qui aide des ingénieurs à gagner en jugement, en influence et en positionnement sans papier peint buzzword.",
       },
     ],
   },
@@ -158,62 +221,68 @@ export const homepageFr = {
     tag: "Témoignages",
     title: "De la preuve humaine, pas des compliments décoratifs.",
     intro:
-      "Garder trois cartes visibles et faire en sorte que chacune prouve quelque chose de distinct : confiance grand compte, qualité de collaboration et crédibilité technique.",
+      "Les vrais extraits viendront de LinkedIn, Malt et du portefeuille client. La mise en forme doit déjà montrer un système de preuve crédible et structuré.",
     cards: [
       {
-        quote: "Extrait de témoignage grand compte à intégrer ici dès validation.",
-        attribution: "Rôle / Société",
-        meta: "Preuve grand compte",
+        quote: "Extrait LinkedIn grand compte à intégrer ici.",
+        attribution: "Référence à confirmer",
+        meta: "Confiance en contexte sensible",
       },
       {
-        quote: "Extrait de témoignage collaboration à intégrer ici dès validation.",
-        attribution: "Rôle / Contexte",
-        meta: "Preuve collaboration",
+        quote: "Extrait Malt ou collègue à intégrer ici.",
+        attribution: "Référence à confirmer",
+        meta: "Qualité de collaboration",
       },
       {
-        quote: "Extrait de témoignage technique à intégrer ici dès validation.",
-        attribution: "Rôle / Société",
+        quote: "Extrait technique à intégrer ici.",
+        attribution: "Référence à confirmer",
         meta: "Crédibilité technique",
       },
     ] satisfies TestimonialCard[],
   },
   insights: {
     tag: "Notes",
-    title: "Analyses, terrain et satire contrôlée.",
+    title: "Analyses, terrain et recul stratégique.",
     intro:
-      "Cette section doit montrer que la marque est active et intellectuellement vivante, pas seulement propre commercialement.",
+      "Cette zone renverra vers tes réseaux sociaux et tes contenus longs sans casser l'unité visuelle du site.",
     cards: [
       {
         kicker: "Observabilité",
-        title: "Une manière plus nette de parler du signal, du bruit et des habitudes outillées",
+        title: "Rendre visible la différence entre signal utile et décoration d'interface",
+        body:
+          "Posts, carrousels ou notes sur les habitudes d'observabilité qui aident vraiment une équipe à décider.",
       },
       {
         kicker: "IA pragmatique",
         title: "Des usages concrets de l'IA sans décor de hype",
+        body:
+          "Des cas d'usage directement reliés au travail d'ingénierie, de leadership et de conseil technique.",
       },
       {
         kicker: "Leadership",
         title: "Comment des ingénieurs gagnent en influence stratégique",
+        body:
+          "Réflexions pour tech leads, engineering managers et freelances qui veulent prendre plus de hauteur.",
       },
     ] satisfies InsightCard[],
   },
   contact: {
     tag: "Commencer ici",
-    title: "Pour les équipes qui ont besoin de clarté avant plus de bruit.",
+    title: "Parlons d'un système à remettre au clair.",
     bullets: [
-      "Des environnements opérationnels désordonnés avec de vrais enjeux",
-      "Fiabilité, observabilité, infra ou repositionnement technique stratégique",
-      "Des responsables qui veulent de l'exécution avec du jugement, pas du théâtre",
+      "Un environnement opérationnel désordonné avec de vrais enjeux techniques et politiques",
+      "Un besoin de fiabilité, d'observabilité, de stratégie infra ou de repositionnement technique",
+      "Une attente d'exécution avec du jugement, pas de théâtre ni de jargon décoratif",
     ],
     primaryCta: {
-      label: "Discuter d'un projet",
+      label: "Prendre un rendez-vous",
       href: "#top",
     },
     secondaryCta: {
-      label: "Voir les références",
-      href: "#proof",
+      label: "Voir les notes",
+      href: "#insights",
     },
     note:
-      "La prise de rendez-vous Google Calendar / Meet sera branchée via une URL externe, sans logique métier côté serveur.",
+      "La prise de rendez-vous V1 passera par Google Calendar / Meet via une URL externe, sans logique métier côté serveur.",
   },
 } as const;
