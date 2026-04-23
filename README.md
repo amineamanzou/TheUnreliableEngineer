@@ -2,13 +2,28 @@
 
 Dépôt technique du site de marque.
 
-La V1 du site est en français. L'internationalisation viendra plus tard.
+La V1 est un site statique Astro en français. La V2 ajoutera l'internationalisation.
 
-## Contenu versionné
+## Surfaces versionnées
 
-- [Site statique V1](site/index.html)
-- [Styles V1](site/styles.css)
-- [Contenu structuré homepage](content/homepage-v1.yaml)
+- [ADR V1 architecture](adr/0001-v1-web-architecture.md)
+- [Homepage Astro](src/pages/index.astro)
+- [Données homepage FR](src/data/homepage.fr.ts)
+- [Styles globaux](src/styles/global.css)
+- [Runtime container](Dockerfile)
+- [Runtime Caddy](ops/Caddyfile)
+
+## Choix V1
+
+- Astro
+- site statique
+- pas de SSR
+- pas de backend
+- pas de base de données
+- pas de React en V1
+- couche client minimale
+- rendez-vous via Google Calendar / Meet externe
+- runtime statique minimal derrière Caddy
 
 ## Contenu local non versionné
 
@@ -21,13 +36,14 @@ Concrètement :
 
 ## Règles de dépôt
 
-- Conventional commits
-- Commits réguliers et ciblés
-- Le dépôt garde la trace technique du travail versionné
-- La documentation de conception reste hors GitHub pour cette V1
+- conventional commits
+- commits réguliers et ciblés
+- trace technique conservée dans le dépôt versionné
+- documentation de conception gardée hors GitHub pour cette V1
 
 ## Prochaines étapes
 
-1. Remplacer les placeholders du hero, des missions et des témoignages.
-2. Ajouter les premiers assets visuels du hero.
-3. Préparer le packaging et le déploiement de la V1 française.
+1. Installer les dépendances et valider le build Astro.
+2. Remplacer les placeholders du hero, des missions et des témoignages.
+3. Brancher l'URL réelle de prise de rendez-vous Google.
+4. Générer les premiers assets du hero.
