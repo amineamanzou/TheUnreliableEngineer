@@ -32,7 +32,7 @@ for (const target of viewports) {
   await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
 
   await page.locator(".hero").waitFor({ state: "visible" });
-  await page.locator(".persona-placeholder").waitFor({ state: "visible" });
+  await page.locator(".hero-character").waitFor({ state: "visible" });
   await page.locator(".hero-note").waitFor({ state: "visible" });
 
   const metrics = await page.evaluate(() => {
@@ -46,7 +46,7 @@ for (const target of viewports) {
       heroWidth: hero?.getBoundingClientRect().width ?? 0,
       hasBubble: Boolean(document.querySelector(".hero-bubble")),
       hasStickyNote: Boolean(document.querySelector(".hero-note")),
-      hasPersona: Boolean(document.querySelector(".persona-placeholder")),
+      hasPersona: Boolean(document.querySelector(".character-asset")),
     };
   });
 
@@ -63,6 +63,18 @@ for (const target of viewports) {
       }px)`,
     );
   }
+
+  await page.evaluate(async () => {
+    document.documentElement.style.scrollBehavior = "auto";
+    document.body.style.scrollBehavior = "auto";
+    const step = Math.max(window.innerHeight * 0.75, 320);
+    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 60));
+    }
+    window.scrollTo(0, 0);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
 
   await page.screenshot({
     path: path.join(outputDir, `homepage-${target.name}.png`),

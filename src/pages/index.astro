@@ -55,7 +55,12 @@ const page = homepageFr;
         <div class="hero-stage">
           <article class="panel hero-stage-board">
             <div class="slot-label slot-label-ink">Personnage principal</div>
-            <PersonaPlaceholder />
+            <PersonaPlaceholder
+              src="/brand/web/characters/camera.png"
+              alt="The Unreliable Engineer présente son point de vue éditorial"
+              class="hero-character"
+              loading="eager"
+            />
             <div class="persona-caption">
               <strong>{page.hero.persona.caption}</strong>
               <p>{page.hero.persona.body}</p>
@@ -178,6 +183,11 @@ const page = homepageFr;
         <div class="territory-grid">
           <article class="panel territory-feature">
             <div class="slot-label">{page.editorial.featureLabel}</div>
+            <PersonaPlaceholder
+              src="/brand/web/characters/thinking.png"
+              alt="The Unreliable Engineer réfléchit à une décision technique"
+              class="feature-character"
+            />
             <h3 class="card-title">{page.editorial.featureTitle}</h3>
             <p class="card-copy">{page.editorial.featureBody}</p>
             <p class="feature-note">{page.editorial.featureNote}</p>
@@ -234,6 +244,13 @@ const page = homepageFr;
             <article class={`panel insight-card insight-card-${index + 1}`}>
               <div class="thumb">
                 <div class="slot-label">Visuel note</div>
+                {index === 0 && (
+                  <PersonaPlaceholder
+                    src="/brand/web/characters/skepticism.png"
+                    alt="The Unreliable Engineer sceptique devant un signal faible"
+                    class="thumb-character"
+                  />
+                )}
               </div>
               <span class="kicker">{card.kicker}</span>
               <h3 class="card-title">{card.title}</h3>

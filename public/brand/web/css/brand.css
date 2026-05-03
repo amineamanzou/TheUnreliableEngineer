@@ -1,0 +1,36 @@
+:root {
+  --tue-color-ink: #101010;
+  --tue-color-paper: #fff7e8;
+  --tue-color-paper-deep: #f4dfbd;
+  --tue-color-red: #d82323;
+  --tue-color-deep-red: #7f1212;
+  --tue-color-flannel-red: #b91818;
+  --tue-color-yellow: #ffd33d;
+  --tue-color-gray: #2d3136;
+  --tue-color-page-background: #191919;
+  --tue-font-display-font: "Arial Black", Impact, sans-serif;
+  --tue-font-body-font: Arial, sans-serif;
+}
+
+.tue-paper-surface {
+  background: var(--tue-color-paper);
+  color: var(--tue-color-ink);
+}
+
+.tue-ink-surface {
+  background: var(--tue-color-ink);
+  color: var(--tue-color-paper);
+}
+
+.tue-comic-frame {
+  border: 6px solid var(--tue-color-ink);
+  box-shadow: 10px 10px 0 var(--tue-color-red);
+  background: var(--tue-color-paper);
+}
+
+.tue-character {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(10px 14px 0 rgba(0, 0, 0, .22));
+}
