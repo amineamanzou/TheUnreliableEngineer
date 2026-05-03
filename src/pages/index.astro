@@ -54,16 +54,16 @@ const page = homepageFr;
 
         <div class="hero-stage">
           <article class="panel hero-stage-board">
-            <div class="slot-label slot-label-ink">Personnage principal</div>
+            <div class="slot-label slot-label-ink">{page.hero.consultation.label}</div>
             <PersonaPlaceholder
               src="/brand/web/characters/camera.png"
               alt="The Unreliable Engineer présente son point de vue éditorial"
               class="hero-character"
               loading="eager"
             />
-            <div class="persona-caption">
-              <strong>{page.hero.persona.caption}</strong>
-              <p>{page.hero.persona.body}</p>
+            <div class="case-caption">
+              <strong>{page.hero.consultation.caption}</strong>
+              <p>{page.hero.consultation.body}</p>
             </div>
           </article>
 
@@ -74,9 +74,9 @@ const page = homepageFr;
           </aside>
 
           <article class="spec-card">
-            <div class="slot-label slot-label-dark">{page.hero.persona.title}</div>
+            <div class="slot-label slot-label-dark">Ce qu'on clarifie</div>
             <ul class="spec-list">
-              {page.hero.persona.specs.map((spec) => (
+              {page.hero.consultation.points.map((spec) => (
                 <li>
                   <span class="spec-label">{spec.label}</span>
                   <span class="spec-value">{spec.value}</span>
@@ -103,6 +103,18 @@ const page = homepageFr;
               <p class="proof-intro">{page.proof.intro}</p>
             </div>
             <p class="proof-callout">{page.proof.callout}</p>
+          </div>
+
+          <div class="logo-rail" aria-label="Références clients">
+            {page.proof.logos.map((logo) => (
+              <article class="client-logo-card">
+                <img src={logo.src} alt={`Logo ${logo.label}`} loading="lazy" decoding="async" />
+                <div>
+                  <strong>{logo.label}</strong>
+                  <span>{logo.context}</span>
+                </div>
+              </article>
+            ))}
           </div>
 
           <div class="proof-rail">

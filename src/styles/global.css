@@ -286,8 +286,8 @@ h1,
 }
 
 h1 {
-  max-width: 11ch;
-  font-size: clamp(3.6rem, 7.4vw, 7.7rem);
+  max-width: 12ch;
+  font-size: clamp(3.2rem, 6.3vw, 6.6rem);
 }
 
 .section-title {
@@ -308,7 +308,7 @@ h1 {
 .proof-intro,
 .proof-callout,
 .sticky-note p,
-.persona-caption p,
+.case-caption p,
 .spec-value,
 .feature-note {
   color: var(--ink-soft);
@@ -470,20 +470,20 @@ h1 {
   transform-origin: center bottom;
 }
 
-.persona-caption {
+.case-caption {
   display: grid;
   gap: 10px;
   padding-top: 8px;
 }
 
-.persona-caption strong,
+.case-caption strong,
 .sticky-note strong,
 .proof-flash strong {
   font-size: clamp(1.2rem, 2vw, 1.58rem);
   line-height: 1.16;
 }
 
-.persona-caption p,
+.case-caption p,
 .sticky-note p,
 .proof-flash p {
   margin: 0;
@@ -625,9 +625,56 @@ h1 {
   max-width: 34rem;
 }
 
+.logo-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.client-logo-card {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 110px;
+  padding: 16px;
+  border: 5px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 6px 6px 0 var(--accent);
+  color: var(--ink);
+}
+
+.client-logo-card img {
+  display: block;
+  width: 76px;
+  height: 76px;
+  border: 3px solid var(--ink);
+  background: #fff;
+  object-fit: contain;
+}
+
+.client-logo-card div {
+  display: grid;
+  gap: 5px;
+}
+
+.client-logo-card strong {
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 1.08rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.client-logo-card span {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
 .proof-rail {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -982,7 +1029,11 @@ h1 {
   }
 
   .proof-rail {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .logo-rail {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1067,11 +1118,21 @@ h1 {
   }
 
   h1 {
-    font-size: clamp(2.65rem, 13.5vw, 4.1rem);
+    font-size: clamp(2.35rem, 12vw, 3.55rem);
   }
 
   .proof-rail {
     grid-template-columns: 1fr;
+  }
+
+  .client-logo-card {
+    grid-template-columns: 64px minmax(0, 1fr);
+    min-height: 94px;
+  }
+
+  .client-logo-card img {
+    width: 64px;
+    height: 64px;
   }
 
   .testimonial-card-2 {
