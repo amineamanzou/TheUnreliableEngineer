@@ -3,6 +3,8 @@ node_modules/
 dist/
 .astro/
 artifacts/
+.superpowers/
+.worktrees/
 
 # Internal design and specification work stays local for this project.
 docs/
