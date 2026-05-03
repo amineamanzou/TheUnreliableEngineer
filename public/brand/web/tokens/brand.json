@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "name": "the-unreliable-engineer-web",
+  "source": "brand/carousel-tokens.json",
+  "color": {
+    "ink": "#101010",
+    "paper": "#fff7e8",
+    "paper_deep": "#f4dfbd",
+    "red": "#d82323",
+    "deep_red": "#7f1212",
+    "flannel_red": "#b91818",
+    "yellow": "#ffd33d",
+    "gray": "#2d3136",
+    "page_background": "#191919"
+  },
+  "typography": {
+    "display_font": "\"Arial Black\", Impact, sans-serif",
+    "body_font": "Arial, sans-serif"
+  }
+}

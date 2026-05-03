@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "name": "the-unreliable-engineer-web-kit",
+  "generated_from": [
+    "assets/characters/index.accepted.json",
+    "brand/carousel-tokens.json"
+  ],
+  "characters": [
+    {
+      "id": "character_host_halfbody_anger_video_v001",
+      "expression": "anger",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/anger.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_anger_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_camera_carousel_v001",
+      "expression": "camera",
+      "type": "half_body",
+      "surface": "carousel",
+      "path": "characters/camera.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_camera_carousel_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_concentration_video_v001",
+      "expression": "concentration",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/concentration.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_concentration_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_confusion_video_v001",
+      "expression": "confusion",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/confusion.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_confusion_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_crying-elbow_video_v001",
+      "expression": "crying_elbow",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/crying_elbow.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_crying-elbow_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_facepalm_video_v001",
+      "expression": "facepalm",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/facepalm.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_facepalm_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_fatigue_video_v001",
+      "expression": "fatigue",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/fatigue.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_fatigue_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_fear-panic_obs_v001",
+      "expression": "fear_panic",
+      "type": "half_body",
+      "surface": "obs",
+      "path": "characters/fear_panic.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_fear-panic_obs_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_football-changed_carousel_v001",
+      "expression": "football_changed",
+      "type": "half_body",
+      "surface": "carousel",
+      "path": "characters/football_changed.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_football-changed_carousel_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_hair-pulling_video_v002",
+      "expression": "hair_pulling",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/hair_pulling.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_hair-pulling_video_v002_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_helpless-hands_video_v001",
+      "expression": "helpless_hands",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/helpless_hands.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_helpless-hands_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_idea_video_v001",
+      "expression": "idea",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/idea.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_idea_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_joy_video_v001",
+      "expression": "joy",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/joy.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_joy_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_pointing-up_video_v001",
+      "expression": "pointing_up",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/pointing_up.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_pointing-up_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_pride_video_v001",
+      "expression": "pride",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/pride.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_pride_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_portrait_sadness_web_v001",
+      "expression": "sadness",
+      "type": "portrait",
+      "surface": "web",
+      "path": "characters/sadness.png",
+      "source_asset": "assets/exports/characters/character_host_portrait_sadness_web_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_skepticism_video_v001",
+      "expression": "skepticism",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/skepticism.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_skepticism_video_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_surprise_notification_v001",
+      "expression": "surprise",
+      "type": "half_body",
+      "surface": "notification",
+      "path": "characters/surprise.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_surprise_notification_v001_alpha.png"
+    },
+    {
+      "id": "character_host_halfbody_thinking_video_v001",
+      "expression": "thinking",
+      "type": "half_body",
+      "surface": "video",
+      "path": "characters/thinking.png",
+      "source_asset": "assets/exports/characters/character_host_halfbody_thinking_video_v001_alpha.png"
+    }
+  ],
+  "tokens": {
+    "json": "tokens/brand.json",
+    "css": "css/brand.css"
+  },
+  "usage_notes": [
+    "Use this dist/web directory as the stable public contract for external websites.",
+    "Do not import from assets/characters or assets/exports directly in another repo.",
+    "All character PNGs in this kit are accepted alpha exports."
+  ]
+}
