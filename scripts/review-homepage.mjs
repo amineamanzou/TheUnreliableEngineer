@@ -74,6 +74,13 @@ for (const target of viewports) {
     }
     window.scrollTo(0, 0);
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const topbar = document.querySelector(".topbar");
+    if (topbar instanceof HTMLElement) {
+      topbar.style.position = "absolute";
+      topbar.style.top = "0";
+      topbar.style.left = "0";
+      topbar.style.right = "0";
+    }
   });
 
   await page.screenshot({

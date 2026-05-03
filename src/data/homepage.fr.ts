@@ -8,9 +8,10 @@ export type ProofItem = {
   meta: string;
 };
 
-export type PersonaSpec = {
+export type LogoItem = {
   label: string;
-  value: string;
+  src: string;
+  context: string;
 };
 
 export type WorkCard = {
@@ -22,6 +23,11 @@ export type WorkCard = {
 export type MethodStep = {
   index: string;
   title: string;
+  body: string;
+};
+
+export type AudienceCard = {
+  labels: string[];
   body: string;
 };
 
@@ -39,250 +45,252 @@ export type InsightCard = {
 
 export const homepageFr = {
   meta: {
-    title: "The Unreliable Engineer | SRE, observabilité et stratégie infra",
+    title: "The Unreliable Engineer | Clarification SRE, observabilité et positionnement tech",
     description:
-      "SRE, observabilité, stratégie infra et IA pragmatique pour les équipes qui ont besoin de clarté dans des environnements instables.",
+      "Études de cas de 60 minutes pour clarifier un problème de fiabilité, d'observabilité, d'infrastructure ou de positionnement tech avant de choisir la suite.",
   },
   topbar: {
     brand: "The Unreliable Engineer",
-    meta: "SRE / Observabilité / Stratégie infra / IA pragmatique",
+    meta: "Clarification / SRE / Observabilité / Positionnement tech",
     nav: [
-      { label: "Missions", href: "#work" },
-      { label: "Méthode", href: "#method" },
-      { label: "Références", href: "#proof" },
-      { label: "Notes", href: "#insights" },
+      { label: "Offres", href: "#work" },
+      { label: "Format", href: "#method" },
+      { label: "Preuves", href: "#proof" },
+      { label: "Témoignages", href: "#testimonials" },
     ] satisfies NavItem[],
     cta: {
-      label: "Prendre un rendez-vous",
+      label: "Réserver 60 minutes",
       href: "#contact",
     },
   },
   hero: {
-    eyebrow: "SRE / Observabilité / Stratégie infra",
-    title: "Des systèmes plus fiables. Des décisions moins fragiles.",
+    eyebrow: "Clarification technique / SRE / Marché freelance",
+    title: "Mieux formuler le problème. Mieux choisir la suite.",
     body:
-      "J'accompagne tech leads, engineering managers, responsables infrastructure et CTO sur les sujets SRE, observabilité, stratégie infra et IA pragmatique. Avec une approche sérieuse sur le fond, satirique sur la forme et toujours ancrée dans le réel.",
+      "J'aide les équipes techniques et les profils tech senior à clarifier ce qui bloque vraiment: un système trop bruyant, une observabilité qui n'aide plus à décider, une trajectoire freelance confuse ou une prise de parole qui ne reflète pas encore leur niveau.",
     primaryCta: {
-      label: "Prendre un rendez-vous",
+      label: "Réserver une étude de cas",
       href: "#contact",
     },
     secondaryCta: {
-      label: "Voir les références",
+      label: "Voir les preuves",
       href: "#proof",
     },
-    chips: ["Orange", "Odigo", "SI énergie / 400+ projets", "Banque privée"],
+    chips: ["60 minutes", "Systèmes & observabilité", "Freelance & marché", "Sans recette magique"],
     bubble: {
-      kicker: "Bulle du moment",
+      kicker: "Le principe",
       body:
-        "Le dashboard n'est pas une stratégie. L'observabilité ne vaut quelque chose que si elle aide vraiment une équipe à décider.",
+        "On ne vient pas chercher une réponse rapide. On vient rendre le problème assez clair pour que les bonnes réponses deviennent visibles.",
     },
     sticky: {
       kicker: "Post-it",
-      title: "Premium sur le fond. Décalé sur la forme.",
+      title: "Tu réserves du temps, pas une méthode miracle.",
       body:
-        "Une voix éditoriale assumée pour parler de fiabilité, d'observabilité et de stratégie infra sans jargon de brochure.",
+        "Une conversation structurée pour mettre de l'ordre dans un sujet technique, stratégique ou professionnel qui résiste aux réponses toutes faites.",
     },
-    persona: {
-      title: "Personnage canonique",
-      caption: "The Unreliable Engineer, version éditoriale à illustrer.",
+    consultation: {
+      label: "Étude de cas 60 min",
+      caption: "Une session pour clarifier avant d'agir.",
       body:
-        "Le hero doit pouvoir accueillir ton personnage, ses bulles de dialogue et ses post-it sans casser la crédibilité premium du site.",
-      specs: [
+        "Tu exposes le contexte, les contraintes et les tensions. On décortique le problème ensemble, sans vendre une solution préfabriquée.",
+      points: [
         {
-          label: "Silhouette",
-          value: "Homme, visage ovale et légèrement rond, expression sympathique.",
+          label: "Entrée",
+          value: "Un problème réel, flou, sensible ou bloqué.",
         },
         {
-          label: "Cheveux",
-          value: "Cheveux noirs tirés en arrière, man bun strict, front dégagé.",
+          label: "Travail",
+          value: "Nommer les angles morts, les compromis et les questions qui comptent.",
         },
         {
-          label: "Visage",
-          value: "Barbe complète noire, moustache présente, lunettes rondes fines en métal.",
+          label: "Sortie",
+          value: "Des pistes de lecture et de décision plus nettes.",
         },
-        {
-          label: "Vêtement",
-          value: "Chemise en flanelle rouge et noir, parfois avec un tee-shirt geek.",
-        },
-      ] satisfies PersonaSpec[],
+      ],
     },
     proofFlash: {
       kicker: "Références",
-      title: "Orange, Odigo, SI énergie, banque privée.",
+      title: "Orange, Odigo, Enedis.",
       body:
-        "Des environnements sensibles où la clarté technique change directement le niveau de risque et la qualité de décision.",
+        "Télécom, énergie, production, plateformes internes, observabilité et DevOps/SRE dans des environnements où le flou coûte cher.",
     },
   },
   proof: {
-    tag: "Références",
+    tag: "Preuves",
     intro:
-      "J'interviens là où la fiabilité, la lisibilité du système et la qualité de décision ont un impact direct sur l'équipe et sur le business.",
+      "Le travail s'appuie sur des contextes réels: grands comptes, énergie, télécom, production critique, dette opérationnelle et responsabilités partagées.",
     callout:
-      "Grand compte, environnements sensibles, dette opérationnelle, responsabilités partagées: la preuve doit apparaître immédiatement.",
+      "La valeur attendue n'est pas un avis de plus. C'est une lecture plus claire du problème, de ses contraintes et de ce qu'il rend possible.",
+    logos: [
+      { label: "Orange", src: "/brand/logos/orange.jpeg", context: "Télécom / production" },
+      { label: "Odigo", src: "/brand/logos/odigo.jpeg", context: "Systèmes opérationnels" },
+      { label: "Enedis", src: "/brand/logos/enedis.jpeg", context: "Énergie / SI à grande échelle" },
+    ] satisfies LogoItem[],
     items: [
-      { label: "Orange", meta: "Contexte grand compte" },
-      { label: "Odigo", meta: "Systèmes opérationnels" },
-      { label: "SI énergie", meta: "Environ 400 projets" },
-      { label: "Banque privée", meta: "Environnement à forte exigence" },
-      { label: "LinkedIn", meta: "Preuve collègue" },
-      { label: "Malt", meta: "Crédibilité freelance" },
+      { label: "Observabilité", meta: "Signal, alerting, pratiques d'équipe" },
+      { label: "SRE / DevOps", meta: "Production, incidents, fiabilité" },
+      { label: "Architecture", meta: "Systèmes internes, flux, dette" },
+      { label: "Positionnement", meta: "Freelance, contenu, perception marché" },
     ] satisfies ProofItem[],
   },
   work: {
-    tag: "Missions",
-    title: "Ce que j'apporte aux équipes sous pression.",
+    tag: "Offres",
+    title: "Trois façons de réserver mon temps.",
     intro:
-      "Quand la production devient illisible, que l'observabilité rassure plus qu'elle n'éclaire, ou que l'infrastructure grossit plus vite que sa clarté, j'interviens pour remettre du signal.",
+      "Chaque format part d'un cas concret. Pas de tunnel de conseil, pas de diagnostic standardisé: une heure pour rendre le problème plus lisible.",
     featured: {
-      kicker: "Mission principale",
-      meta: "Terrain / Arbitrages / Livraison",
-      title: "Remettre du signal dans des systèmes qui ont appris à survivre dans le bruit.",
+      kicker: "Format central",
+      meta: "60 minutes / cas réel / clarification",
+      title: "Étude de cas: poser le bon problème avant de chercher la bonne solution.",
       body:
-        "Audit terrain, cadrage de l'observabilité, simplification des flux, arbitrages d'architecture et documentation utile. Le travail vise toujours un système plus lisible, plus opérable et moins dépendant de l'improvisation.",
+        "Tu arrives avec un sujet qui tourne en boucle. On le met à plat, on regarde ce qui est technique, humain, politique, économique ou narratif, puis on extrait les questions qui peuvent vraiment guider la suite.",
     },
     cards: [
       {
-        kicker: "SRE",
-        title: "Fiabilité sous contraintes réelles",
+        kicker: "Système",
+        title: "Fiabilité, incidents, dette infra",
         body:
-          "Résilience, incidents, niveaux de service, runbooks et décisions de fiabilité qui tiennent hors du slide deck.",
+          "Pour comprendre pourquoi un système reste fragile, coûteux à opérer ou difficile à reprendre malgré les outils déjà en place.",
       },
       {
         kicker: "Observabilité",
-        title: "Rendre le signal lisible",
+        title: "Signal, dashboards, alerting",
         body:
-          "Logs, metrics, traces et alerting remis au service du diagnostic plutôt que du théâtre des dashboards.",
+          "Pour distinguer ce qui aide une équipe à décider de ce qui occupe seulement l'interface et les rituels.",
       },
       {
-        kicker: "Stratégie infra",
-        title: "Clarifier le système avant de multiplier les outils",
+        kicker: "Positionnement",
+        title: "Freelance, contenu, perception marché",
         body:
-          "Architecture, outillage, coûts et responsabilités clarifiés avant d'ajouter une nouvelle couche de complexité.",
+          "Pour passer d'un profil perçu comme exécutant fiable à un interlocuteur plus stratégique, visible et mieux compris.",
       },
     ] satisfies WorkCard[],
   },
   method: {
-    tag: "Méthode",
-    title: "Une méthode lisible, sans théâtre de cabinet.",
+    tag: "Format",
+    title: "Une heure pour mieux penser le problème.",
     intro:
-      "Le but n'est pas d'importer un framework de plus. Le but est de réduire l'ambiguïté, d'accélérer la décision et de laisser un système que d'autres peuvent reprendre.",
+      "Le but n'est pas de repartir avec une injonction. Le but est de mieux comprendre ce qui rend le sujet difficile, puis de faire émerger des éléments de réponse plus solides.",
     steps: [
       {
         index: "01",
-        title: "Lire le terrain",
+        title: "Exposer le cas",
         body:
-          "Identifier les contraintes réelles, la dette visible et les angles morts que les rituels ne montrent plus.",
+          "Tu présentes le contexte, les contraintes, ce qui bloque et ce que tu as déjà essayé ou envisagé.",
       },
       {
         index: "02",
-        title: "Réduire le problème",
+        title: "Démêler les couches",
         body:
-          "Transformer un système flou en arbitrages explicites, tractables et compréhensibles par l'équipe.",
+          "On sépare les symptômes, les causes possibles, les tensions d'équipe, les enjeux de décision et les angles morts.",
       },
       {
         index: "03",
-        title: "Exécuter sans folklore",
+        title: "Questionner les évidences",
         body:
-          "Livrer des changements utiles, compatibles avec le contexte technique et politique qui existe réellement.",
+          "On regarde les hypothèses implicites: pourquoi ce problème est formulé comme ça, et ce que cette formulation empêche de voir.",
       },
       {
         index: "04",
-        title: "Laisser une couche réutilisable",
+        title: "Extraire des pistes",
         body:
-          "Documenter les décisions et les artefacts pour que la valeur du travail survive après l'intervention.",
+          "Tu repars avec une lecture plus nette, des questions de décision et des options à explorer sans te vendre une recette.",
       },
     ] satisfies MethodStep[],
   },
   editorial: {
-    tag: "Contenu",
-    title: "Le contenu prolonge la méthode.",
+    tag: "Pour qui",
+    title: "Même mécanique: clarifier ce qui est mal nommé.",
     intro:
-      "Conférences, posts, satire SRE, vulgarisation IA et réflexions de carrière servent la même promesse: produire du recul utile pour des équipes techniques en responsabilité.",
-    featureLabel: "Poster / vidéo / case BD",
-    featureTitle: "Le personnage devient un outil de lecture, pas un gimmick.",
+      "Les sujets changent, mais le travail reste le même: faire apparaître les tensions, les compromis et les décisions cachées derrière un problème trop vite résumé.",
+    featureLabel: "Technique / marché / narration",
+    featureTitle: "Le problème n'est pas toujours là où il a l'air d'être.",
     featureBody:
-      "Le hero et les futures animations devront utiliser ton personnage pour créer de la tension visuelle, du contraste et des prises de parole mémorables.",
+      "Un sujet d'observabilité peut être un sujet de décision. Un sujet freelance peut être un sujet de perception. Un sujet contenu peut être un sujet d'offre.",
     featureNote:
-      "Direction à tenir: ligne claire, humains uniquement, contours noirs nets, bulles, post-it jaunes et énergie éditoriale contrôlée.",
+      "C'est précisément ce mélange entre technique, stratégie et lecture du marché qui rend la conversation utile.",
     cards: [
       {
-        labels: ["SRE", "Observabilité", "Satire contrôlée"],
+        labels: ["Équipes tech", "CTO", "Engineering managers"],
         body:
-          "Des contenus qui font sourire assez pour qu'on écoute, mais surtout assez clairs pour faire évoluer une pratique.",
+          "Pour clarifier un sujet de production, d'observabilité, de fiabilité, de dette infra ou d'arbitrage technique.",
       },
       {
-        labels: ["IA pragmatique", "Leadership", "Freelance premium"],
+        labels: ["Freelances tech", "Salariés en transition", "Seniors"],
         body:
-          "Une parole publique qui aide des ingénieurs à gagner en jugement, en influence et en positionnement sans papier peint buzzword.",
+          "Pour travailler l'offre, la posture, le contenu et la perception: exécutant fiable, expert visible ou interlocuteur stratégique.",
       },
-    ],
+    ] satisfies AudienceCard[],
   },
   testimonials: {
     tag: "Témoignages",
-    title: "De la preuve humaine, pas des compliments décoratifs.",
+    title: "Ce que les autres retiennent du travail.",
     intro:
-      "Les vrais extraits viendront de LinkedIn, Malt et du portefeuille client. La mise en forme doit déjà montrer un système de preuve crédible et structuré.",
+      "Les recommandations parlent surtout d'une chose: la capacité à élever le niveau de lecture, techniquement et stratégiquement.",
     cards: [
       {
-        quote: "Extrait LinkedIn grand compte à intégrer ici.",
-        attribution: "Référence à confirmer",
-        meta: "Confiance en contexte sensible",
+        quote:
+          "Amine est exceptionnellement compétent techniquement et porte une vision stratégique de l'observabilité de premier ordre.",
+        attribution: "Amin",
+        meta: "Project management · Enedis",
       },
       {
-        quote: "Extrait Malt ou collègue à intégrer ici.",
-        attribution: "Référence à confirmer",
-        meta: "Qualité de collaboration",
+        quote:
+          "Travailler avec Amine, c'est l'assurance d'élever le niveau des discussions, tant sur le plan technique que stratégique.",
+        attribution: "Valentin",
+        meta: "Expert Observabilité & SRE Freelance · Enedis",
       },
       {
-        quote: "Extrait technique à intégrer ici.",
-        attribution: "Référence à confirmer",
-        meta: "Crédibilité technique",
+        quote:
+          "Amine est un SRE expérimenté que je recommande pour tout projet de solution ou plateformes à échelle.",
+        attribution: "Hichem",
+        meta: "Software Architect / Engineering Manager · Orange",
       },
     ] satisfies TestimonialCard[],
   },
   insights: {
     tag: "Notes",
-    title: "Analyses, terrain et recul stratégique.",
+    title: "Contenu, signal et perception.",
     intro:
-      "Cette zone renverra vers tes réseaux sociaux et tes contenus longs sans casser l'unité visuelle du site.",
+      "Les contenus publics prolongent le même travail: rendre lisible ce qui est souvent confus dans les systèmes, les carrières et les marchés techniques.",
     cards: [
       {
         kicker: "Observabilité",
-        title: "Rendre visible la différence entre signal utile et décoration d'interface",
+        title: "Voir la différence entre signal utile et décoration d'interface",
         body:
-          "Posts, carrousels ou notes sur les habitudes d'observabilité qui aident vraiment une équipe à décider.",
+          "Réflexions sur les dashboards, alertes et habitudes qui donnent l'impression de comprendre sans toujours aider à décider.",
       },
       {
-        kicker: "IA pragmatique",
-        title: "Des usages concrets de l'IA sans décor de hype",
+        kicker: "Freelance",
+        title: "Passer de l'exécution fiable à la valeur stratégique",
         body:
-          "Des cas d'usage directement reliés au travail d'ingénierie, de leadership et de conseil technique.",
+          "Angles, offres et prises de parole pour mieux faire percevoir le jugement derrière le travail technique.",
       },
       {
         kicker: "Leadership",
-        title: "Comment des ingénieurs gagnent en influence stratégique",
+        title: "Formuler ce qu'on voit avant de demander à être écouté",
         body:
-          "Réflexions pour tech leads, engineering managers et freelances qui veulent prendre plus de hauteur.",
+          "Le contenu devient utile quand il montre une capacité de lecture, pas seulement une liste de compétences.",
       },
     ] satisfies InsightCard[],
   },
   contact: {
     tag: "Commencer ici",
-    title: "Parlons d'un système à remettre au clair.",
+    title: "Réserve 60 minutes pour mettre ton problème sur la table.",
     bullets: [
-      "Un environnement opérationnel désordonné avec de vrais enjeux techniques et politiques",
-      "Un besoin de fiabilité, d'observabilité, de stratégie infra ou de repositionnement technique",
-      "Une attente d'exécution avec du jugement, pas de théâtre ni de jargon décoratif",
+      "Un sujet de fiabilité, d'observabilité, d'architecture ou de dette opérationnelle à clarifier",
+      "Une trajectoire freelance, contenu ou positionnement à rendre plus lisible",
+      "Une conversation exigeante pour mieux définir le problème avant de décider quoi faire",
     ],
     primaryCta: {
-      label: "Prendre un rendez-vous",
+      label: "Réserver une étude de cas",
       href: "#top",
     },
     secondaryCta: {
-      label: "Voir les notes",
-      href: "#insights",
+      label: "Voir les témoignages",
+      href: "#testimonials",
     },
     note:
-      "La prise de rendez-vous V1 passera par Google Calendar / Meet via une URL externe, sans logique métier côté serveur.",
+      "Format V1: 60 minutes en visio. Tu viens avec un cas réel; on cherche à mieux le comprendre, pas à cocher une méthode.",
   },
 } as const;
