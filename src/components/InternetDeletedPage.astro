@@ -1,0 +1,50 @@
+---
+import Topbar from "./Topbar.astro";
+import type { Locale } from "../data/i18n";
+import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+type Props = {
+  locale: Locale;
+};
+
+const { locale } = Astro.props;
+const ui = uiByLocale[locale];
+const currentPath = localizedPath(locale, "/blog/internet-deleted/");
+---
+
+<BaseLayout
+  title={ui.deleted.title}
+  description={ui.deleted.description}
+  locale={locale}
+  canonicalPath={currentPath}
+  alternates={[
+    { locale: "fr", path: localizedPath("fr", "/blog/internet-deleted/") },
+    { locale: "en", path: localizedPath("en", "/blog/internet-deleted/") },
+  ]}
+>
+  <Topbar locale={locale} currentPath={currentPath} />
+
+  <main class="page deleted-page">
+    <section class="section-block deleted-section" id="top">
+      <div class="shell shell-wide">
+        <div class="panel deleted-panel">
+          <div class="terminal-bar" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>root@internet:/</strong>
+          </div>
+          <div class="deleted-console">
+            <p><span>$</span> rm -rf /</p>
+            {ui.deleted.lines.map(([label, value]) => <p><strong>{label}</strong> {value}</p>)}
+          </div>
+          <div class="deleted-actions">
+            <a class="button button-primary" href={assetPath(localizedPath(locale, "/blog/"))}>{ui.deleted.restoreBlog}</a>
+            <a class="button button-secondary" href={assetPath(localizedPath(locale, "/"))}>{ui.deleted.backHome}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

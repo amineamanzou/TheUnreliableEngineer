@@ -1,0 +1,91 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import Topbar from "./Topbar.astro";
+import { formatArticleDate } from "../data/articles";
+import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+type Props = {
+  article: CollectionEntry<"articles">;
+};
+
+const { article } = Astro.props;
+const locale = article.data.locale;
+const ui = uiByLocale[locale];
+const { Content } = await render(article);
+const articleDate = formatArticleDate(article.data.publishedAt, locale);
+const heroImage = article.data.heroImage ? assetPath(article.data.heroImage) : undefined;
+const allArticles = await getCollection("articles");
+const alternates = allArticles
+  .filter((candidate) => candidate.data.translationKey === article.data.translationKey)
+  .map((candidate) => ({
+    locale: candidate.data.locale,
+    path: localizedPath(candidate.data.locale, `/blog/${candidate.data.articleSlug}/`),
+  }));
+const currentPath = localizedPath(locale, `/blog/${article.data.articleSlug}/`);
+const alternatePath = alternates.find((alternate) => alternate.locale !== locale)?.path;
+const redirectPaths = {
+  fr: alternates.find((alternate) => alternate.locale === "fr")?.path ?? currentPath,
+  en: alternates.find((alternate) => alternate.locale === "en")?.path ?? currentPath,
+};
+---
+
+<BaseLayout
+  title={`${article.data.title} | The Unreliable Engineer`}
+  description={article.data.excerpt}
+  locale={locale}
+  canonicalPath={currentPath}
+  alternates={alternates}
+  enableLocaleRedirect={locale === "fr"}
+  localeRedirectPaths={redirectPaths}
+>
+  <Topbar locale={locale} currentPath={currentPath} alternatePath={alternatePath} />
+
+  <main class="page article-page">
+    <article class="section-block article-shell" id="top">
+      <div class="shell shell-wide">
+        <div class="panel article-panel">
+          <div class="article-meta">
+            <span class="kicker">{article.data.label}</span>
+            <span>{articleDate}</span>
+            <span>{article.data.readTime}</span>
+          </div>
+
+          <div class="article-layout">
+            <header class="article-head">
+              <h1>{article.data.title}</h1>
+              <p class="hero-text">{article.data.excerpt}</p>
+              {heroImage && (
+                <img
+                  class="article-hero-image"
+                  src={heroImage}
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                />
+              )}
+            </header>
+
+            <aside class="article-source">
+              <div class="terminal-bar" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <strong>{article.data.articleSlug}.linkedin</strong>
+              </div>
+              <p>{ui.article.sourceText}</p>
+              <a class="button button-primary" href={article.data.sourceUrl} target="_blank" rel="noreferrer">
+                {ui.article.sourceCta}
+              </a>
+            </aside>
+          </div>
+
+          <div class="article-body">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+</BaseLayout>

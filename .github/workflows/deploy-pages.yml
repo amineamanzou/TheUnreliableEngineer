@@ -34,6 +34,9 @@ jobs:
       - name: Astro check
         run: npm run check
 
+      - name: I18n content check
+        run: npm run check:i18n
+
       - name: Build for GitHub Pages
         run: npm run build
         env:

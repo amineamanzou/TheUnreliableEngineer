@@ -1,5 +1,8 @@
 ---
 title: "L'Observabilité, le Deck Tracker du Développeur ?"
+locale: "fr"
+articleSlug: "observabilite-deck-tracker-developpeur"
+translationKey: "observabilite-deck-tracker-developpeur"
 publishedAt: "2025-04-14"
 label: "Observabilité / Hearthstone"
 readTime: "5 min"

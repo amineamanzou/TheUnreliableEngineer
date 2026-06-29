@@ -1,0 +1,16 @@
+---
+import HomePage from "../../components/HomePage.astro";
+import { isLocale } from "../../data/i18n";
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" }, props: { locale: "en" } }];
+}
+
+const { locale } = Astro.props;
+
+if (!isLocale(locale)) {
+  return Astro.redirect("/");
+}
+---
+
+<HomePage locale={locale} />

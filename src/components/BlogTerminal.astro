@@ -13,13 +13,29 @@ type TerminalArticle = {
 type Props = {
   articles: TerminalArticle[];
   internetDeletedHref: string;
+  ui: {
+    terminalAria: string;
+    terminalLabel: string;
+    terminalHint: string;
+    terminalTips: string;
+    terminalNoMatch: string;
+    terminalEmptyPreview: string;
+    terminalFileNotFound: string;
+    terminalUnknownCommand: string;
+    terminalResultsLabel: string;
+    terminalResultsPlural: string;
+    fzfTitle: string;
+    commandsAria: string;
+    helpByCommand: Record<string, string>;
+  };
 };
 
-const { articles, internetDeletedHref } = Astro.props;
+const { articles, internetDeletedHref, ui } = Astro.props;
 const terminalArticlesJson = JSON.stringify(articles);
+const terminalUiJson = JSON.stringify(ui);
 ---
 
-<section class="panel blog-terminal-panel" aria-label="Terminal de recherche du blog">
+<section class="panel blog-terminal-panel" aria-label={ui.terminalAria}>
   <div class="terminal-bar" aria-hidden="true">
     <span></span>
     <span></span>
@@ -30,7 +46,7 @@ const terminalArticlesJson = JSON.stringify(articles);
     <p><span>$</span> help</p>
     <p class="terminal-result">
       <strong>fzf · ls · find · rg · ripgrep · open · read · cat</strong>
-      <small>Tab complète, ↑ ↓ rejouent l'historique, fzf ouvre une recherche interactive.</small>
+      <small>{ui.terminalHint}</small>
     </p>
     <div class="terminal-fzf" data-fzf-panel hidden></div>
   </div>
@@ -43,36 +59,27 @@ const terminalArticlesJson = JSON.stringify(articles);
       autocomplete="off"
       spellcheck="false"
       value="fzf"
-      aria-label="Commande terminal"
+      aria-label={ui.terminalLabel}
     />
     <button type="submit">run</button>
   </form>
-  <div class="terminal-command-rail" aria-label="Commandes disponibles">
+  <div class="terminal-command-rail" aria-label={ui.commandsAria}>
     {["fzf", "ls", "find", "rg", "ripgrep", "open", "read", "cat"].map((command) => (
       <button type="button" data-terminal-command={command}>{command}</button>
     ))}
   </div>
 </section>
 
-<script is:inline define:vars={{ terminalArticlesJson, internetDeletedHref }}>
+<script is:inline define:vars={{ terminalArticlesJson, internetDeletedHref, terminalUiJson }}>
   const articles = JSON.parse(terminalArticlesJson);
+  const ui = JSON.parse(terminalUiJson);
   const terminalOutput = document.querySelector("[data-terminal-output]");
   const terminalForm = document.querySelector("[data-terminal-form]");
   const terminalInput = terminalForm?.querySelector("input");
   const commandButtons = Array.from(document.querySelectorAll("[data-terminal-command]"));
   const fzfPanel = document.querySelector("[data-fzf-panel]");
   const commands = ["fzf", "ls", "find", "rg", "ripgrep", "open", "read", "cat", "help"];
-  const helpByCommand = {
-    fzf: "Usage: fzf [query] · ouvre une recherche interactive, ↑ ↓ sélectionnent, Enter ouvre l'article.",
-    ls: "Usage: ls · liste les articles par date de publication.",
-    find: "Usage: find <texte> · filtre les titres, slugs, labels et extraits.",
-    rg: "Usage: rg <texte> · cherche dans les titres, labels et extraits.",
-    ripgrep: "Usage: ripgrep <texte> · alias bavard de rg.",
-    open: "Usage: open <index|slug|texte> · ouvre l'article local correspondant.",
-    read: "Usage: read <index|slug|texte> · ouvre l'article local correspondant.",
-    cat: "Usage: cat <index|slug|texte> · ouvre l'article local correspondant.",
-    help: "Usage: help [commande] · affiche les commandes disponibles ou l'aide d'une commande.",
-  };
+  const helpByCommand = ui.helpByCommand;
   let mode = "command";
   let history = [];
   let historyIndex = 0;
@@ -117,7 +124,7 @@ const terminalArticlesJson = JSON.stringify(articles);
 
   const renderHelp = (command) => {
     if (command && helpByCommand[command]) {
-      return `<p class="terminal-result terminal-help"><strong>${escapeHtml(helpByCommand[command])}</strong><small>Astuce: Tab complète les commandes et les articles.</small></p>`;
+      return `<p class="terminal-result terminal-help"><strong>${escapeHtml(helpByCommand[command])}</strong><small>${escapeHtml(ui.terminalTips)}</small></p>`;
     }
 
     return `<p class="terminal-result terminal-help"><strong>Usage: help [commande]</strong><small>${commands
@@ -173,8 +180,10 @@ const terminalArticlesJson = JSON.stringify(articles);
     fzfPanel.hidden = false;
     fzfPanel.innerHTML = `
       <div class="terminal-fzf-head">
-        <strong>fzf articles</strong>
-        <span>${fzfMatches.length} résultat${fzfMatches.length > 1 ? "s" : ""}</span>
+        <strong>${escapeHtml(ui.fzfTitle)}</strong>
+        <span>${fzfMatches.length} ${escapeHtml(ui.terminalResultsLabel)}${
+          fzfMatches.length > 1 ? escapeHtml(ui.terminalResultsPlural) : ""
+        }</span>
       </div>
       <div class="terminal-fzf-query">query&gt; ${escapeHtml(query || "")}</div>
       <div class="terminal-fzf-grid">
@@ -185,7 +194,7 @@ const terminalArticlesJson = JSON.stringify(articles);
               ? `<strong>${escapeHtml(selected.title)}</strong><span>${escapeHtml(selected.date)} · ${escapeHtml(
                   selected.readTime,
                 )}</span><p>${escapeHtml(selected.excerpt)}</p>`
-              : "<strong>no preview</strong><p>Change la recherche avec fzf &lt;texte&gt;.</p>"
+              : `<strong>no preview</strong><p>${ui.terminalEmptyPreview}</p>`
           }
         </aside>
       </div>`;
@@ -302,7 +311,7 @@ const terminalArticlesJson = JSON.stringify(articles);
         `<p><span>$</span> ${escapeHtml(command)}</p>${
           matches.length
             ? matches.map(name === "find" ? renderArticleLine : renderReadPreview).join("")
-            : '<p class="terminal-result"><strong>0 match</strong><small>try rg "observabilité"</small></p>'
+            : `<p class="terminal-result"><strong>0 match</strong><small>${escapeHtml(ui.terminalNoMatch)}</small></p>`
         }`,
       );
       return;
@@ -315,14 +324,14 @@ const terminalArticlesJson = JSON.stringify(articles);
         window.setTimeout(() => openArticle(article), 90);
       } else {
         pushOutput(
-          `<p><span>$</span> ${escapeHtml(command)}</p><p class="terminal-result"><strong>file not found</strong><small>ls articles first</small></p>`,
+          `<p><span>$</span> ${escapeHtml(command)}</p><p class="terminal-result"><strong>file not found</strong><small>${escapeHtml(ui.terminalFileNotFound)}</small></p>`,
         );
       }
       return;
     }
 
     pushOutput(
-      `<p><span>$</span> ${escapeHtml(command)}</p><p class="terminal-result"><strong>command not found</strong><small>try fzf, ls, find, rg, ripgrep, open, read, cat, help</small></p>`,
+      `<p><span>$</span> ${escapeHtml(command)}</p><p class="terminal-result"><strong>command not found</strong><small>${escapeHtml(ui.terminalUnknownCommand)}</small></p>`,
     );
   };
 

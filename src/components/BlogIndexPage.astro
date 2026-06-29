@@ -1,0 +1,138 @@
+---
+import { getCollection } from "astro:content";
+import BlogTerminal from "./BlogTerminal.astro";
+import PersonaPlaceholder from "./PersonaPlaceholder.astro";
+import Topbar from "./Topbar.astro";
+import { getArticleCards } from "../data/articles";
+import type { Locale } from "../data/i18n";
+import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+type Props = {
+  locale: Locale;
+  enableLocaleRedirect?: boolean;
+};
+
+const { locale, enableLocaleRedirect = false } = Astro.props;
+const ui = uiByLocale[locale];
+const articleCards = getArticleCards(await getCollection("articles"), locale);
+const initialArticles = articleCards.slice(0, 5);
+const articlesJson = JSON.stringify(articleCards);
+const internetDeletedHref = assetPath(ui.blog.deletedHref);
+const readMoreLabel = ui.blog.readMore;
+const blogPath = localizedPath(locale, "/blog/");
+---
+
+<BaseLayout
+  title={ui.blog.title}
+  description={ui.blog.description}
+  locale={locale}
+  canonicalPath={blogPath}
+  alternates={[
+    { locale: "fr", path: localizedPath("fr", "/blog/") },
+    { locale: "en", path: localizedPath("en", "/blog/") },
+  ]}
+  enableLocaleRedirect={enableLocaleRedirect}
+  localeRedirectPath="/blog/"
+>
+  <Topbar locale={locale} currentPath={blogPath} />
+
+  <main class="page blog-page">
+    <section class="blog-hero-band" id="top">
+      <div class="shell shell-wide blog-hero">
+        <BlogTerminal articles={articleCards} internetDeletedHref={internetDeletedHref} ui={ui.blog} />
+
+        <aside class="blog-character-stage" aria-label={ui.blog.terminalAsideAria}>
+          <PersonaPlaceholder
+            src="/brand/web/characters/thinking.png"
+            alt={ui.blog.terminalAsideAlt}
+            class="blog-thinking-character"
+            loading="eager"
+          />
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-block blog-index-section">
+      <div class="shell shell-wide">
+        <div class="section-heading blog-index-heading">
+          <div class="section-tag">{ui.blog.articlesTag}</div>
+        </div>
+
+        <div class="blog-card-grid" data-blog-list data-read-more={readMoreLabel}>
+          {initialArticles.map((article) => (
+            <a class="panel blog-card" href={article.href}>
+              <span class="kicker">{article.label}</span>
+              <div class="article-meta">
+                <span>{article.date}</span>
+                <span>{article.readTime}</span>
+              </div>
+              <h3 class="card-title">{article.title}</h3>
+              <p class="card-copy">{article.excerpt}</p>
+              <span class="quote-link-label">{ui.blog.readMore}</span>
+            </a>
+          ))}
+        </div>
+        <div class="blog-load-sentinel" data-blog-sentinel aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline type="application/json" id="blog-articles-data" set:html={articlesJson} />
+  <script is:inline>
+    const articlesPayload = document.getElementById("blog-articles-data")?.textContent ?? "[]";
+    const articles = JSON.parse(articlesPayload);
+    const blogList = document.querySelector("[data-blog-list]");
+    const sentinel = document.querySelector("[data-blog-sentinel]");
+    const readMoreLabel = blogList?.getAttribute("data-read-more") ?? "Read more";
+    let renderedCount = Math.min(5, articles.length);
+
+    const escapeHtml = (value) =>
+      String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+
+    const renderBlogCard = (article) => {
+      const link = document.createElement("a");
+      link.className = "panel blog-card";
+      link.href = article.href;
+      link.innerHTML = `
+        <span class="kicker">${escapeHtml(article.label)}</span>
+        <div class="article-meta">
+          <span>${escapeHtml(article.date)}</span>
+          <span>${escapeHtml(article.readTime)}</span>
+        </div>
+        <h3 class="card-title">${escapeHtml(article.title)}</h3>
+        <p class="card-copy">${escapeHtml(article.excerpt)}</p>
+        <span class="quote-link-label">${escapeHtml(readMoreLabel)}</span>
+      `;
+      return link;
+    };
+
+    const loadMoreArticles = () => {
+      if (!blogList || renderedCount >= articles.length) {
+        sentinel?.remove();
+        return;
+      }
+
+      const nextArticles = articles.slice(renderedCount, renderedCount + 5);
+      nextArticles.forEach((article) => blogList.append(renderBlogCard(article)));
+      renderedCount += nextArticles.length;
+
+      if (renderedCount >= articles.length) {
+        sentinel?.remove();
+      }
+    };
+
+    if (sentinel && "IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          loadMoreArticles();
+        }
+      });
+      observer.observe(sentinel);
+    }
+  </script>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import InternetDeletedPage from "../../../components/InternetDeletedPage.astro";
+import { isLocale } from "../../../data/i18n";
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" }, props: { locale: "en" } }];
+}
+
+const { locale } = Astro.props;
+
+if (!isLocale(locale)) {
+  return Astro.redirect("/blog/internet-deleted/");
+}
+---
+
+<InternetDeletedPage locale={locale} />
