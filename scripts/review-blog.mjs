@@ -78,7 +78,17 @@ if ((await terminalInput.inputValue()) !== "ls") {
 await terminalInput.fill("fzf");
 await page.locator("[data-terminal-form]").evaluate((form) => form.requestSubmit());
 await page.getByText("fzf articles").waitFor({ timeout: 5000 });
-await page.keyboard.press("ArrowDown");
+await terminalInput.pressSequentially("deck");
+await page.locator(".terminal-fzf-query", { hasText: "query> deck" }).waitFor({ timeout: 5000 });
+await page.locator(".terminal-fzf-row").filter({ hasText: "observabilite-deck-tracker-developpeur" }).waitFor({
+  timeout: 5000,
+});
+const fzfRowsAfterDeck = await page.locator(".terminal-fzf-row").evaluateAll((rows) =>
+  rows.map((row) => row.textContent ?? ""),
+);
+if (!fzfRowsAfterDeck.every((row) => /deck/i.test(row))) {
+  throw new Error(`fzf should filter rows by query "deck", saw: ${fzfRowsAfterDeck.join(" | ")}`);
+}
 await page.keyboard.press("Enter");
 await page.waitForURL("**/blog/observabilite-deck-tracker-developpeur/", { timeout: 5000 });
 
