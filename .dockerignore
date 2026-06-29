@@ -1,5 +1,8 @@
 .git
 .gitignore
+.astro
+artifacts
+coverage
 node_modules
 dist
 docs
