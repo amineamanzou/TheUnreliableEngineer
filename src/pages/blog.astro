@@ -1,27 +1,10 @@
 ---
 import Topbar from "../components/Topbar.astro";
+import { blogArticles } from "../data/blogArticles";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const articles = [
-  {
-    label: "Architecture",
-    title: "Notes longues sur les systèmes qui résistent mal au flou.",
-    body:
-      "Des articles pour documenter les arbitrages, les modèles mentaux, les retours terrain et les angles morts qu'un post social ne permet pas de traiter proprement.",
-  },
-  {
-    label: "Observabilité",
-    title: "Runbooks, incidents, signaux faibles et dette opérationnelle.",
-    body:
-      "Un espace pour publier des analyses durables: ce qui casse, ce qui alerte trop tard, ce qui rassure à tort, et ce qu'une équipe peut vraiment décider.",
-  },
-  {
-    label: "Indépendance",
-    title: "Construire hors plateforme, sans abandonner la conversation.",
-    body:
-      "Le blog sert de source canonique: LinkedIn, X ou YouTube peuvent relayer, mais les textes importants vivent ici.",
-  },
-];
+const assetPath = (path: string) =>
+  path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
 ---
 
 <BaseLayout
@@ -52,10 +35,10 @@ const articles = [
             <strong>blog.bootstrap</strong>
           </div>
           <div class="blog-console-body">
-            <p><strong>status</strong> route prête</p>
-            <p><strong>source</strong> TheUnreliableEngineer</p>
+            <p><strong>status</strong> 2 articles importés</p>
+            <p><strong>source</strong> LinkedIn + site</p>
             <p><strong>platform_lock_in</strong> false</p>
-            <p><strong>next</strong> brancher les premiers articles</p>
+            <p><strong>latest</strong> 29 juin 2026</p>
           </div>
         </aside>
       </div>
@@ -66,21 +49,26 @@ const articles = [
         <div class="section-heading">
           <div class="stack">
             <div class="section-tag">À publier ici</div>
-            <h2 class="section-title">Trois familles de textes pour commencer.</h2>
+            <h2 class="section-title">Les deux derniers articles publiés.</h2>
           </div>
           <p class="lede">
-            Cette page pose le socle. Les prochains contenus pourront devenir des fichiers Astro ou Markdown,
-            puis être relayés ailleurs sans que la source canonique dépende d'une plateforme.
+            LinkedIn reste une surface de distribution. Le site devient la base qui garde les textes visibles,
+            organisés et réutilisables sans dépendre du flux social.
           </p>
         </div>
 
         <div class="blog-card-grid">
-          {articles.map((article) => (
-            <article class="panel blog-card">
+          {blogArticles.map((article) => (
+            <a class="panel blog-card" href={assetPath(`/blog/${article.slug}/`)}>
               <span class="kicker">{article.label}</span>
+              <div class="article-meta">
+                <span>{article.date}</span>
+                <span>{article.readTime}</span>
+              </div>
               <h3 class="card-title">{article.title}</h3>
-              <p class="card-copy">{article.body}</p>
-            </article>
+              <p class="card-copy">{article.excerpt}</p>
+              <span class="quote-link-label">Lire sur le site</span>
+            </a>
           ))}
         </div>
       </div>

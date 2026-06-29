@@ -248,6 +248,31 @@ for (const target of viewports) {
     );
   }
 
+  await page.evaluate(async () => {
+    document.documentElement.style.scrollBehavior = "auto";
+    window.location.hash = "proof";
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
+
+  const anchorMetrics = await page.evaluate(() => {
+    const topbar = document.querySelector(".topbar");
+    const proof = document.querySelector("#proof");
+    const topbarBottom = topbar?.getBoundingClientRect().bottom ?? 0;
+    const proofTop = proof?.getBoundingClientRect().top ?? 0;
+
+    return {
+      topbarBottom,
+      proofTop,
+      clearsStickyTopbar: proofTop >= topbarBottom - 1,
+    };
+  });
+
+  if (!anchorMetrics.clearsStickyTopbar) {
+    throw new Error(
+      `${target.name}: anchor target is hidden by sticky topbar (proof top ${anchorMetrics.proofTop}px, topbar bottom ${anchorMetrics.topbarBottom}px)`,
+    );
+  }
+
   for (const [label, passed] of [
     ["60-minute offer above fold", metrics.hasOfferAboveFold],
     ["target audience above fold", metrics.hasAudienceAboveFold],
