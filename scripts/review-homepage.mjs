@@ -33,6 +33,9 @@ const forbiddenSourceFragments = [
   "reserver une etude de cas",
   "Booking V1",
   "Voir les témoignages",
+  "carrousels LinkedIn vérifiés",
+  "impressions cumulées sur ces carrousels",
+  "GitHub",
 ];
 
 for (const fragment of forbiddenSourceFragments) {
@@ -139,6 +142,7 @@ for (const target of viewports) {
         countTo: Number.parseInt(element.getAttribute("data-count-to") ?? "0", 10),
       }),
     );
+    const socialStatDetails = Array.from(document.querySelectorAll("#social-signal .social-stat small"));
     const socialLinks = Array.from(document.querySelectorAll("#social-signal .social-link")).map(
       (element) => element.getAttribute("href") ?? "",
     );
@@ -194,11 +198,17 @@ for (const target of viewports) {
       socialLinks,
       hasSocialSignal:
         socialStats.length === 3 &&
-        socialStats.some((stat) => stat.countTo === 48431) &&
-        socialStats.some((stat) => stat.countTo === 16) &&
-        socialStats.some((stat) => stat.countTo === 5963) &&
+        socialStats.some((stat) => stat.countTo === 350) &&
+        socialStats.some((stat) => stat.countTo === 326000) &&
+        socialStats.some((stat) => stat.countTo === 550) &&
+        socialStatDetails.length === 0 &&
         socialLinks.includes("https://www.linkedin.com/in/amineamanzou/") &&
-        socialLinks.includes("https://github.com/amineamanzou"),
+        socialLinks.includes("https://www.tiktok.com/@theunreliableengi") &&
+        socialLinks.includes("https://www.instagram.com/theunreliableengineer/") &&
+        socialLinks.includes("https://www.facebook.com/profile.php?id=61570743494074") &&
+        socialLinks.includes("https://x.com/TheUnreliableEn") &&
+        socialLinks.includes("https://www.threads.com/@theunreliableengineer") &&
+        socialLinks.includes("https://www.youtube.com/@theunreliableengineer"),
       hasReducedMotionNeutralized:
         window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
         window.getComputedStyle(document.querySelector(".signal-map")).transform === "none" &&
