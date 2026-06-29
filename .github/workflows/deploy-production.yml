@@ -118,8 +118,8 @@ jobs:
         env:
           REDACTED_SECRET_KEY_NAME: ${{ secrets.REDACTED_SECRET_KEY_NAME }}
           THE_UNRELIABLE_ENGINEER_IMAGE: ${{ needs.build.outputs.image_ref }}
-          WEB_REGISTRY_USERNAME: ${{ secrets.GHCR_USERNAME }}
-          WEB_REGISTRY_PASSWORD: ${{ secrets.REDACTED_REGISTRY_TOKEN_NAME }}
+          WEB_REGISTRY_USERNAME: ${{ secrets.GHCR_USERNAME || github.actor }}
+          WEB_REGISTRY_PASSWORD: ${{ secrets.REDACTED_REGISTRY_TOKEN_NAME || secrets.GITHUB_TOKEN }}
         run: |
           test -n "$REDACTED_SECRET_KEY_NAME"
           test -n "$THE_UNRELIABLE_ENGINEER_IMAGE"
