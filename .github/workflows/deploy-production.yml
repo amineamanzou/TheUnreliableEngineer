@@ -115,6 +115,24 @@ jobs:
           printf '%s\n' "$WEB_PROD_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
+      - name: Preflight SSH reachability
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+            -o BatchMode=yes \
+            -o ConnectTimeout=60 \
+            -o ServerAliveInterval=15 \
+            -o UserKnownHostsFile=/tmp/theunreliableinfra_known_hosts \
+            -o StrictHostKeyChecking=accept-new \
+            root@178.104.174.106 true
+          ssh -i ~/.ssh/id_ed25519 \
+            -o BatchMode=yes \
+            -o ConnectTimeout=60 \
+            -o ServerAliveInterval=15 \
+            -o UserKnownHostsFile=/tmp/theunreliableinfra_known_hosts \
+            -o StrictHostKeyChecking=accept-new \
+            -o ProxyCommand="ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes -o ConnectTimeout=60 -o ServerAliveInterval=15 -o UserKnownHostsFile=/tmp/theunreliableinfra_known_hosts -o StrictHostKeyChecking=accept-new -W 10.42.1.30:22 root@178.104.174.106" \
+            root@10.42.1.30 true
+
       - name: Deploy immutable release
         working-directory: infra
         env:
@@ -145,6 +163,7 @@ jobs:
           ANSIBLE_LOCAL_TEMP=/tmp/ansible-local \
           ANSIBLE_REMOTE_TEMP=/tmp/ansible-remote \
           ANSIBLE_HOME=/tmp/ansible-home \
+          ANSIBLE_TIMEOUT=60 \
           HOME=/tmp/ansible-home \
           .venv-ansible/bin/ansible-playbook \
             -i inventories/prod/hosts.yml \
