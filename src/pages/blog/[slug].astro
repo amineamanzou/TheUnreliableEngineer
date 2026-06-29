@@ -1,0 +1,63 @@
+---
+import { blogArticles } from "../../data/blogArticles";
+import Topbar from "../../components/Topbar.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return blogArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+---
+
+<BaseLayout
+  title={`${article.title} | The Unreliable Engineer`}
+  description={article.excerpt}
+>
+  <Topbar />
+
+  <main class="page article-page">
+    <article class="section-block article-shell" id="top">
+      <div class="shell shell-wide">
+        <div class="panel article-panel">
+          <div class="article-meta">
+            <span class="kicker">{article.label}</span>
+            <span>{article.date}</span>
+            <span>{article.readTime}</span>
+          </div>
+
+          <div class="article-layout">
+            <header class="article-head">
+              <h1>{article.title}</h1>
+              <p class="hero-text">{article.excerpt}</p>
+            </header>
+
+            <aside class="article-source">
+              <div class="terminal-bar" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <strong>source.linkedIn</strong>
+              </div>
+              <p>Version importée depuis le dernier historique d'articles LinkedIn.</p>
+              <a class="button button-primary" href={article.sourceUrl} target="_blank" rel="noreferrer">
+                Lire sur LinkedIn
+              </a>
+            </aside>
+          </div>
+
+          <div class="article-body">
+            <p>{article.intro}</p>
+            <h2>Ce que l'article travaille</h2>
+            <ul class="list">
+              {article.points.map((point) => <li>{point}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+</BaseLayout>

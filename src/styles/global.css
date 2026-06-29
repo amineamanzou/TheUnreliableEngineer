@@ -23,6 +23,7 @@
   --pointer-nx: 0;
   --pointer-ny: 0;
   --scroll-progress: 0;
+  --topbar-offset: 112px;
 }
 
 * {
@@ -31,6 +32,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--topbar-offset);
 }
 
 body {
@@ -114,6 +116,11 @@ button:focus-visible,
 
 .page {
   padding: 24px 0 120px;
+}
+
+main section[id],
+.article-shell[id] {
+  scroll-margin-top: var(--topbar-offset);
 }
 
 .topbar {
@@ -370,13 +377,101 @@ h1,
 
 .blog-card-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
 }
 
 .blog-card {
-  min-height: 280px;
+  min-height: 320px;
   padding: 26px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.blog-card .quote-link-label {
+  align-self: end;
+  margin-top: auto;
+}
+
+.article-shell {
+  padding-top: 28px;
+}
+
+.article-panel {
+  padding: clamp(24px, 4vw, 52px);
+}
+
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.article-meta span:not(.kicker) {
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  padding: 6px 10px;
+}
+
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+  gap: 32px;
+  align-items: start;
+  margin-top: 28px;
+}
+
+.article-head {
+  display: grid;
+  gap: 22px;
+}
+
+.article-source {
+  border: 5px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.article-source p {
+  margin: 0;
+  padding: 22px;
+  color: rgba(255, 247, 232, 0.84);
+}
+
+.article-source .button {
+  margin: 0 22px 22px;
+  width: calc(100% - 44px);
+}
+
+.article-body {
+  display: grid;
+  gap: 22px;
+  max-width: 860px;
+  margin-top: 42px;
+}
+
+.article-body p,
+.article-body li {
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 1.2vw, 1.14rem);
+}
+
+.article-body .list li {
+  color: var(--ink-soft);
+}
+
+.article-body h2 {
+  margin: 0;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: clamp(2rem, 4vw, 4rem);
+  letter-spacing: 0;
+  line-height: 0.94;
+  text-transform: uppercase;
 }
 
 .hero-copy {
@@ -1722,6 +1817,10 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .article-layout {
+    grid-template-columns: 1fr;
+  }
+
   .work-feature,
   .work-card,
   .work-card-3 {
@@ -1751,6 +1850,10 @@ h1 {
 }
 
 @media (max-width: 760px) {
+  :root {
+    --topbar-offset: 128px;
+  }
+
   .page {
     padding-top: 12px;
   }
@@ -1816,7 +1919,8 @@ h1 {
   .cta-panel,
   .social-signal-panel,
   .blog-hero-copy,
-  .blog-card {
+  .blog-card,
+  .article-panel {
     padding: 18px;
   }
 
