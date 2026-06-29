@@ -118,8 +118,8 @@ jobs:
         env:
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
           THE_UNRELIABLE_ENGINEER_IMAGE: ${{ needs.build.outputs.image_ref }}
-          WEB_REGISTRY_USERNAME: ${{ secrets.GHCR_USERNAME }}
-          WEB_REGISTRY_PASSWORD: ${{ secrets.GHCR_READ_TOKEN }}
+          WEB_REGISTRY_USERNAME: ${{ secrets.GHCR_USERNAME || github.actor }}
+          WEB_REGISTRY_PASSWORD: ${{ secrets.GHCR_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           test -n "$SOPS_AGE_KEY"
           test -n "$THE_UNRELIABLE_ENGINEER_IMAGE"

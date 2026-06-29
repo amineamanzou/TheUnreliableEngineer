@@ -64,3 +64,29 @@ Si GitHub affiche une erreur du type `Invalid YAML front matter in
 src/pages/index.astro`, c'est que Pages essaie de lancer Jekyll sur les sources
 Astro. Repasser la source Pages sur **GitHub Actions**; les fichiers `.nojekyll`
 servent de garde-fou pour l'artifact généré.
+
+## Déploiement production
+
+Le workflow `.github/workflows/deploy-production.yml` se lance sur `main`.
+Il valide Astro, pousse l'image Docker sur GHCR, puis déploie le digest
+immutable via Ansible dans le dépôt privé `TheUnreliableInfrastructure`.
+
+Avant de merger sur `main`, créer l'environnement GitHub `production` et y
+ajouter les secrets:
+
+- `INFRA_WORKFLOW_TOKEN`: token autorisé à cloner le dépôt privé infra.
+- `WEB_PROD_SSH_PRIVATE_KEY`: clé SSH capable de joindre `web-prod` via
+  `ops-gw`.
+- `SOPS_AGE_KEY`: clé age privée capable de déchiffrer les secrets SOPS infra.
+
+Secrets optionnels:
+
+- `GHCR_USERNAME`
+- `GHCR_READ_TOKEN`
+
+Sans secrets GHCR dédiés, le workflow utilise `github.actor` et `GITHUB_TOKEN`
+pour le login registry côté serveur.
+
+Le dépôt infra doit contenir le contrat Ansible `web_runtime` introduit par le
+commit `348605b` ou plus récent. La production n'accepte qu'une image sous forme
+`ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest>`.
