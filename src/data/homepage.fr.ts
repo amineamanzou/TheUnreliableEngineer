@@ -66,6 +66,7 @@ export const homepageFr = {
       { label: "Témoignages", href: "#testimonials" },
       { label: "Commencer ici", href: "#contact" },
     ] satisfies NavItem[],
+    blog: { label: "Blog", href: "/blog/" } satisfies NavItem,
     cta: {
       label: "Réserver 60 minutes",
       href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",

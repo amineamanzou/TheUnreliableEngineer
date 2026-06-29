@@ -1,5 +1,6 @@
 ---
 import PersonaPlaceholder from "../components/PersonaPlaceholder.astro";
+import Topbar from "../components/Topbar.astro";
 import { homepageFr } from "../data/homepage.fr";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -9,23 +10,7 @@ const assetPath = (path: string) =>
 ---
 
 <BaseLayout title={page.meta.title} description={page.meta.description}>
-  <header class="topbar">
-    <div class="shell shell-wide topbar-inner">
-      <a class="brand" href="#top" aria-label={`Accueil ${page.topbar.brand}`}>
-        <span class="brand-mark" aria-hidden="true">
-          <img
-            src={assetPath("/brand/web/characters/thinking.png")}
-            alt=""
-            loading="eager"
-            decoding="async"
-          />
-        </span>
-        <span class="brand-copy">
-          <span class="brand-title">{page.topbar.brand}</span>
-        </span>
-      </a>
-    </div>
-  </header>
+  <Topbar home />
 
   <main class="page">
     <section class="hero-band" id="top">
