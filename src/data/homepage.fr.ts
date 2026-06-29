@@ -6,12 +6,16 @@ export type NavItem = {
 export type ProofItem = {
   label: string;
   meta: string;
+  status: "descriptor_first";
+  supportedClaim: string;
 };
 
 export type LogoItem = {
   label: string;
   src: string;
   context: string;
+  status: "approved_logo";
+  supportedClaim: string;
 };
 
 export type WorkCard = {
@@ -35,6 +39,8 @@ export type TestimonialCard = {
   quote: string;
   attribution: string;
   meta: string;
+  status: "testimonial_quote";
+  supportedClaim: string;
 };
 
 export type InsightCard = {
@@ -47,11 +53,11 @@ export const homepageFr = {
   meta: {
     title: "The Unreliable Engineer | Clarification SRE, observabilité et positionnement tech",
     description:
-      "Études de cas de 60 minutes pour clarifier un problème de fiabilité, d'observabilité, d'infrastructure ou de positionnement tech avant de choisir la suite.",
+      "Session de 60 minutes pour clarifier un problème de fiabilité, d'observabilité, d'architecture ou de décision technique avant de choisir la suite.",
   },
   topbar: {
     brand: "The Unreliable Engineer",
-    meta: "Clarification / SRE / Observabilité / Positionnement tech",
+    meta: "Session 60 min / SRE / Observabilité / Grands comptes",
     nav: [
       { label: "Offres", href: "#work" },
       { label: "Format", href: "#method" },
@@ -60,39 +66,39 @@ export const homepageFr = {
     ] satisfies NavItem[],
     cta: {
       label: "Réserver 60 minutes",
-      href: "#contact",
+      href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
     },
   },
   hero: {
-    eyebrow: "Clarification technique / SRE / Marché freelance",
-    title: "Mieux formuler le problème. Mieux choisir la suite.",
+    eyebrow: "Session 60 minutes / SRE / observabilité / grands comptes",
+    title: "Clarifier le problème avant d'engager la suite.",
     body:
-      "J'aide les équipes techniques et les profils tech senior à clarifier ce qui bloque vraiment: un système trop bruyant, une observabilité qui n'aide plus à décider, une trajectoire freelance confuse ou une prise de parole qui ne reflète pas encore leur niveau.",
+      "Pour les tech leads, CTO, engineering managers, responsables infra, SRE et observabilité qui doivent trancher dans le flou. Je lis les signaux faibles, les logs humains et les dashboards trop sûrs d'eux pour remettre le vrai problème au centre.",
     primaryCta: {
-      label: "Réserver une étude de cas",
-      href: "#contact",
+      label: "Réserver 60 minutes",
+      href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
     },
     secondaryCta: {
       label: "Voir les preuves",
       href: "#proof",
     },
-    chips: ["60 minutes", "Systèmes & observabilité", "Freelance & marché", "Sans recette magique"],
+    chips: ["grep le vrai problème", "tail -f production", "dashboard != décision"],
     bubble: {
       kicker: "Le principe",
       body:
-        "On ne vient pas chercher une réponse rapide. On vient rendre le problème assez clair pour que les bonnes réponses deviennent visibles.",
+        "Tu viens avec un problème réel, mal cadré ou bloqué. On le rend assez net pour décider de la suite sans vendre une méthode miracle.",
     },
     sticky: {
       kicker: "Post-it",
-      title: "Tu réserves du temps, pas une méthode miracle.",
+      title: "Une heure de clarification, pas une promesse gonflée.",
       body:
-        "Une conversation structurée pour mettre de l'ordre dans un sujet technique, stratégique ou professionnel qui résiste aux réponses toutes faites.",
+        "Une conversation structurée pour remettre de l'ordre dans un sujet de production, d'observabilité, d'architecture ou de positionnement tech qui résiste aux réponses rapides.",
     },
     consultation: {
-      label: "Étude de cas 60 min",
-      caption: "Une session pour clarifier avant d'agir.",
+      label: "Session 60 min",
+      caption: "Une offre principale: clarifier avant d'agir.",
       body:
-        "Tu exposes le contexte, les contraintes et les tensions. On décortique le problème ensemble, sans vendre une solution préfabriquée.",
+        "Tu exposes le contexte, les contraintes et les tensions. On démêle le sujet ensemble pour sortir avec un problème mieux formulé, des arbitrages plus visibles et des prochaines questions plus nettes.",
       points: [
         {
           label: "Entrée",
@@ -108,11 +114,33 @@ export const homepageFr = {
         },
       ],
     },
+    terminal: {
+      title: "ops-console.local",
+      status: "clarification session armed",
+      lines: [
+        {
+          prompt: "$",
+          command: "grep -R \"vrai probleme\" ./prod ./roadmap ./politics",
+          output: "3 suspects, 12 symptômes, 1 décision à isoler",
+        },
+        {
+          prompt: "$",
+          command: "tail -f dashboards.log | filter --not-theater",
+          output: "dashboard != décision; alert != incident",
+        },
+        {
+          prompt: "$",
+          command: "ssh contexte-reel -- 'show constraints'",
+          output: "humain, budget, dette, org, signal faible",
+        },
+      ],
+      badges: ["NO MAGIC FRAMEWORK", "WORKS ON PROD?", "RUNBOOK MENTAL"],
+    },
     proofFlash: {
       kicker: "Références",
-      title: "Orange, Odigo, Enedis.",
+      title: "SRE, observabilité, production, grands comptes.",
       body:
-        "Télécom, énergie, production, plateformes internes, observabilité et DevOps/SRE dans des environnements où le flou coûte cher.",
+        "Orange, Odigo, Enedis: télécom, énergie, systèmes opérationnels et environnements où un mauvais cadrage coûte du temps, de l'argent et de l'attention.",
     },
   },
   proof: {
@@ -122,44 +150,82 @@ export const homepageFr = {
     callout:
       "La valeur attendue n'est pas un avis de plus. C'est une lecture plus claire du problème, de ses contraintes et de ce qu'il rend possible.",
     logos: [
-      { label: "Orange", src: "/brand/logos/orange.jpeg", context: "Télécom / production" },
-      { label: "Odigo", src: "/brand/logos/odigo.jpeg", context: "Systèmes opérationnels" },
-      { label: "Enedis", src: "/brand/logos/enedis.jpeg", context: "Énergie / SI à grande échelle" },
+      {
+        label: "Orange",
+        src: "/brand/logos/orange.jpeg",
+        context: "Télécom / production",
+        status: "approved_logo",
+        supportedClaim: "Expérience production et grands comptes",
+      },
+      {
+        label: "Odigo",
+        src: "/brand/logos/odigo.jpeg",
+        context: "Systèmes opérationnels",
+        status: "approved_logo",
+        supportedClaim: "Systèmes opérationnels et fiabilité",
+      },
+      {
+        label: "Enedis",
+        src: "/brand/logos/enedis.jpeg",
+        context: "Énergie / SI à grande échelle",
+        status: "approved_logo",
+        supportedClaim: "Énergie, SI à grande échelle et observabilité",
+      },
     ] satisfies LogoItem[],
     items: [
-      { label: "Observabilité", meta: "Signal, alerting, pratiques d'équipe" },
-      { label: "SRE / DevOps", meta: "Production, incidents, fiabilité" },
-      { label: "Architecture", meta: "Systèmes internes, flux, dette" },
-      { label: "Positionnement", meta: "Freelance, contenu, perception marché" },
+      {
+        label: "Observabilité",
+        meta: "Signal, alerting, pratiques d'équipe",
+        status: "descriptor_first",
+        supportedClaim: "Clarifier le signal utile avant d'ajouter du dashboard",
+      },
+      {
+        label: "SRE / DevOps",
+        meta: "Production, incidents, fiabilité",
+        status: "descriptor_first",
+        supportedClaim: "Lire les contraintes de production et de fiabilité",
+      },
+      {
+        label: "Architecture",
+        meta: "Systèmes internes, flux, dette",
+        status: "descriptor_first",
+        supportedClaim: "Rendre les arbitrages techniques plus décidables",
+      },
+      {
+        label: "Positionnement",
+        meta: "Freelance, contenu, perception marché",
+        status: "descriptor_first",
+        supportedClaim: "Clarifier la perception stratégique d'un profil senior",
+      },
     ] satisfies ProofItem[],
   },
   work: {
-    tag: "Offres",
-    title: "Trois façons de réserver mon temps.",
+    tag: "Session",
+    title: "Une offre principale: 60 minutes de clarification.",
     intro:
-      "Chaque format part d'un cas concret. Pas de tunnel de conseil, pas de diagnostic standardisé: une heure pour rendre le problème plus lisible.",
+      "Pas trois offres qui se battent entre elles. Une session centrale, puis des cas typiques où elle est utile quand un problème technique, organisationnel ou de positionnement reste mal nommé.",
     featured: {
-      kicker: "Format central",
+      kicker: "main.sh",
       meta: "60 minutes / cas réel / clarification",
-      title: "Étude de cas: poser le bon problème avant de chercher la bonne solution.",
+      title: "Réserver 60 minutes pour grep le bon problème avant de chercher la bonne solution.",
       body:
-        "Tu arrives avec un sujet qui tourne en boucle. On le met à plat, on regarde ce qui est technique, humain, politique, économique ou narratif, puis on extrait les questions qui peuvent vraiment guider la suite.",
+        "Tu arrives avec un sujet qui tourne en boucle. On le met à plat, on distingue ce qui relève de la production, des arbitrages, des contraintes d'équipe ou de la perception marché, puis on extrait les vraies questions qui doivent guider la suite.",
     },
     cards: [
       {
-        kicker: "Système",
-        title: "Fiabilité, incidents, dette infra",
+        kicker: "WARN",
+        title: "Incident fantôme, dette infra",
         body:
           "Pour comprendre pourquoi un système reste fragile, coûteux à opérer ou difficile à reprendre malgré les outils déjà en place.",
       },
       {
-        kicker: "Observabilité",
+        kicker: "TRACE",
         title: "Signal, dashboards, alerting",
         body:
           "Pour distinguer ce qui aide une équipe à décider de ce qui occupe seulement l'interface et les rituels.",
       },
       {
-        kicker: "Positionnement",
+        kicker: "SIDE QUEST",
         title: "Freelance, contenu, perception marché",
         body:
           "Pour passer d'un profil perçu comme exécutant fiable à un interlocuteur plus stratégique, visible et mieux compris.",
@@ -174,25 +240,19 @@ export const homepageFr = {
     steps: [
       {
         index: "01",
-        title: "Exposer le cas",
+        title: "tail -f le réel",
         body:
           "Tu présentes le contexte, les contraintes, ce qui bloque et ce que tu as déjà essayé ou envisagé.",
       },
       {
         index: "02",
-        title: "Démêler les couches",
+        title: "grep les causes",
         body:
-          "On sépare les symptômes, les causes possibles, les tensions d'équipe, les enjeux de décision et les angles morts.",
+          "On sépare les symptômes, les causes possibles, les tensions d'équipe, les enjeux de décision et les hypothèses qui empêchent de voir le vrai sujet.",
       },
       {
         index: "03",
-        title: "Questionner les évidences",
-        body:
-          "On regarde les hypothèses implicites: pourquoi ce problème est formulé comme ça, et ce que cette formulation empêche de voir.",
-      },
-      {
-        index: "04",
-        title: "Extraire des pistes",
+        title: "ship la décision",
         body:
           "Tu repars avec une lecture plus nette, des questions de décision et des options à explorer sans te vendre une recette.",
       },
@@ -233,18 +293,24 @@ export const homepageFr = {
           "Amine est exceptionnellement compétent techniquement et porte une vision stratégique de l'observabilité de premier ordre.",
         attribution: "Amin",
         meta: "Project management · Enedis",
+        status: "testimonial_quote",
+        supportedClaim: "Vision stratégique de l'observabilité",
       },
       {
         quote:
           "Travailler avec Amine, c'est l'assurance d'élever le niveau des discussions, tant sur le plan technique que stratégique.",
         attribution: "Valentin",
         meta: "Expert Observabilité & SRE Freelance · Enedis",
+        status: "testimonial_quote",
+        supportedClaim: "Élévation du niveau de discussion technique et stratégique",
       },
       {
         quote:
           "Amine est un SRE expérimenté que je recommande pour tout projet de solution ou plateformes à échelle.",
         attribution: "Hichem",
         meta: "Software Architect / Engineering Manager · Orange",
+        status: "testimonial_quote",
+        supportedClaim: "Crédibilité SRE et plateformes à échelle",
       },
     ] satisfies TestimonialCard[],
   },
@@ -276,21 +342,21 @@ export const homepageFr = {
   },
   contact: {
     tag: "Commencer ici",
-    title: "Réserve 60 minutes pour mettre ton problème sur la table.",
+    title: "Réserve 60 minutes pour clarifier le problème avant de lancer la machine.",
     bullets: [
       "Un sujet de fiabilité, d'observabilité, d'architecture ou de dette opérationnelle à clarifier",
       "Une trajectoire freelance, contenu ou positionnement à rendre plus lisible",
       "Une conversation exigeante pour mieux définir le problème avant de décider quoi faire",
     ],
     primaryCta: {
-      label: "Réserver une étude de cas",
-      href: "#top",
+      label: "Réserver 60 minutes",
+      href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
     },
     secondaryCta: {
       label: "Voir les témoignages",
       href: "#testimonials",
     },
     note:
-      "Format V1: 60 minutes en visio. Tu viens avec un cas réel; on cherche à mieux le comprendre, pas à cocher une méthode.",
+      "Placeholder de réservation actuel: email direct en attendant une URL de booking dédiée. Format V1: 60 minutes en visio, autour d'un cas réel, pour mieux comprendre avant d'agir.",
   },
 } as const;

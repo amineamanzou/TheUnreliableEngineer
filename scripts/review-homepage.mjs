@@ -26,6 +26,7 @@ for (const target of viewports) {
   const page = await browser.newPage({
     viewport: target.viewport,
     colorScheme: "light",
+    reducedMotion: "reduce",
     deviceScaleFactor: 1,
   });
 
@@ -37,6 +38,59 @@ for (const target of viewports) {
 
   const metrics = await page.evaluate(() => {
     const hero = document.querySelector(".hero");
+    const isAboveFold = (element) => {
+      const rect = element?.getBoundingClientRect();
+      return Boolean(rect) && rect.width > 0 && rect.height > 0 && rect.top < window.innerHeight && rect.bottom > 0;
+    };
+    const textFor = (selector) =>
+      Array.from(document.querySelectorAll(selector))
+        .filter(isAboveFold)
+        .map((element) => element.textContent ?? "")
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+    const offerText = textFor('[data-review="offer"], h1');
+    const audienceText = textFor('[data-review="audience"]');
+    const credibilityText = textFor('[data-review="credibility"], .chips');
+    const primaryBookingLink = Array.from(document.querySelectorAll("a")).find((link) =>
+      /réserver|reserver/.test(link.textContent?.toLowerCase() ?? ""),
+    );
+    const primaryBookingRect = primaryBookingLink?.getBoundingClientRect();
+    const primaryBookingAboveFold =
+      Boolean(primaryBookingLink) &&
+      Boolean(primaryBookingRect) &&
+      primaryBookingRect.top < window.innerHeight &&
+      primaryBookingRect.bottom > 0;
+
+    const focusBefore =
+      primaryBookingLink instanceof HTMLElement
+        ? window.getComputedStyle(primaryBookingLink)
+        : undefined;
+    const focusBeforeBoxShadow = focusBefore?.boxShadow;
+
+    if (primaryBookingLink instanceof HTMLElement) {
+      primaryBookingLink.focus();
+    }
+
+    const focusedElement =
+      document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+    const focusStyle = focusedElement ? window.getComputedStyle(focusedElement) : undefined;
+    const hasVisibleFocus =
+      Boolean(focusedElement) &&
+      ((focusStyle?.outlineStyle !== "none" && focusStyle?.outlineWidth !== "0px") ||
+        (focusStyle?.boxShadow !== "none" && focusStyle?.boxShadow !== focusBeforeBoxShadow));
+    const proofElements = Array.from(
+      document.querySelectorAll("[data-proof-status], [data-supported-claim]"),
+    );
+    const proofGovernance = proofElements.map((element) => ({
+      status: element.getAttribute("data-proof-status"),
+      supportedClaim: element.getAttribute("data-supported-claim"),
+      text: (element.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 80),
+    }));
+    const hasCompleteProofGovernance =
+      proofGovernance.length > 0 &&
+      proofGovernance.every((item) => Boolean(item.status) && Boolean(item.supportedClaim));
 
     return {
       title: document.title,
@@ -47,6 +101,24 @@ for (const target of viewports) {
       hasBubble: Boolean(document.querySelector(".hero-bubble")),
       hasStickyNote: Boolean(document.querySelector(".hero-note")),
       hasPersona: Boolean(document.querySelector(".character-asset")),
+      hasOfferAboveFold: offerText.includes("60 minutes"),
+      hasAudienceAboveFold:
+        audienceText.includes("équipes tech") ||
+        audienceText.includes("equipes tech") ||
+        audienceText.includes("décideurs") ||
+        audienceText.includes("decideurs"),
+      hasCredibilityAboveFold:
+        credibilityText.includes("sre") &&
+        credibilityText.includes("observabilité") &&
+        (credibilityText.includes("grands comptes") ||
+          credibilityText.includes("orange") ||
+          credibilityText.includes("odigo") ||
+          credibilityText.includes("enedis")),
+      hasPrimaryBookingAboveFold: primaryBookingAboveFold,
+      primaryBookingHref: primaryBookingLink?.getAttribute("href") ?? null,
+      hasVisibleFocus,
+      proofGovernance,
+      hasCompleteProofGovernance,
     };
   });
 
@@ -62,6 +134,23 @@ for (const target of viewports) {
         metrics.innerWidth * 0.82
       }px)`,
     );
+  }
+
+  for (const [label, passed] of [
+    ["60-minute offer above fold", metrics.hasOfferAboveFold],
+    ["target audience above fold", metrics.hasAudienceAboveFold],
+    ["credibility proof above fold", metrics.hasCredibilityAboveFold],
+    ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
+    ["visible focus treatment", metrics.hasVisibleFocus],
+    ["complete proof governance", metrics.hasCompleteProofGovernance],
+  ]) {
+    if (!passed) {
+      throw new Error(`${target.name}: missing ${label}`);
+    }
+  }
+
+  if (!metrics.primaryBookingHref || metrics.primaryBookingHref === "#top") {
+    throw new Error(`${target.name}: primary booking CTA points to an invalid href`);
   }
 
   await page.evaluate(async () => {
