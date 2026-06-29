@@ -47,7 +47,7 @@ export const homepageFr = {
     brand: "The Unreliable Engineer",
     meta: "",
     nav: [
-      { label: "Offres", href: "#work" },
+      { label: "Suites", href: "#work" },
       { label: "Preuves", href: "#proof" },
       { label: "Témoignages", href: "#testimonials" },
       { label: "Commencer ici", href: "#contact" },
@@ -76,13 +76,13 @@ export const homepageFr = {
     bubble: {
       kicker: "Point d'entrée",
       body:
-        "Tu viens avec un problème réel, mal cadré ou bloqué. On le rend assez net pour choisir la suite: diagnostic, contenu, introduction, accompagnement ou rien de plus.",
+        "Tu viens avec un problème réel, mal cadré ou bloqué. On le rend assez net pour choisir la suite: cadrage, accompagnement, positionnement, introduction qualifiée ou rien de plus.",
     },
     consultation: {
       label: "Clarifier le problème",
       caption: "Une situation floue n'a pas besoin d'un gros plan. Elle a d'abord besoin d'être lisible.",
       body:
-        "On part du réel: contexte, contraintes, tensions, signaux faibles. Puis on distingue ce qui relève d'un cadrage, d'un accompagnement, d'un positionnement ou d'une mise en relation.",
+        "On part du réel: contexte, contraintes, tensions, signaux faibles. Puis on distingue ce qui relève d'un cadrage, d'un accompagnement, d'un positionnement, d'une opportunité ou d'une mise en relation qualifiée.",
       points: [
         {
           label: "Symptôme",
@@ -160,10 +160,10 @@ export const homepageFr = {
     ] satisfies ProofItem[],
   },
   work: {
-    tag: "Offres",
-    title: "Un point d'entrée, trois suites possibles.",
+    tag: "Suites possibles",
+    title: "Un point d'entrée, quatre suites possibles.",
     intro:
-      "La page ne vend pas quatre services concurrents. Elle vend une capacité: rendre le sujet lisible, puis choisir la bonne suite.",
+      "La page ne vend pas une liste de services concurrents. Elle vend une capacité: rendre le sujet lisible, puis choisir la bonne suite.",
     featured: {
       kicker: "Entrée",
       meta: "60 minutes / cas réel / clarification",
@@ -185,10 +185,16 @@ export const homepageFr = {
           "Une cadence régulière pour challenger les arbitrages, la narration technique, les priorités et les signaux faibles.",
       },
       {
-        kicker: "Opportunités",
-        title: "Positionnement et mise en relation",
+        kicker: "Positionnement",
+        title: "Positionnement et opportunités",
         body:
-          "Clarifier une offre, un récit ou une opportunité avant d'ouvrir les bonnes conversations. La mise en relation vient après le signal.",
+          "Rendre une offre, un récit ou une trajectoire senior plus lisible avant d'ouvrir une opportunité ou de produire du contenu.",
+      },
+      {
+        kicker: "Signal qualifié",
+        title: "Mise en relation qualifiée",
+        body:
+          "Ouvrir une conversation seulement quand le contexte, la valeur et le signal sont assez clairs pour les deux côtés.",
       },
     ] satisfies WorkCard[],
   },
@@ -254,7 +260,7 @@ export const homepageFr = {
     bullets: [
       "Un problème technique ou stratégique à rendre arbitrable",
       "Une offre ou une trajectoire senior à rendre plus lisible",
-      "Une opportunité à qualifier avant d'ouvrir les bonnes conversations",
+      "Une opportunité ou une introduction à qualifier avant d'ouvrir les bonnes conversations",
     ],
     primaryCta: {
       label: "Réserver 60 minutes",

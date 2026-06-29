@@ -27,7 +27,7 @@ The homepage must make five things immediately obvious:
 
 1. The entry point: reserve 60 minutes of clarification.
 2. The audience: technical teams, senior technical profiles, freelancers or decision-makers dealing with a badly framed problem.
-3. The broader offers: short framing, business development / introductions and long-term advisory work.
+3. The possible next steps: technical framing, senior accompaniment, positioning / opportunities and qualified introductions.
 4. The credibility basis: SRE, observability, production, large-account contexts and the ability to turn ambiguity into sharper decisions.
 5. The next action: book the session.
 
@@ -53,7 +53,8 @@ The broader offer map is:
 - **Clarification 60 minutes:** point d'entrée pour formuler le vrai problème, les contraintes et les décisions à isoler.
 - **Cadrage technique:** quelques jours pour cadrer un sujet de fiabilité, d'observabilité, d'architecture, de dette opérationnelle ou d'IA avant d'engager une trajectoire.
 - **Accompagnement senior:** présence régulière auprès d'une équipe, d'un leader technique ou d'un profil senior pour garder le cap, challenger les décisions et transformer la clarté en mouvement.
-- **Positionnement et mise en relation:** aider des profils, indépendants ou équipes à rendre leur valeur lisible et à ouvrir les bonnes conversations seulement quand le signal est clair.
+- **Positionnement et opportunités:** aider des profils, indépendants ou équipes à rendre leur valeur lisible avant d'ouvrir une opportunité ou de produire du contenu.
+- **Mise en relation qualifiée:** ouvrir une conversation seulement quand le contexte, la valeur et le signal sont clairs pour les deux côtés.
 
 ## First Screen Contract
 

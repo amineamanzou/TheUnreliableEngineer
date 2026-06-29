@@ -54,6 +54,13 @@ for (const target of viewports) {
     const offerText = textFor('[data-review="offer"], h1');
     const audienceText = textFor('[data-review="audience"]');
     const postureText = textFor('[data-review="credibility"], h1, .hero-text');
+    const workSectionText = (document.querySelector("#work")?.textContent ?? "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+    const workCardTitles = Array.from(document.querySelectorAll("#work .work-card .card-title")).map((element) =>
+      (element.textContent ?? "").replace(/\s+/g, " ").trim().toLowerCase(),
+    );
     const primaryBookingLink = Array.from(document.querySelectorAll("a")).find((link) =>
       /réserver|reserver/.test(link.textContent?.toLowerCase() ?? ""),
     );
@@ -110,6 +117,22 @@ for (const target of viewports) {
         postureText.includes("amine") ||
         postureText.includes("unreliable engineer") ||
         postureText.includes("problèmes flous"),
+      hasCentralCapability:
+        workSectionText.includes("elle vend une capacité") &&
+        workSectionText.includes("rendre le sujet lisible") &&
+        workSectionText.includes("choisir la bonne suite"),
+      hasExpectedSuiteCount:
+        workSectionText.includes("quatre suites possibles") &&
+        workCardTitles.length === 4 &&
+        workCardTitles.includes("cadrage technique") &&
+        workCardTitles.includes("accompagnement senior") &&
+        workCardTitles.includes("positionnement et opportunités") &&
+        workCardTitles.includes("mise en relation qualifiée"),
+      avoidsServiceMenuFraming:
+        workSectionText.includes("ne vend pas une liste de services concurrents") &&
+        !workSectionText.includes("trois suites possibles") &&
+        !workSectionText.includes("menu de prestations"),
+      workCardTitles,
       hasPrimaryBookingAboveFold: primaryBookingAboveFold,
       primaryBookingHref: primaryBookingLink?.getAttribute("href") ?? null,
       hasVisibleFocus,
@@ -136,6 +159,9 @@ for (const target of viewports) {
     ["60-minute offer above fold", metrics.hasOfferAboveFold],
     ["target audience above fold", metrics.hasAudienceAboveFold],
     ["person/posture above fold", metrics.hasPostureAboveFold],
+    ["central capability framing", metrics.hasCentralCapability],
+    ["four expected next-step suites", metrics.hasExpectedSuiteCount],
+    ["no service-menu framing in suites", metrics.avoidsServiceMenuFraming],
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],

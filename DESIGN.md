@@ -8,6 +8,13 @@ The desired impression is an engineer arriving with a marker, cutting through no
 
 The "wow" layer should feel like observability applied to a fuzzy decision: traces, signal paths, terminal labels, diagnostic nodes and pointer-aware interaction. It should not become a decorative dashboard for its own sake.
 
+## Benchmark Notes
+
+- Recent brand-site trends support sci-fi interface cues, glow effects, detailed microinteractions and cursor interactions when they create immersion and focus. See Webflow's 2025 trend review: https://webflow.com/blog/web-design-trends-2025
+- Use that trend direction only through the brand's own observability language: traces, spans, signal paths and diagnostic states.
+- NN/g's motion guidance is the constraint: animation should be subtle, brief and communicative, mostly as feedback or state/signifier support. See https://www.nngroup.com/articles/animation-purpose-ux/
+- Therefore, the page can use glow, pointer tracking, parallax and signal motion, but only when it makes the clarification metaphor easier to understand.
+
 ## Art Direction Guardrail
 
 The new direction is a clarification and decision dossier, not a stationery theme.
@@ -102,7 +109,8 @@ Recommended composition:
 - Keep clarification 60 minutes as the point of entry.
 - Add technical framing for situations that need more than one hour but not a large mission.
 - Add senior accompaniment for teams, leaders or senior profiles that need regular challenge and continuity.
-- Add positioning / introductions for profiles and teams that need the right conversations, positioning and market access.
+- Add positioning / opportunities for profiles and teams that need clearer market perception.
+- Add qualified introductions only after the signal is clear for both sides.
 - Avoid spammy section names, decorative card grids and repeated labels.
 
 ### Boundaries

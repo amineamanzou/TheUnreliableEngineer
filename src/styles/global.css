@@ -1022,8 +1022,8 @@ h1 {
 }
 
 .work-feature {
-  grid-column: span 5;
-  min-height: 300px;
+  grid-column: span 4;
+  min-height: 280px;
   padding: 32px;
   background:
     linear-gradient(90deg, rgba(16, 16, 16, 0.18) 0 1px, transparent 1px),
@@ -1052,7 +1052,7 @@ h1 {
 }
 
 .work-card {
-  grid-column: span 7;
+  grid-column: span 4;
   min-height: 170px;
   padding: 28px;
   background: var(--paper);
@@ -1064,7 +1064,6 @@ h1 {
 }
 
 .work-card-2 {
-  grid-column: span 6;
   box-shadow: var(--shadow-yellow);
 }
 
@@ -1074,6 +1073,14 @@ h1 {
   background:
     linear-gradient(90deg, rgba(255, 211, 61, 0.32) 0 20px, transparent 20px),
     var(--paper);
+}
+
+.work-card-4 {
+  grid-column: span 6;
+  min-height: 170px;
+  background: var(--ink);
+  box-shadow: var(--shadow-yellow);
+  color: var(--paper);
 }
 
 .boundary-section {
@@ -1153,6 +1160,7 @@ h1 {
 }
 
 .work-feature .card-copy,
+.work-card-4 .card-copy,
 .testimonial-card-1 .quote-byline .meta {
   color: rgba(255, 247, 232, 0.82);
 }
