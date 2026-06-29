@@ -23,7 +23,7 @@ The Unreliable Engineer sells focused strategic and technical clarification for 
 
 The 60-minute session is the main entry point, not the whole product. It gives a fast, concrete way to test the working relationship, expose the real problem and decide whether the next useful move is a short framing engagement, a business introduction, a longer advisory relationship or no further work at all.
 
-The homepage must make four things immediately obvious:
+The homepage must make five things immediately obvious:
 
 1. The entry point: reserve 60 minutes of clarification.
 2. The audience: technical teams, senior technical profiles, freelancers or decision-makers dealing with a badly framed problem.
@@ -46,12 +46,14 @@ The visitor should understand:
 
 The page should not imply that one hour solves a whole system. It should imply that one hour can make the real problem visible enough to stop wasting motion.
 
+The page should also protect against wrong-fit expectations: no 40-page audit promise, no generic coaching, no automatic introduction and no magical AI answer.
+
 The broader offer map is:
 
 - **Clarification 60 minutes:** point d'entrée pour formuler le vrai problème, les contraintes et les décisions à isoler.
-- **Cadrage court / diagnostic:** quelques jours ou semaines pour cadrer un sujet de fiabilité, d'observabilité, d'architecture, de dette opérationnelle ou de positionnement avant d'engager une trajectoire.
-- **Apport d'affaires / mise en relation:** aider des profils, indépendants ou équipes à rendre leur valeur lisible et à créer les bonnes conversations avec le marché.
-- **Accompagnement long terme:** présence régulière auprès d'une équipe, d'un leader technique ou d'un profil senior pour garder le cap, challenger les décisions et transformer la clarté en mouvement.
+- **Cadrage technique:** quelques jours pour cadrer un sujet de fiabilité, d'observabilité, d'architecture, de dette opérationnelle ou d'IA avant d'engager une trajectoire.
+- **Accompagnement senior:** présence régulière auprès d'une équipe, d'un leader technique ou d'un profil senior pour garder le cap, challenger les décisions et transformer la clarté en mouvement.
+- **Positionnement et mise en relation:** aider des profils, indépendants ou équipes à rendre leur valeur lisible et à ouvrir les bonnes conversations seulement quand le signal est clair.
 
 ## First Screen Contract
 

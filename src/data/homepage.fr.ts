@@ -24,6 +24,11 @@ export type WorkCard = {
   body: string;
 };
 
+export type BoundaryItem = {
+  title: string;
+  body: string;
+};
+
 export type TestimonialCard = {
   quote: string;
   attribution: string;
@@ -34,9 +39,9 @@ export type TestimonialCard = {
 
 export const homepageFr = {
   meta: {
-    title: "The Unreliable Engineer | IA, contenu et clarification tech",
+    title: "The Unreliable Engineer | Clarification technique et stratégie lisible",
     description:
-      "Clarification, cadrage, contenu IA et accompagnement pour rendre un problème technique, stratégique ou commercial assez net pour décider.",
+      "Conseil indépendant pour rendre une situation technique ou stratégique confuse assez lisible pour décider la bonne suite.",
   },
   topbar: {
     brand: "The Unreliable Engineer",
@@ -54,12 +59,12 @@ export const homepageFr = {
   },
   hero: {
     eyebrow: "Amine · The Unreliable Engineer",
-    title: "Je clarifie le problème avant de lancer la machine.",
+    title: "Clarifier le vrai sujet avant de lancer la machine.",
     audience:
-      "Pour les équipes tech, profils seniors, indépendants et décideurs qui sentent qu'un sujet résiste aux réponses rapides.",
-    offerLine: "Le point d'entrée: 60 minutes pour clarifier avant de choisir le format.",
+      "Pour les équipes tech, profils seniors, indépendants et décideurs qui doivent rendre une situation confuse lisible et décidable.",
+    offerLine: "Point d'entrée: 60 minutes pour sortir avec une décision plus nette.",
     body:
-      "J'aide à formuler ce qui bloque: un sujet IA, contenu, observabilité, architecture, fiabilité, positionnement ou mise en relation commerciale.",
+      "J'aide à démêler les sujets où architecture, observabilité, IA, contenu et perception marché se mélangent trop vite.",
     primaryCta: {
       label: "Réserver 60 minutes",
       href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
@@ -75,21 +80,25 @@ export const homepageFr = {
     },
     consultation: {
       label: "Clarifier le problème",
-      caption: "60 minutes est le point d'entrée, pas la limite du travail.",
+      caption: "Une situation floue n'a pas besoin d'un gros plan. Elle a d'abord besoin d'être lisible.",
       body:
-        "On part du réel: contexte, contraintes, tensions, signaux faibles. Puis on distingue le sujet à clarifier de ce qui demande un cadrage, une introduction, du contenu ou un accompagnement.",
+        "On part du réel: contexte, contraintes, tensions, signaux faibles. Puis on distingue ce qui relève d'un cadrage, d'un accompagnement, d'un positionnement ou d'une mise en relation.",
       points: [
         {
-          label: "Entrée",
-          value: "Un problème réel, flou, sensible ou bloqué.",
+          label: "Symptôme",
+          value: "Ce que l'équipe répète sans réussir à trancher.",
         },
         {
-          label: "Travail",
-          value: "Nommer les angles morts, les compromis et les questions qui comptent.",
+          label: "Contrainte",
+          value: "Ce qui rend le sujet politique, technique ou commercialement sensible.",
+        },
+        {
+          label: "Décision",
+          value: "Ce qui doit devenir arbitrable avant d'engager du temps, du budget ou une relation.",
         },
         {
           label: "Sortie",
-          value: "Une suite lisible: décider, cadrer, rencontrer, produire ou arrêter.",
+          value: "Clarifier, cadrer, accompagner, connecter ou arrêter proprement.",
         },
       ],
     },
@@ -152,36 +161,60 @@ export const homepageFr = {
   },
   work: {
     tag: "Offres",
-    title: "Quatre façons d'avancer quand le problème devient lisible.",
+    title: "Un point d'entrée, trois suites possibles.",
     intro:
-      "La session de 60 minutes sert de point d'entrée. Selon ce qui apparaît, la suite peut être courte, commerciale, éditoriale ou plus longue.",
+      "La page ne vend pas quatre services concurrents. Elle vend une capacité: rendre le sujet lisible, puis choisir la bonne suite.",
     featured: {
       kicker: "Entrée",
       meta: "60 minutes / cas réel / clarification",
-      title: "Clarification 60 minutes: isoler le vrai problème avant de lancer la machine.",
+      title: "Clarification 60 minutes",
       body:
-        "Tu arrives avec un sujet qui tourne en boucle. On le met à plat, on distingue les symptômes des contraintes, puis on sort avec une formulation plus nette et une prochaine action raisonnable.",
+        "Une session courte pour formuler le problème, les contraintes, les angles morts et la prochaine décision utile.",
     },
     cards: [
       {
         kicker: "Cadrage",
-        title: "Diagnostic court",
+        title: "Cadrage technique",
         body:
-          "Quelques jours ou semaines pour cadrer un sujet de fiabilité, d'observabilité, d'architecture, de dette opérationnelle, d'IA ou de contenu avant de mobiliser plus lourd.",
-      },
-      {
-        kicker: "Business",
-        title: "Apport d'affaires et mise en relation",
-        body:
-          "Pour rendre une valeur technique plus lisible, créer les bonnes conversations et connecter un profil, une équipe ou une offre aux bons interlocuteurs.",
+          "Quelques jours pour transformer un sujet de fiabilité, observabilité, architecture, dette ou IA en plan de décision exploitable.",
       },
       {
         kicker: "Long cours",
-        title: "Accompagnement régulier",
+        title: "Accompagnement senior",
         body:
-          "Pour garder un regard externe sur les décisions, le positionnement, les contenus, les arbitrages techniques et la transformation de la clarté en mouvement.",
+          "Une cadence régulière pour challenger les arbitrages, la narration technique, les priorités et les signaux faibles.",
+      },
+      {
+        kicker: "Opportunités",
+        title: "Positionnement et mise en relation",
+        body:
+          "Clarifier une offre, un récit ou une opportunité avant d'ouvrir les bonnes conversations. La mise en relation vient après le signal.",
       },
     ] satisfies WorkCard[],
+  },
+  boundaries: {
+    tag: "Ce que ce n'est pas",
+    title: "Pas un menu de prestations. Pas une promesse magique.",
+    intro:
+      "Le cadrage protège autant que l'action: parfois la bonne suite est de ne rien lancer, ou de ne pas ouvrir une conversation trop tôt.",
+    items: [
+      {
+        title: "Pas un audit de 40 pages",
+        body: "Le livrable utile est une décision plus claire, pas un document qui rassure sans changer la suite.",
+      },
+      {
+        title: "Pas une promesse IA magique",
+        body: "Si l'IA n'est pas le bon levier, on le dit avant de construire autour d'un buzzword.",
+      },
+      {
+        title: "Pas du coaching flou",
+        body: "La discussion part d'un cas réel: contraintes, signaux, arbitrages, prochaines actions.",
+      },
+      {
+        title: "Pas une mise en relation automatique",
+        body: "Une introduction n'a de valeur que si le signal est clair pour les deux côtés.",
+      },
+    ] satisfies BoundaryItem[],
   },
   testimonials: {
     tag: "Témoignages",
@@ -217,11 +250,11 @@ export const homepageFr = {
   },
   contact: {
     tag: "Commencer ici",
-    title: "Commence par 60 minutes. On verra ensuite si la suite mérite d'exister.",
+    title: "On commence par nommer le sujet. Ensuite on choisit le format.",
     bullets: [
-      "Un sujet IA, contenu, fiabilité, observabilité, architecture ou dette opérationnelle à clarifier",
-      "Une offre, une trajectoire freelance ou une mise en relation à rendre plus lisible",
-      "Une conversation exigeante pour décider s'il faut cadrer, produire, connecter ou s'arrêter là",
+      "Un problème technique ou stratégique à rendre arbitrable",
+      "Une offre ou une trajectoire senior à rendre plus lisible",
+      "Une opportunité à qualifier avant d'ouvrir les bonnes conversations",
     ],
     primaryCta: {
       label: "Réserver 60 minutes",
