@@ -47,3 +47,20 @@ Concrètement :
 2. Remplacer les placeholders du hero, des missions et des témoignages.
 3. Brancher l'URL réelle de prise de rendez-vous Google.
 4. Générer les premiers assets du hero.
+
+## Preview GitHub Pages
+
+Le workflow `.github/workflows/deploy-pages.yml` publie la version statique sur
+GitHub Pages pour prévisualisation:
+
+`https://amineamanzou.github.io/TheUnreliableEngineer/`
+
+Avant la première publication, ouvrir les settings du repository sur GitHub,
+aller dans **Pages**, puis choisir **GitHub Actions** comme source. Le workflow
+se lance à chaque push sur `main` et peut aussi être lancé manuellement depuis
+l'onglet **Actions**.
+
+Si GitHub affiche une erreur du type `Invalid YAML front matter in
+src/pages/index.astro`, c'est que Pages essaie de lancer Jekyll sur les sources
+Astro. Repasser la source Pages sur **GitHub Actions**; les fichiers `.nojekyll`
+servent de garde-fou pour l'artifact généré.
