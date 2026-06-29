@@ -198,9 +198,9 @@ for (const target of viewports) {
       socialLinks,
       hasSocialSignal:
         socialStats.length === 3 &&
-        socialStats.some((stat) => stat.countTo === 350) &&
-        socialStats.some((stat) => stat.countTo === 326000) &&
-        socialStats.some((stat) => stat.countTo === 550) &&
+        socialStats.some((stat) => stat.countTo === 409) &&
+        socialStats.some((stat) => stat.countTo === 527032) &&
+        socialStats.some((stat) => stat.countTo === 22069) &&
         socialStatDetails.length === 0 &&
         socialLinks.includes("https://www.linkedin.com/in/amineamanzou/") &&
         socialLinks.includes("https://www.tiktok.com/@theunreliableengi") &&
