@@ -395,8 +395,11 @@ const terminalArticlesJson = JSON.stringify(articles);
     button.addEventListener("click", () => {
       const command = button.getAttribute("data-terminal-command") ?? "ls";
       if (terminalInput) {
-        terminalInput.value = command;
+        terminalInput.value = ["open", "read", "cat"].includes(command) ? `${command} ` : command;
         terminalInput.focus();
+      }
+      if (["open", "read", "cat"].includes(command)) {
+        return;
       }
       submitCommand(command);
     });
