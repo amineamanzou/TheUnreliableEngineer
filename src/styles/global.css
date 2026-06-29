@@ -944,17 +944,22 @@ h1 {
 
 .proof-rail {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border: 4px solid rgba(255, 247, 232, 0.18);
+  background: rgba(255, 247, 232, 0.045);
 }
 
 .proof-item {
-  min-height: 132px;
-  padding: 18px;
-  border: 5px solid var(--ink);
-  background: var(--paper);
-  box-shadow: 6px 6px 0 var(--accent);
-  color: var(--ink);
+  display: grid;
+  grid-template-columns: minmax(130px, 0.36fr) minmax(0, 0.74fr);
+  gap: 4px 16px;
+  min-height: 0;
+  padding: 14px 16px;
+  border: 0;
+  border-top: 2px solid rgba(255, 247, 232, 0.14);
+  background: transparent;
+  color: var(--paper);
   font-size: 0.78rem;
   text-transform: uppercase;
   transition:
@@ -965,20 +970,32 @@ h1 {
 
 .proof-item::before {
   content: attr(data-proof-status);
-  display: block;
+  display: inline-flex;
+  grid-column: 1 / -1;
   width: fit-content;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
   padding: 4px 6px;
-  background: var(--ink);
+  background: rgba(255, 247, 232, 0.1);
   color: var(--signal);
   font-family: "Courier New", monospace;
   font-size: 0.62rem;
 }
 
+.proof-item:nth-child(odd) {
+  border-right: 2px solid rgba(255, 247, 232, 0.14);
+}
+
+.proof-item strong {
+  color: var(--paper);
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1;
+}
+
 .proof-item span {
-  display: block;
-  margin-top: 8px;
-  color: var(--ink-soft);
+  display: inline;
+  margin-top: 0;
+  color: rgba(255, 247, 232, 0.76);
   font-size: 0.86rem;
   font-weight: 700;
   text-transform: none;
@@ -986,14 +1003,16 @@ h1 {
 
 .proof-item small {
   display: block;
-  margin-top: 12px;
+  grid-column: 2;
+  margin-top: 2px;
+  color: rgba(255, 247, 232, 0.62);
   text-transform: none;
 }
 
 .proof-item:hover {
-  background: var(--signal);
-  box-shadow: 10px 10px 0 var(--accent);
-  transform: translate(-3px, -3px);
+  background: rgba(255, 211, 61, 0.1);
+  box-shadow: none;
+  transform: none;
 }
 
 .section-block {
@@ -1547,6 +1566,18 @@ h1 {
 
   .proof-rail {
     grid-template-columns: 1fr;
+  }
+
+  .proof-item {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-item:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .proof-item small {
+    grid-column: 1;
   }
 
   .boundary-list li {
