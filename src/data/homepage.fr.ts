@@ -24,14 +24,8 @@ export type WorkCard = {
   body: string;
 };
 
-export type MethodStep = {
-  index: string;
+export type BoundaryItem = {
   title: string;
-  body: string;
-};
-
-export type AudienceCard = {
-  labels: string[];
   body: string;
 };
 
@@ -43,26 +37,20 @@ export type TestimonialCard = {
   supportedClaim: string;
 };
 
-export type InsightCard = {
-  kicker: string;
-  title: string;
-  body: string;
-};
-
 export const homepageFr = {
   meta: {
-    title: "The Unreliable Engineer | Clarification SRE, observabilité et positionnement tech",
+    title: "The Unreliable Engineer | Clarification technique et stratégie lisible",
     description:
-      "Session de 60 minutes pour clarifier un problème de fiabilité, d'observabilité, d'architecture ou de décision technique avant de choisir la suite.",
+      "Conseil indépendant pour rendre une situation technique ou stratégique confuse assez lisible pour décider la bonne suite.",
   },
   topbar: {
     brand: "The Unreliable Engineer",
-    meta: "Session 60 min / SRE / Observabilité / Grands comptes",
+    meta: "",
     nav: [
-      { label: "Offres", href: "#work" },
-      { label: "Format", href: "#method" },
+      { label: "Suites", href: "#work" },
       { label: "Preuves", href: "#proof" },
       { label: "Témoignages", href: "#testimonials" },
+      { label: "Commencer ici", href: "#contact" },
     ] satisfies NavItem[],
     cta: {
       label: "Réserver 60 minutes",
@@ -70,10 +58,13 @@ export const homepageFr = {
     },
   },
   hero: {
-    eyebrow: "Session 60 minutes / SRE / observabilité / grands comptes",
-    title: "Clarifier le problème avant d'engager la suite.",
+    eyebrow: "Amine · The Unreliable Engineer",
+    title: "Clarifier le vrai sujet avant de lancer la machine.",
+    audience:
+      "Pour les équipes tech, profils seniors, indépendants et décideurs qui doivent rendre une situation confuse lisible et décidable.",
+    offerLine: "Point d'entrée: 60 minutes pour sortir avec une décision plus nette.",
     body:
-      "Pour les tech leads, CTO, engineering managers, responsables infra, SRE et observabilité qui doivent trancher dans le flou. Je lis les signaux faibles, les logs humains et les dashboards trop sûrs d'eux pour remettre le vrai problème au centre.",
+      "J'aide à démêler les sujets où architecture, observabilité, IA, contenu et perception marché se mélangent trop vite.",
     primaryCta: {
       label: "Réserver 60 minutes",
       href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
@@ -82,65 +73,29 @@ export const homepageFr = {
       label: "Voir les preuves",
       href: "#proof",
     },
-    chips: ["grep le vrai problème", "tail -f production", "dashboard != décision"],
-    bubble: {
-      kicker: "Le principe",
-      body:
-        "Tu viens avec un problème réel, mal cadré ou bloqué. On le rend assez net pour décider de la suite sans vendre une méthode miracle.",
-    },
-    sticky: {
-      kicker: "Post-it",
-      title: "Une heure de clarification, pas une promesse gonflée.",
-      body:
-        "Une conversation structurée pour remettre de l'ordre dans un sujet de production, d'observabilité, d'architecture ou de positionnement tech qui résiste aux réponses rapides.",
-    },
     consultation: {
-      label: "Session 60 min",
-      caption: "Une offre principale: clarifier avant d'agir.",
+      label: "Clarifier le problème",
+      caption: "Une situation floue n'a pas besoin d'un gros plan. Elle a d'abord besoin d'être lisible.",
       body:
-        "Tu exposes le contexte, les contraintes et les tensions. On démêle le sujet ensemble pour sortir avec un problème mieux formulé, des arbitrages plus visibles et des prochaines questions plus nettes.",
+        "On part du réel: contexte, contraintes, tensions, signaux faibles. Puis on distingue ce qui relève d'un cadrage, d'un accompagnement, d'un positionnement, d'une opportunité ou d'une mise en relation qualifiée.",
       points: [
         {
-          label: "Entrée",
-          value: "Un problème réel, flou, sensible ou bloqué.",
+          label: "Symptôme",
+          value: "Ce que l'équipe répète sans réussir à trancher.",
         },
         {
-          label: "Travail",
-          value: "Nommer les angles morts, les compromis et les questions qui comptent.",
+          label: "Contrainte",
+          value: "Ce qui rend le sujet politique, technique ou commercialement sensible.",
+        },
+        {
+          label: "Décision",
+          value: "Ce qui doit devenir arbitrable avant d'engager du temps, du budget ou une relation.",
         },
         {
           label: "Sortie",
-          value: "Des pistes de lecture et de décision plus nettes.",
+          value: "Clarifier, cadrer, accompagner, connecter ou arrêter proprement.",
         },
       ],
-    },
-    terminal: {
-      title: "ops-console.local",
-      status: "clarification session armed",
-      lines: [
-        {
-          prompt: "$",
-          command: "grep -R \"vrai probleme\" ./prod ./roadmap ./politics",
-          output: "3 suspects, 12 symptômes, 1 décision à isoler",
-        },
-        {
-          prompt: "$",
-          command: "tail -f dashboards.log | filter --not-theater",
-          output: "dashboard != décision; alert != incident",
-        },
-        {
-          prompt: "$",
-          command: "ssh contexte-reel -- 'show constraints'",
-          output: "humain, budget, dette, org, signal faible",
-        },
-      ],
-      badges: ["NO MAGIC FRAMEWORK", "WORKS ON PROD?", "RUNBOOK MENTAL"],
-    },
-    proofFlash: {
-      kicker: "Références",
-      title: "SRE, observabilité, production, grands comptes.",
-      body:
-        "Orange, Odigo, Enedis: télécom, énergie, systèmes opérationnels et environnements où un mauvais cadrage coûte du temps, de l'argent et de l'attention.",
     },
   },
   proof: {
@@ -200,87 +155,67 @@ export const homepageFr = {
     ] satisfies ProofItem[],
   },
   work: {
-    tag: "Session",
-    title: "Une offre principale: 60 minutes de clarification.",
+    tag: "Suites possibles",
+    title: "Un point d'entrée, quatre suites possibles.",
     intro:
-      "Pas trois offres qui se battent entre elles. Une session centrale, puis des cas typiques où elle est utile quand un problème technique, organisationnel ou de positionnement reste mal nommé.",
+      "La page ne vend pas une liste de services concurrents. Elle vend une capacité: rendre le sujet lisible, puis choisir la bonne suite.",
     featured: {
-      kicker: "main.sh",
+      kicker: "Entrée",
       meta: "60 minutes / cas réel / clarification",
-      title: "Réserver 60 minutes pour grep le bon problème avant de chercher la bonne solution.",
+      title: "Clarification 60 minutes",
       body:
-        "Tu arrives avec un sujet qui tourne en boucle. On le met à plat, on distingue ce qui relève de la production, des arbitrages, des contraintes d'équipe ou de la perception marché, puis on extrait les vraies questions qui doivent guider la suite.",
+        "Une session courte pour formuler le problème, les contraintes, les angles morts et la prochaine décision utile.",
     },
     cards: [
       {
-        kicker: "WARN",
-        title: "Incident fantôme, dette infra",
+        kicker: "Cadrage",
+        title: "Cadrage technique",
         body:
-          "Pour comprendre pourquoi un système reste fragile, coûteux à opérer ou difficile à reprendre malgré les outils déjà en place.",
+          "Quelques jours pour transformer un sujet de fiabilité, observabilité, architecture, dette ou IA en plan de décision exploitable.",
       },
       {
-        kicker: "TRACE",
-        title: "Signal, dashboards, alerting",
+        kicker: "Long cours",
+        title: "Accompagnement senior",
         body:
-          "Pour distinguer ce qui aide une équipe à décider de ce qui occupe seulement l'interface et les rituels.",
+          "Une cadence régulière pour challenger les arbitrages, la narration technique, les priorités et les signaux faibles.",
       },
       {
-        kicker: "SIDE QUEST",
-        title: "Freelance, contenu, perception marché",
+        kicker: "Positionnement",
+        title: "Positionnement et opportunités",
         body:
-          "Pour passer d'un profil perçu comme exécutant fiable à un interlocuteur plus stratégique, visible et mieux compris.",
+          "Rendre une offre, un récit ou une trajectoire senior plus lisible avant d'ouvrir une opportunité ou de produire du contenu.",
+      },
+      {
+        kicker: "Signal qualifié",
+        title: "Mise en relation qualifiée",
+        body:
+          "Ouvrir une conversation seulement quand le contexte, la valeur et le signal sont assez clairs pour les deux côtés.",
       },
     ] satisfies WorkCard[],
   },
-  method: {
-    tag: "Format",
-    title: "Une heure pour mieux penser le problème.",
+  boundaries: {
+    tag: "Ce que ce n'est pas",
+    title: "Pas un menu de prestations. Pas une promesse magique.",
     intro:
-      "Le but n'est pas de repartir avec une injonction. Le but est de mieux comprendre ce qui rend le sujet difficile, puis de faire émerger des éléments de réponse plus solides.",
-    steps: [
+      "Le cadrage protège autant que l'action: parfois la bonne suite est de ne rien lancer, ou de ne pas ouvrir une conversation trop tôt.",
+    items: [
       {
-        index: "01",
-        title: "tail -f le réel",
-        body:
-          "Tu présentes le contexte, les contraintes, ce qui bloque et ce que tu as déjà essayé ou envisagé.",
+        title: "Pas un audit de 40 pages",
+        body: "Le livrable utile est une décision plus claire, pas un document qui rassure sans changer la suite.",
       },
       {
-        index: "02",
-        title: "grep les causes",
-        body:
-          "On sépare les symptômes, les causes possibles, les tensions d'équipe, les enjeux de décision et les hypothèses qui empêchent de voir le vrai sujet.",
+        title: "Pas une promesse IA magique",
+        body: "Si l'IA n'est pas le bon levier, on le dit avant de construire autour d'un buzzword.",
       },
       {
-        index: "03",
-        title: "ship la décision",
-        body:
-          "Tu repars avec une lecture plus nette, des questions de décision et des options à explorer sans te vendre une recette.",
-      },
-    ] satisfies MethodStep[],
-  },
-  editorial: {
-    tag: "Pour qui",
-    title: "Même mécanique: clarifier ce qui est mal nommé.",
-    intro:
-      "Les sujets changent, mais le travail reste le même: faire apparaître les tensions, les compromis et les décisions cachées derrière un problème trop vite résumé.",
-    featureLabel: "Technique / marché / narration",
-    featureTitle: "Le problème n'est pas toujours là où il a l'air d'être.",
-    featureBody:
-      "Un sujet d'observabilité peut être un sujet de décision. Un sujet freelance peut être un sujet de perception. Un sujet contenu peut être un sujet d'offre.",
-    featureNote:
-      "C'est précisément ce mélange entre technique, stratégie et lecture du marché qui rend la conversation utile.",
-    cards: [
-      {
-        labels: ["Équipes tech", "CTO", "Engineering managers"],
-        body:
-          "Pour clarifier un sujet de production, d'observabilité, de fiabilité, de dette infra ou d'arbitrage technique.",
+        title: "Pas du coaching flou",
+        body: "La discussion part d'un cas réel: contraintes, signaux, arbitrages, prochaines actions.",
       },
       {
-        labels: ["Freelances tech", "Salariés en transition", "Seniors"],
-        body:
-          "Pour travailler l'offre, la posture, le contenu et la perception: exécutant fiable, expert visible ou interlocuteur stratégique.",
+        title: "Pas une mise en relation automatique",
+        body: "Une introduction n'a de valeur que si le signal est clair pour les deux côtés.",
       },
-    ] satisfies AudienceCard[],
+    ] satisfies BoundaryItem[],
   },
   testimonials: {
     tag: "Témoignages",
@@ -314,39 +249,13 @@ export const homepageFr = {
       },
     ] satisfies TestimonialCard[],
   },
-  insights: {
-    tag: "Notes",
-    title: "Contenu, signal et perception.",
-    intro:
-      "Les contenus publics prolongent le même travail: rendre lisible ce qui est souvent confus dans les systèmes, les carrières et les marchés techniques.",
-    cards: [
-      {
-        kicker: "Observabilité",
-        title: "Voir la différence entre signal utile et décoration d'interface",
-        body:
-          "Réflexions sur les dashboards, alertes et habitudes qui donnent l'impression de comprendre sans toujours aider à décider.",
-      },
-      {
-        kicker: "Freelance",
-        title: "Passer de l'exécution fiable à la valeur stratégique",
-        body:
-          "Angles, offres et prises de parole pour mieux faire percevoir le jugement derrière le travail technique.",
-      },
-      {
-        kicker: "Leadership",
-        title: "Formuler ce qu'on voit avant de demander à être écouté",
-        body:
-          "Le contenu devient utile quand il montre une capacité de lecture, pas seulement une liste de compétences.",
-      },
-    ] satisfies InsightCard[],
-  },
   contact: {
     tag: "Commencer ici",
-    title: "Réserve 60 minutes pour clarifier le problème avant de lancer la machine.",
+    title: "On commence par nommer le sujet. Ensuite on choisit le format.",
     bullets: [
-      "Un sujet de fiabilité, d'observabilité, d'architecture ou de dette opérationnelle à clarifier",
-      "Une trajectoire freelance, contenu ou positionnement à rendre plus lisible",
-      "Une conversation exigeante pour mieux définir le problème avant de décider quoi faire",
+      "Un problème technique ou stratégique à rendre arbitrable",
+      "Une offre ou une trajectoire senior à rendre plus lisible",
+      "Une opportunité ou une introduction à qualifier avant d'ouvrir les bonnes conversations",
     ],
     primaryCta: {
       label: "Réserver 60 minutes",
