@@ -1,0 +1,38 @@
+---
+import Topbar from "../../components/Topbar.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Internet deleted | The Unreliable Engineer"
+  description="Easter egg terminal du blog The Unreliable Engineer."
+>
+  <Topbar />
+
+  <main class="page deleted-page">
+    <section class="section-block deleted-section" id="top">
+      <div class="shell shell-wide">
+        <div class="panel deleted-panel">
+          <div class="terminal-bar" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>root@internet:/</strong>
+          </div>
+          <div class="deleted-console">
+            <p><span>$</span> rm -rf /</p>
+            <p><strong>internet</strong> deleted</p>
+            <p><strong>dns</strong> gone</p>
+            <p><strong>memes</strong> temporarily unavailable</p>
+            <p><strong>linkedin</strong> 404, probably healthier this way</p>
+            <p><strong>rollback</strong> restore from cache?</p>
+          </div>
+          <div class="deleted-actions">
+            <a class="button button-primary" href="../">Restaurer le blog</a>
+            <a class="button button-secondary" href="../../">Retour au site</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

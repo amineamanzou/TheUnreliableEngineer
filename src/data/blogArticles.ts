@@ -2,6 +2,7 @@ export type BlogArticle = {
   slug: string;
   label: string;
   title: string;
+  publishedAt: string;
   date: string;
   readTime: string;
   sourceUrl: string;
@@ -15,6 +16,7 @@ export const blogArticles = [
     slug: "opamp-fleet-management-agents",
     label: "OpAMP / Fleet management",
     title: "Qui utilise vraiment OpAMP pour gérer ses agents ?",
+    publishedAt: "2026-06-29",
     date: "29 juin 2026",
     readTime: "11 min",
     sourceUrl:
@@ -33,6 +35,7 @@ export const blogArticles = [
     slug: "observabilite-deck-tracker-developpeur",
     label: "Observabilité / Hearthstone",
     title: "L'Observabilité, le Deck Tracker du Développeur ?",
+    publishedAt: "2025-04-14",
     date: "14 avril 2025",
     readTime: "5 min",
     sourceUrl:

@@ -1,10 +1,25 @@
 ---
+import PersonaPlaceholder from "../components/PersonaPlaceholder.astro";
 import Topbar from "../components/Topbar.astro";
 import { blogArticles } from "../data/blogArticles";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const assetPath = (path: string) =>
   path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
+const sortedArticles = [...blogArticles].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+const initialArticles = sortedArticles.slice(0, 5);
+const terminalArticles = sortedArticles.map((article) => ({
+  slug: article.slug,
+  label: article.label,
+  title: article.title,
+  publishedAt: article.publishedAt,
+  date: article.date,
+  readTime: article.readTime,
+  excerpt: article.excerpt,
+  href: assetPath(`/blog/${article.slug}/`),
+}));
+const terminalArticlesJson = JSON.stringify(terminalArticles);
+const internetDeletedHref = assetPath("/blog/internet-deleted/");
 ---
 
 <BaseLayout
@@ -16,30 +31,54 @@ const assetPath = (path: string) =>
   <main class="page blog-page">
     <section class="blog-hero-band" id="top">
       <div class="shell shell-wide blog-hero">
-        <article class="panel blog-hero-copy">
-          <div class="stack">
-            <div class="section-tag section-tag-light">Blog</div>
-            <h1>Un endroit à moi pour les textes qui doivent durer.</h1>
-            <p class="hero-text">
-              Les réseaux sociaux sont utiles pour distribuer. Ils ne doivent pas décider où vit la pensée
-              longue: architecture, observabilité, IA, production, indépendance et notes de terrain.
-            </p>
-          </div>
-        </article>
-
-        <aside class="panel blog-console" aria-label="Statut éditorial">
+        <section class="panel blog-terminal-panel" aria-label="Terminal de recherche du blog">
           <div class="terminal-bar" aria-hidden="true">
             <span></span>
             <span></span>
             <span></span>
-            <strong>blog.bootstrap</strong>
+            <strong>~/articles</strong>
           </div>
-          <div class="blog-console-body">
-            <p><strong>status</strong> 2 articles importés</p>
-            <p><strong>source</strong> LinkedIn + site</p>
-            <p><strong>platform_lock_in</strong> false</p>
-            <p><strong>latest</strong> 29 juin 2026</p>
+          <div class="blog-terminal-screen" data-terminal-output>
+            <p><span>$</span> ls</p>
+            {terminalArticles.map((article) => (
+              <p class="terminal-result">
+                <span>{article.publishedAt}</span>
+                <strong>{article.title}</strong>
+              </p>
+            ))}
+            <p><span>$</span> rg "OpAMP"</p>
+            <p class="terminal-result">
+              <strong>{terminalArticles[0]?.title}</strong>
+              <small>{terminalArticles[0]?.excerpt}</small>
+            </p>
           </div>
+          <form class="blog-terminal-input" data-terminal-form>
+            <label for="blog-terminal-command">$</label>
+            <input
+              id="blog-terminal-command"
+              name="command"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              value="fzf"
+              aria-label="Commande terminal"
+            />
+            <button type="submit">run</button>
+          </form>
+          <div class="terminal-command-rail" aria-label="Commandes disponibles">
+            {["fzf", "ls", "find", "rg", "ripgrep", "read", "cat"].map((command) => (
+              <button type="button" data-terminal-command={command}>{command}</button>
+            ))}
+          </div>
+        </section>
+
+        <aside class="blog-character-stage" aria-label="The Unreliable Engineer réfléchit aux articles">
+          <PersonaPlaceholder
+            src="/brand/web/characters/thinking.png"
+            alt="The Unreliable Engineer réfléchit devant le terminal du blog"
+            class="blog-thinking-character"
+            loading="eager"
+          />
         </aside>
       </div>
     </section>
@@ -49,7 +88,7 @@ const assetPath = (path: string) =>
         <div class="section-heading">
           <div class="stack">
             <div class="section-tag">À publier ici</div>
-            <h2 class="section-title">Les deux derniers articles publiés.</h2>
+            <h2 class="section-title">Articles publiés.</h2>
           </div>
           <p class="lede">
             LinkedIn reste une surface de distribution. Le site devient la base qui garde les textes visibles,
@@ -57,8 +96,8 @@ const assetPath = (path: string) =>
           </p>
         </div>
 
-        <div class="blog-card-grid">
-          {blogArticles.map((article) => (
+        <div class="blog-card-grid" data-blog-list>
+          {initialArticles.map((article) => (
             <a class="panel blog-card" href={assetPath(`/blog/${article.slug}/`)}>
               <span class="kicker">{article.label}</span>
               <div class="article-meta">
@@ -71,7 +110,166 @@ const assetPath = (path: string) =>
             </a>
           ))}
         </div>
+        <div class="blog-load-sentinel" data-blog-sentinel aria-hidden="true"></div>
       </div>
     </section>
   </main>
+
+  <script is:inline define:vars={{ terminalArticlesJson, internetDeletedHref }}>
+    const articles = JSON.parse(terminalArticlesJson);
+    const terminalOutput = document.querySelector("[data-terminal-output]");
+    const terminalForm = document.querySelector("[data-terminal-form]");
+    const terminalInput = terminalForm?.querySelector("input");
+    const commandButtons = Array.from(document.querySelectorAll("[data-terminal-command]"));
+    const blogList = document.querySelector("[data-blog-list]");
+    const sentinel = document.querySelector("[data-blog-sentinel]");
+    let renderedCount = Math.min(5, articles.length);
+
+    const escapeHtml = (value) =>
+      String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+
+    const renderArticleLine = (article, index) =>
+      `<p class="terminal-result"><span>${index + 1}</span><strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(
+        article.label,
+      )} · ${escapeHtml(article.date)} · ${escapeHtml(article.readTime)}</small></p>`;
+
+    const renderRead = (article) =>
+      `<p class="terminal-result terminal-read"><strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(
+        article.excerpt,
+      )}</small><a href="${article.href}">open ${escapeHtml(article.slug)}</a></p>`;
+
+    const findArticle = (query) => {
+      const normalized = query.trim().toLowerCase();
+      if (!normalized) {
+        return articles[0];
+      }
+
+      return articles.find((article) =>
+        [article.title, article.label, article.excerpt, article.slug].some((field) =>
+          field.toLowerCase().includes(normalized),
+        ),
+      );
+    };
+
+    const runTerminalCommand = (rawCommand) => {
+      const command = rawCommand.trim();
+      const [name, ...rest] = command.split(/\s+/);
+      const query = rest.join(" ").replace(/^["']|["']$/g, "");
+
+      if (!terminalOutput || !name) {
+        return;
+      }
+
+      if (command === "rm -rf /") {
+        terminalOutput.insertAdjacentHTML(
+          "beforeend",
+          '<p><span>$</span> rm -rf /</p><p class="terminal-result"><strong>internet:</strong><small>deleting indexes, memes, DNS caches...</small></p>',
+        );
+        window.setTimeout(() => {
+          window.location.href = internetDeletedHref;
+        }, 650);
+        return;
+      }
+
+      let html = `<p><span>$</span> ${escapeHtml(command)}</p>`;
+
+      if (name === "ls") {
+        html += articles.map(renderArticleLine).join("");
+      } else if (name === "fzf" || name === "find") {
+        const matches = query
+          ? articles.filter((article) =>
+              [article.title, article.label, article.excerpt, article.slug].some((field) =>
+                field.toLowerCase().includes(query.toLowerCase()),
+              ),
+            )
+          : articles;
+        html += matches.length
+          ? matches.map(renderArticleLine).join("")
+          : '<p class="terminal-result"><strong>0 match</strong><small>try rg "observabilité"</small></p>';
+      } else if (name === "rg" || name === "ripgrep") {
+        const matches = articles.filter((article) =>
+          [article.title, article.label, article.excerpt].some((field) =>
+            field.toLowerCase().includes(query.toLowerCase()),
+          ),
+        );
+        html += matches.length
+          ? matches.map(renderRead).join("")
+          : '<p class="terminal-result"><strong>no matches</strong><small>ripgrep returned 1</small></p>';
+      } else if (name === "read" || name === "cat") {
+        const article = findArticle(query);
+        html += article
+          ? renderRead(article)
+          : '<p class="terminal-result"><strong>file not found</strong><small>ls articles first</small></p>';
+      } else {
+        html += '<p class="terminal-result"><strong>command not found</strong><small>try fzf, ls, find, rg, ripgrep, read, cat</small></p>';
+      }
+
+      terminalOutput.insertAdjacentHTML("beforeend", html);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    };
+
+    terminalForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      runTerminalCommand(terminalInput?.value ?? "");
+      if (terminalInput) {
+        terminalInput.value = "";
+        terminalInput.focus();
+      }
+    });
+
+    commandButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const command = button.getAttribute("data-terminal-command") ?? "ls";
+        if (terminalInput) {
+          terminalInput.value = command === "read" || command === "cat" ? `${command} ${articles[0]?.slug ?? ""}` : command;
+        }
+        runTerminalCommand(terminalInput?.value ?? command);
+      });
+    });
+
+    const renderBlogCard = (article) => {
+      const link = document.createElement("a");
+      link.className = "panel blog-card";
+      link.href = article.href;
+      link.innerHTML = `
+        <span class="kicker">${escapeHtml(article.label)}</span>
+        <div class="article-meta">
+          <span>${escapeHtml(article.date)}</span>
+          <span>${escapeHtml(article.readTime)}</span>
+        </div>
+        <h3 class="card-title">${escapeHtml(article.title)}</h3>
+        <p class="card-copy">${escapeHtml(article.excerpt)}</p>
+        <span class="quote-link-label">Lire sur le site</span>
+      `;
+      return link;
+    };
+
+    const loadMoreArticles = () => {
+      if (!blogList || renderedCount >= articles.length) {
+        sentinel?.remove();
+        return;
+      }
+
+      const nextArticles = articles.slice(renderedCount, renderedCount + 5);
+      nextArticles.forEach((article) => blogList.append(renderBlogCard(article)));
+      renderedCount += nextArticles.length;
+
+      if (renderedCount >= articles.length) {
+        sentinel?.remove();
+      }
+    };
+
+    if (sentinel && "IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          loadMoreArticles();
+        }
+      });
+      observer.observe(sentinel);
+    }
+  </script>
 </BaseLayout>
