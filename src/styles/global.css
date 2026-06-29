@@ -1076,10 +1076,6 @@ h1 {
   margin-top: 58px;
 }
 
-.boundary-heading {
-  align-items: start;
-}
-
 .boundary-console {
   display: grid;
   padding: 0;
