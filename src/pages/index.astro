@@ -12,7 +12,14 @@ const assetPath = (path: string) =>
   <header class="topbar">
     <div class="shell shell-wide topbar-inner">
       <a class="brand" href="#top" aria-label={`Accueil ${page.topbar.brand}`}>
-        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">
+          <img
+            src={assetPath("/brand/web/characters/thinking.png")}
+            alt=""
+            loading="eager"
+            decoding="async"
+          />
+        </span>
         <span class="brand-copy">
           <span class="brand-title">{page.topbar.brand}</span>
         </span>
