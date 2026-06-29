@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "review:homepage": "node scripts/review-homepage.mjs"
+    "review:homepage": "node scripts/review-homepage.mjs",
+    "review:blog": "node scripts/review-blog.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
