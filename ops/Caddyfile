@@ -6,6 +6,7 @@
 :8080 {
   root * /srv
   encode zstd gzip
+  respond /healthz 200
   file_server
 
   header {
