@@ -57,8 +57,8 @@ GitHub Pages pour prévisualisation:
 
 Avant la première publication, ouvrir les settings du repository sur GitHub,
 aller dans **Pages**, puis choisir **GitHub Actions** comme source. Le workflow
-se lance à chaque push sur `main` et peut aussi être lancé manuellement depuis
-l'onglet **Actions**.
+sert de préproduction et se lance à chaque push sur `dev`; il peut aussi être
+lancé manuellement depuis l'onglet **Actions**.
 
 Si GitHub affiche une erreur du type `Invalid YAML front matter in
 src/pages/index.astro`, c'est que Pages essaie de lancer Jekyll sur les sources
