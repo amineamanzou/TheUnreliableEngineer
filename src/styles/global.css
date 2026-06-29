@@ -1023,6 +1023,9 @@ h1 {
 
 .work-feature {
   grid-column: span 4;
+  display: grid;
+  align-content: start;
+  gap: 18px;
   min-height: 280px;
   padding: 32px;
   background:
@@ -1036,6 +1039,9 @@ h1 {
 
 .work-card {
   grid-column: span 4;
+  display: grid;
+  align-content: start;
+  gap: 18px;
   min-height: 170px;
   padding: 28px;
   background: var(--paper);
@@ -1155,7 +1161,6 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 22px;
-  margin-bottom: 18px;
 }
 
 .meta {
