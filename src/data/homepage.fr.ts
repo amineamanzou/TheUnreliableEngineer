@@ -291,26 +291,26 @@ export const homepageFr = {
         value: "409+",
         countTo: 409,
         suffix: "",
-        label: "publications visibles sur les plateformes",
+        label: "publications sur les plateformes",
       },
       {
         value: "527k+",
         countTo: 527032,
         suffix: "",
-        label: "vues et impressions vérifiées",
+        label: "vues et impressions",
       },
       {
-        value: "22k+",
+        value: "22,1k+",
         countTo: 22069,
         suffix: "",
-        label: "interactions vérifiées",
+        label: "interactions",
       },
     ] satisfies SocialStat[],
     links: [
       {
         label: "LinkedIn",
         href: "https://www.linkedin.com/in/amineamanzou/",
-        meta: "65 232 impressions, 841 réactions, 156 commentaires",
+        meta: "65,2k impressions, 841 réactions, 156 commentaires",
       },
       {
         label: "TikTok",
@@ -330,17 +330,22 @@ export const homepageFr = {
       {
         label: "X",
         href: "https://x.com/TheUnreliableEn",
-        meta: "185 posts, build logs et signaux faibles",
+        meta: "185 posts, build logs et veille informationnelle",
       },
       {
         label: "Threads",
         href: "https://www.threads.com/@theunreliableengineer",
-        meta: "Posts courts, conversations tech et vues récentes",
+        meta: "Posts courts et conversations tech",
       },
       {
         label: "YouTube",
         href: "https://www.youtube.com/@theunreliableengineer",
         meta: "50,5k vues, 559 likes, 84 contenus",
+      },
+      {
+        label: "GitHub",
+        href: "https://github.com/amineamanzou",
+        meta: "Labs, dotfiles, prises de notes",
       },
     ] satisfies SocialLink[],
   },

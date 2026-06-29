@@ -35,7 +35,6 @@ const forbiddenSourceFragments = [
   "Voir les témoignages",
   "carrousels LinkedIn vérifiés",
   "impressions cumulées sur ces carrousels",
-  "GitHub",
 ];
 
 for (const fragment of forbiddenSourceFragments) {
@@ -208,7 +207,8 @@ for (const target of viewports) {
         socialLinks.includes("https://www.facebook.com/profile.php?id=61570743494074") &&
         socialLinks.includes("https://x.com/TheUnreliableEn") &&
         socialLinks.includes("https://www.threads.com/@theunreliableengineer") &&
-        socialLinks.includes("https://www.youtube.com/@theunreliableengineer"),
+        socialLinks.includes("https://www.youtube.com/@theunreliableengineer") &&
+        socialLinks.includes("https://github.com/amineamanzou"),
       hasReducedMotionNeutralized:
         window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
         window.getComputedStyle(document.querySelector(".signal-map")).transform === "none" &&
