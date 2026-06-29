@@ -73,11 +73,6 @@ export const homepageFr = {
       label: "Voir les preuves",
       href: "#proof",
     },
-    bubble: {
-      kicker: "Point d'entrée",
-      body:
-        "Tu viens avec un problème réel, mal cadré ou bloqué. On le rend assez net pour choisir la suite: cadrage, accompagnement, positionnement, introduction qualifiée ou rien de plus.",
-    },
     consultation: {
       label: "Clarifier le problème",
       caption: "Une situation floue n'a pas besoin d'un gros plan. Elle a d'abord besoin d'être lisible.",

@@ -15,6 +15,7 @@ const viewports = [
 await mkdir(outputDir, { recursive: true });
 
 const cssSource = await readFile(path.resolve("src/styles/global.css"), "utf8");
+const homepageDataSource = await readFile(path.resolve("src/data/homepage.fr.ts"), "utf8");
 const requiredHoverSelectors = [
   ".button:hover",
   ".panel:hover",
@@ -22,6 +23,19 @@ const requiredHoverSelectors = [
   ".proof-item:hover",
   ".work-card:hover",
 ];
+const forbiddenSourceFragments = [
+  "trois suites possibles",
+  "Positionnement et mise en relation",
+  "diagnostic, contenu",
+  "réserver une étude de cas",
+  "reserver une etude de cas",
+];
+
+for (const fragment of forbiddenSourceFragments) {
+  if (homepageDataSource.includes(fragment)) {
+    throw new Error(`source: obsolete homepage framing still present: ${fragment}`);
+  }
+}
 
 const browser = await chromium.launch({
   executablePath,
