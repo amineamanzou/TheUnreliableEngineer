@@ -122,7 +122,7 @@ const assetPath = (path: string) =>
                 data-proof-status={item.status}
                 data-supported-claim={item.supportedClaim}
               >
-                {item.label}
+                <strong>{item.label}</strong>
                 <span>{item.meta}</span>
                 <small>{item.supportedClaim}</small>
               </div>
