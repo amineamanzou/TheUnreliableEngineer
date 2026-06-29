@@ -33,8 +33,23 @@ export type TestimonialCard = {
   quote: string;
   attribution: string;
   meta: string;
+  href: string;
   status: "testimonial_quote";
   supportedClaim: string;
+};
+
+export type SocialStat = {
+  value: string;
+  countTo: number;
+  suffix: string;
+  label: string;
+  detail: string;
+};
+
+export type SocialLink = {
+  label: string;
+  href: string;
+  meta: string;
 };
 
 export const homepageFr = {
@@ -228,6 +243,7 @@ export const homepageFr = {
           "Amine est exceptionnellement compétent techniquement et porte une vision stratégique de l'observabilité de premier ordre.",
         attribution: "Amin",
         meta: "Project management · Enedis",
+        href: "https://www.linkedin.com/in/amineamanzou/details/recommendations/",
         status: "testimonial_quote",
         supportedClaim: "Vision stratégique de l'observabilité",
       },
@@ -236,6 +252,7 @@ export const homepageFr = {
           "Travailler avec Amine, c'est l'assurance d'élever le niveau des discussions, tant sur le plan technique que stratégique.",
         attribution: "Valentin",
         meta: "Expert Observabilité & SRE Freelance · Enedis",
+        href: "https://www.linkedin.com/in/amineamanzou/details/recommendations/",
         status: "testimonial_quote",
         supportedClaim: "Élévation du niveau de discussion technique et stratégique",
       },
@@ -244,6 +261,7 @@ export const homepageFr = {
           "Amine est un SRE expérimenté que je recommande pour tout projet de solution ou plateformes à échelle.",
         attribution: "Hichem",
         meta: "Software Architect / Engineering Manager · Orange",
+        href: "https://www.linkedin.com/in/amineamanzou/details/recommendations/",
         status: "testimonial_quote",
         supportedClaim: "Crédibilité SRE et plateformes à échelle",
       },
@@ -261,11 +279,48 @@ export const homepageFr = {
       label: "Réserver 60 minutes",
       href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
     },
-    secondaryCta: {
-      label: "Voir les témoignages",
-      href: "#testimonials",
-    },
     note:
-      "Placeholder de réservation actuel: email direct en attendant une URL de booking dédiée. Format V1: 60 minutes en visio, autour d'un cas réel, pour mieux comprendre avant d'agir.",
+      "Format actuel: 60 minutes en visio, autour d'un cas réel, pour mieux comprendre avant d'agir.",
+  },
+  socialSignal: {
+    tag: "Signal public",
+    title: "Le contenu est aussi un laboratoire.",
+    intro:
+      "Je publie pour tester les angles, documenter les systèmes et exposer les frictions réelles: observabilité, agents IA, production, freelance et outillage maison.",
+    stats: [
+      {
+        value: "48k",
+        countTo: 48431,
+        suffix: "",
+        label: "impressions sur le meilleur post LinkedIn",
+        detail: "Snapshot LinkedIn Analytics · 30/03/2026",
+      },
+      {
+        value: "16",
+        countTo: 16,
+        suffix: "",
+        label: "carrousels LinkedIn vérifiés",
+        detail: "Ledger contenu · 07/06/2026",
+      },
+      {
+        value: "5.9k",
+        countTo: 5963,
+        suffix: "",
+        label: "impressions cumulées sur ces carrousels",
+        detail: "Audit publication LinkedIn · 07/06/2026",
+      },
+    ] satisfies SocialStat[],
+    links: [
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/amineamanzou/",
+        meta: "Posts, recommandations et carrousels techniques",
+      },
+      {
+        label: "GitHub",
+        href: "https://github.com/amineamanzou",
+        meta: "Labs, outils et systèmes construits en public",
+      },
+    ] satisfies SocialLink[],
   },
 } as const;

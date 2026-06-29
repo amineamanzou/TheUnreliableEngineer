@@ -204,18 +204,23 @@ const assetPath = (path: string) =>
 
         <div class="testimonial-grid">
           {page.testimonials.cards.map((card, index) => (
-            <article
+            <a
               class={`panel testimonial-card testimonial-card-${index + 1}`}
+              href={card.href}
+              target="_blank"
+              rel="noreferrer"
               data-proof-status={card.status}
               data-supported-claim={card.supportedClaim}
+              aria-label={`Lire le témoignage LinkedIn de ${card.attribution}`}
             >
               <p class="quote">"{card.quote}"</p>
               <div class="quote-byline">
                 <strong>{card.attribution}</strong>
                 <div class="meta">{card.meta}</div>
                 <small>{card.supportedClaim}</small>
+                <span class="quote-link-label">Lire sur LinkedIn</span>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </div>
@@ -228,7 +233,6 @@ const assetPath = (path: string) =>
             <div class="section-tag section-tag-light">{page.contact.tag}</div>
             <h2 class="cta-title">{page.contact.title}</h2>
             <div class="cta-bubble">
-              <span class="bubble-kicker">Booking V1</span>
               <p>{page.contact.note}</p>
             </div>
           </div>
@@ -240,10 +244,44 @@ const assetPath = (path: string) =>
               <a class="button button-primary" href={page.contact.primaryCta.href}>
                 {page.contact.primaryCta.label}
               </a>
-              <a class="button button-secondary" href={page.contact.secondaryCta.href}>
-                {page.contact.secondaryCta.label}
-              </a>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block social-signal-section" id="social-signal">
+      <div class="shell shell-wide">
+        <div class="panel social-signal-panel">
+          <div class="social-signal-copy">
+            <div class="section-tag section-tag-light">{page.socialSignal.tag}</div>
+            <h2 class="section-title">{page.socialSignal.title}</h2>
+            <p class="lede">{page.socialSignal.intro}</p>
+          </div>
+
+          <div class="social-stat-grid" aria-label="Statistiques de production de contenu">
+            {page.socialSignal.stats.map((stat) => (
+              <article class="social-stat">
+                <strong
+                  data-count-to={stat.countTo}
+                  data-stat-value={stat.value}
+                  data-stat-suffix={stat.suffix}
+                >
+                  {stat.value}
+                </strong>
+                <span>{stat.label}</span>
+                <small>{stat.detail}</small>
+              </article>
+            ))}
+          </div>
+
+          <div class="social-link-rail" aria-label="Présence sur les réseaux sociaux">
+            {page.socialSignal.links.map((link) => (
+              <a class="social-link" href={link.href} target="_blank" rel="noreferrer">
+                <span>{link.label}</span>
+                <small>{link.meta}</small>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -271,6 +309,54 @@ const assetPath = (path: string) =>
 
       updateScroll();
       window.addEventListener("scroll", updateScroll, { passive: true });
+
+      const statElements = Array.from(document.querySelectorAll("[data-count-to]"));
+      const formatStat = (value: number, finalValue: string) => {
+        if (finalValue.includes("k")) {
+          return value >= 10000 ? `${Math.round(value / 1000)}k` : `${(value / 1000).toFixed(1)}k`;
+        }
+
+        return new Intl.NumberFormat("fr-FR").format(Math.round(value));
+      };
+
+      const revealStat = (element: Element) => {
+        const target = Number.parseInt(element.getAttribute("data-count-to") ?? "0", 10);
+        const finalValue = element.getAttribute("data-stat-value") ?? "";
+        const suffix = element.getAttribute("data-stat-suffix") ?? "";
+        const start = performance.now();
+        const duration = 950;
+
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 4);
+          element.textContent = `${formatStat(target * eased, finalValue)}${suffix}`;
+
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+            return;
+          }
+
+          element.textContent = `${finalValue}${suffix}`;
+        };
+
+        requestAnimationFrame(tick);
+      };
+
+      const statObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            revealStat(entry.target);
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.45 },
+      );
+
+      statElements.forEach((element) => statObserver.observe(element));
     }
   </script>
 </BaseLayout>

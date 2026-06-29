@@ -264,27 +264,8 @@ h1,
   align-content: start;
   min-height: 620px;
   padding: clamp(26px, 3.6vw, 52px);
-  background:
-    linear-gradient(90deg, rgba(216, 35, 35, 0.1) 0 22px, transparent 22px),
-    linear-gradient(180deg, var(--paper), var(--paper-soft));
+  background: linear-gradient(180deg, var(--paper), var(--paper-soft));
   box-shadow: var(--shadow-red);
-}
-
-.hero-copy::after {
-  content: "";
-  position: absolute;
-  inset: auto 28px 24px 28px;
-  height: 14px;
-  border: 4px solid var(--ink);
-  background: var(--accent);
-  box-shadow:
-    inset 18px 0 0 var(--ink),
-    inset 54px 0 0 var(--accent),
-    inset 72px 0 0 var(--ink),
-    inset 108px 0 0 var(--accent),
-    inset 126px 0 0 var(--ink),
-    inset 162px 0 0 var(--accent),
-    inset 180px 0 0 var(--ink);
 }
 
 .hero-copy-stack {
@@ -1053,23 +1034,6 @@ h1 {
   color: var(--paper);
 }
 
-.work-feature::before {
-  content: "";
-  position: absolute;
-  inset: auto 24px 24px 24px;
-  height: 16px;
-  border: 4px solid var(--ink);
-  background: var(--signal);
-  box-shadow:
-    inset 18px 0 0 var(--ink),
-    inset 54px 0 0 var(--signal),
-    inset 72px 0 0 var(--ink),
-    inset 108px 0 0 var(--signal),
-    inset 126px 0 0 var(--ink),
-    inset 162px 0 0 var(--signal),
-    inset 180px 0 0 var(--ink);
-}
-
 .work-card {
   grid-column: span 4;
   min-height: 170px;
@@ -1229,6 +1193,7 @@ h1 {
   min-height: 250px;
   padding: 28px;
   background: var(--paper);
+  text-decoration: none;
 }
 
 .testimonial-grid {
@@ -1256,6 +1221,23 @@ h1 {
   background: var(--paper);
 }
 
+.testimonial-card:hover {
+  transform: translate(
+    calc(var(--pointer-nx) * -4px - 3px),
+    calc(var(--pointer-ny) * -4px - 3px)
+  );
+  box-shadow: 12px 12px 0 var(--signal);
+}
+
+.testimonial-card-2:hover {
+  transform: translate(
+      calc(var(--pointer-nx) * -4px - 3px),
+      calc(var(--pointer-ny) * -4px + 15px)
+    )
+    rotate(-1deg);
+  box-shadow: 12px 12px 0 var(--accent);
+}
+
 .quote {
   font-size: 1.13rem;
   font-weight: 700;
@@ -1275,6 +1257,20 @@ h1 {
 
 .testimonial-card-1 .quote-byline small {
   color: rgba(255, 247, 232, 0.72);
+}
+
+.quote-link-label {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 3px solid currentColor;
+  color: inherit;
+  font-family: "Courier New", monospace;
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .cta-panel {
@@ -1319,6 +1315,130 @@ h1 {
   height: 11px;
   border: 2px solid var(--ink);
   background: var(--signal);
+}
+
+.social-signal-section {
+  margin-top: 50px;
+}
+
+.social-signal-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 24px;
+  padding: 28px;
+  background:
+    linear-gradient(90deg, rgba(255, 211, 61, 0.08) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 211, 61, 0.08) 0 1px, transparent 1px),
+    var(--ink);
+  background-size: 26px 26px;
+  box-shadow: var(--shadow-red);
+  color: var(--paper);
+}
+
+.social-signal-copy {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.social-signal-copy .section-title {
+  max-width: 13ch;
+}
+
+.social-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.social-stat {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  gap: 14px;
+  min-height: 210px;
+  padding: 18px;
+  border: 4px solid rgba(255, 247, 232, 0.22);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 211, 61, 0.16), transparent 44%),
+    rgba(255, 247, 232, 0.055);
+  overflow: hidden;
+}
+
+.social-stat::before {
+  content: "metric";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: rgba(255, 247, 232, 0.28);
+  font-family: "Courier New", monospace;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.social-stat strong {
+  color: var(--signal);
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.social-stat span {
+  color: var(--paper);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.social-stat small {
+  color: rgba(255, 247, 232, 0.62);
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.social-link-rail {
+  display: grid;
+  grid-column: 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.social-link {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 5px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 7px 7px 0 var(--accent);
+  color: var(--ink);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.social-link:hover {
+  background: var(--signal);
+  box-shadow: 10px 10px 0 var(--accent);
+  transform: translate(-3px, -3px);
+}
+
+.social-link span {
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 1.12rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.social-link small {
+  color: var(--ink-soft);
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 @keyframes signal-sweep {
@@ -1443,6 +1563,15 @@ h1 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .social-signal-panel,
+  .social-link-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .social-link-rail {
+    grid-column: auto;
+  }
+
   .proof-rail {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1476,6 +1605,10 @@ h1 {
   }
 
   .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .social-stat-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1516,7 +1649,8 @@ h1 {
   .work-feature,
   .work-card,
   .testimonial-card,
-  .cta-panel {
+  .cta-panel,
+  .social-signal-panel {
     padding: 18px;
   }
 
@@ -1527,13 +1661,6 @@ h1 {
 
   .hero-copy-stack {
     gap: 14px;
-  }
-
-  .hero-copy::after,
-  .work-feature::before {
-    left: 18px;
-    right: 18px;
-    bottom: 16px;
   }
 
   h1,
@@ -1606,8 +1733,16 @@ h1 {
     transform: none;
   }
 
+  .testimonial-card-2:hover {
+    transform: translate(-3px, -3px);
+  }
+
   .cta-bubble {
     width: 100%;
+  }
+
+  .social-stat {
+    min-height: 150px;
   }
 
   .hero-character {
@@ -1692,6 +1827,9 @@ h1 {
   }
 
   .panel:hover,
+  .testimonial-card:hover,
+  .testimonial-card-2:hover,
+  .social-link:hover,
   .hero-character,
   .signal-map,
   .signal-map::after {
