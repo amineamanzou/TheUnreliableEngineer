@@ -184,6 +184,12 @@ main section[id],
   color: var(--ink);
 }
 
+.nav .language-switch {
+  min-width: 42px;
+  justify-content: center;
+  border-color: rgba(255, 247, 232, 0.42);
+}
+
 .nav-cta {
   min-height: 42px;
   padding: 0 16px;

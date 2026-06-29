@@ -35,6 +35,9 @@ jobs:
       - name: Astro check
         run: npm run check
 
+      - name: I18n content check
+        run: npm run check:i18n
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 

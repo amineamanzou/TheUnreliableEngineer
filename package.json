@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "check:i18n": "node scripts/checks/i18n-content.mjs",
     "review:homepage": "node scripts/review-homepage.mjs",
     "review:blog": "node scripts/review-blog.mjs"
   },

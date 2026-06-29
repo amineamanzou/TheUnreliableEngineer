@@ -28,5 +28,8 @@ jobs:
       - name: Astro check
         run: npm run check
 
+      - name: I18n content check
+        run: npm run check:i18n
+
       - name: Build
         run: npm run build

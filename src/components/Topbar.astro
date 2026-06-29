@@ -1,21 +1,34 @@
 ---
-import { homepageFr } from "../data/homepage.fr";
+import {
+  assetPath,
+  homepageByLocale,
+  localizedPath,
+  otherLocale,
+  swapLocalePath,
+  uiByLocale,
+  type Locale,
+} from "../data/i18n";
 
 type Props = {
   home?: boolean;
+  locale?: Locale;
+  currentPath?: string;
+  alternatePath?: string;
 };
 
-const { home = false } = Astro.props;
-const page = homepageFr;
-const assetPath = (path: string) =>
-  path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
-const homeHref = assetPath("/");
-const navHref = (href: string) => (href.startsWith("#") && !home ? `${homeHref}${href}` : href);
+const { home = false, locale = "fr", currentPath = Astro.url.pathname, alternatePath } = Astro.props;
+const page = homepageByLocale[locale];
+const ui = uiByLocale[locale];
+const localeHomeHref = assetPath(localizedPath(locale, "/"));
+const alternateLocale = otherLocale(locale);
+const alternateHref = assetPath(alternatePath ?? swapLocalePath(locale, currentPath));
+const navHref = (href: string) =>
+  href.startsWith("#") && !home ? `${localeHomeHref}${href}` : href;
 ---
 
 <header class="topbar">
   <div class="shell shell-wide topbar-inner">
-    <a class="brand" href={home ? "#top" : homeHref} aria-label={`Accueil ${page.topbar.brand}`}>
+    <a class="brand" href={home ? "#top" : localeHomeHref} aria-label={ui.topbar.homeAria}>
       <span class="brand-mark" aria-hidden="true">
         <img
           src={assetPath("/brand/web/characters/thinking.png")}
@@ -29,7 +42,7 @@ const navHref = (href: string) => (href.startsWith("#") && !home ? `${homeHref}$
       </span>
     </a>
 
-    <nav class="nav" aria-label="Navigation principale">
+    <nav class="nav" aria-label={ui.topbar.navAria}>
       {page.topbar.nav.map((item) => <a href={navHref(item.href)}>{item.label}</a>)}
       <a class="nav-blog" href={assetPath(page.topbar.blog.href)} aria-current={home ? undefined : "page"}>
         {page.topbar.blog.label}
@@ -37,6 +50,25 @@ const navHref = (href: string) => (href.startsWith("#") && !home ? `${homeHref}$
       <a class="button button-primary nav-cta" href={page.topbar.cta.href}>
         {page.topbar.cta.label}
       </a>
+      <a
+        class="language-switch"
+        href={alternateHref}
+        data-locale-switch={alternateLocale}
+        aria-label={ui.language.ariaLabel}
+      >
+        {ui.language[alternateLocale]}
+      </a>
     </nav>
   </div>
 </header>
+
+<script>
+  document.querySelectorAll("[data-locale-switch]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const locale = link.getAttribute("data-locale-switch");
+      if (locale) {
+        window.localStorage.setItem("preferredLocale", locale);
+      }
+    });
+  });
+</script>

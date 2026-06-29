@@ -80,7 +80,7 @@ await page.locator("[data-terminal-form]").evaluate((form) => form.requestSubmit
 await page.getByText("fzf articles").waitFor({ timeout: 5000 });
 await terminalInput.pressSequentially("deck");
 await page.locator(".terminal-fzf-query", { hasText: "query> deck" }).waitFor({ timeout: 5000 });
-await page.locator(".terminal-fzf-row").filter({ hasText: "observabilite-deck-tracker-developpeur" }).waitFor({
+await page.locator(".terminal-fzf-row").filter({ hasText: /deck-tracker/ }).waitFor({
   timeout: 5000,
 });
 const fzfRowsAfterDeck = await page.locator(".terminal-fzf-row").evaluateAll((rows) =>
@@ -90,7 +90,7 @@ if (!fzfRowsAfterDeck.every((row) => /deck/i.test(row))) {
   throw new Error(`fzf should filter rows by query "deck", saw: ${fzfRowsAfterDeck.join(" | ")}`);
 }
 await page.keyboard.press("Enter");
-await page.waitForURL("**/blog/observabilite-deck-tracker-developpeur/", { timeout: 5000 });
+await page.waitForURL(/\/blog\/.*deck.*\/$/, { timeout: 5000 });
 
 await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
 for (const command of ["open", "read", "cat"]) {
@@ -106,7 +106,7 @@ const articleMetrics = await page.evaluate(() => ({
   paragraphs: document.querySelectorAll(".article-body p").length,
   images: document.querySelectorAll(".article-body img, .article-hero-image").length,
   hasReactionLink: Array.from(document.querySelectorAll("a")).some((link) =>
-    /réagir sur linkedin/i.test(link.textContent ?? ""),
+    /réagir sur linkedin|react on linkedin/i.test(link.textContent ?? ""),
   ),
   hasImportedWording: document.body.textContent?.includes("Version importée") ?? false,
 }));

@@ -1,87 +1,17 @@
 ---
-import { getCollection, render } from "astro:content";
-import type { CollectionEntry } from "astro:content";
-import Topbar from "../../components/Topbar.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import ArticlePage from "../../components/ArticlePage.astro";
 
-type Props = {
-  article: CollectionEntry<"articles">;
-  slug: string;
-};
-
-const assetPath = (path: string) =>
-  path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
-const formatDate = (isoDate: string) =>
-  new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(
-    new Date(`${isoDate}T00:00:00`),
-  );
 export async function getStaticPaths() {
-  const articles = await getCollection("articles");
-  const getSlug = (article: { id: string; slug?: string }) =>
-    article.slug ?? article.id.replace(/\.mdx?$/, "").replace(/\/index$/, "");
+  const articles = (await getCollection("articles")).filter((article) => article.data.locale === "fr");
 
   return articles.map((article) => ({
-    params: { slug: getSlug(article) },
-    props: { article, slug: getSlug(article) },
+    params: { slug: article.data.articleSlug },
+    props: { article },
   }));
 }
 
-const { article, slug } = Astro.props;
-const { Content } = await render(article);
-const articleDate = formatDate(article.data.publishedAt);
-const heroImage = article.data.heroImage ? assetPath(article.data.heroImage) : undefined;
+const { article } = Astro.props;
 ---
 
-<BaseLayout
-  title={`${article.data.title} | The Unreliable Engineer`}
-  description={article.data.excerpt}
->
-  <Topbar />
-
-  <main class="page article-page">
-    <article class="section-block article-shell" id="top">
-      <div class="shell shell-wide">
-        <div class="panel article-panel">
-          <div class="article-meta">
-            <span class="kicker">{article.data.label}</span>
-            <span>{articleDate}</span>
-            <span>{article.data.readTime}</span>
-          </div>
-
-          <div class="article-layout">
-            <header class="article-head">
-              <h1>{article.data.title}</h1>
-              <p class="hero-text">{article.data.excerpt}</p>
-              {heroImage && (
-                <img
-                  class="article-hero-image"
-                  src={heroImage}
-                  alt=""
-                  loading="eager"
-                  decoding="async"
-                />
-              )}
-            </header>
-
-            <aside class="article-source">
-              <div class="terminal-bar" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-                <strong>{slug}.linkedin</strong>
-              </div>
-              <p>Commentaires, réactions et discussion restent ouverts sur le post d'origine.</p>
-              <a class="button button-primary" href={article.data.sourceUrl} target="_blank" rel="noreferrer">
-                Réagir sur LinkedIn
-              </a>
-            </aside>
-          </div>
-
-          <div class="article-body">
-            <Content />
-          </div>
-        </div>
-      </div>
-    </article>
-  </main>
-</BaseLayout>
+<ArticlePage article={article} />
