@@ -13,6 +13,8 @@ The "wow" layer should feel like observability applied to a fuzzy decision: trac
 - Recent brand-site trends support sci-fi interface cues, glow effects, detailed microinteractions and cursor interactions when they create immersion and focus. See Webflow's 2025 trend review: https://webflow.com/blog/web-design-trends-2025
 - Use that trend direction only through the brand's own observability language: traces, spans, signal paths and diagnostic states.
 - NN/g's motion guidance is the constraint: animation should be subtle, brief and communicative, mostly as feedback or state/signifier support. See https://www.nngroup.com/articles/animation-purpose-ux/
+- A 2026 parallax survey still frames parallax as useful for depth and storytelling when used with restraint, while warning that heavy effects can hurt load time, mobile smoothness and navigation. See https://www.creativebloq.com/web-design/parallax-scrolling-1131762
+- 2026 research on web vibe coding warns that generated sites can drift toward homogenized patterns; keep productive friction in the direction by preserving the brand's specific terminal / observability / anti-corporate vocabulary. See https://arxiv.org/abs/2603.13036
 - Therefore, the page can use glow, pointer tracking, parallax and signal motion, but only when it makes the clarification metaphor easier to understand.
 
 ## Art Direction Guardrail
