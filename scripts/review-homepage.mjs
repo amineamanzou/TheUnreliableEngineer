@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "playwright-core";
 
@@ -13,6 +13,29 @@ const viewports = [
 ];
 
 await mkdir(outputDir, { recursive: true });
+
+const cssSource = await readFile(path.resolve("src/styles/global.css"), "utf8");
+const homepageDataSource = await readFile(path.resolve("src/data/homepage.fr.ts"), "utf8");
+const requiredHoverSelectors = [
+  ".button:hover",
+  ".panel:hover",
+  ".client-logo-card:hover",
+  ".proof-item:hover",
+  ".work-card:hover",
+];
+const forbiddenSourceFragments = [
+  "trois suites possibles",
+  "Positionnement et mise en relation",
+  "diagnostic, contenu",
+  "réserver une étude de cas",
+  "reserver une etude de cas",
+];
+
+for (const fragment of forbiddenSourceFragments) {
+  if (homepageDataSource.includes(fragment)) {
+    throw new Error(`source: obsolete homepage framing still present: ${fragment}`);
+  }
+}
 
 const browser = await chromium.launch({
   executablePath,
@@ -34,7 +57,8 @@ for (const target of viewports) {
 
   await page.locator(".hero").waitFor({ state: "visible" });
   await page.locator(".hero-character").waitFor({ state: "visible" });
-  await page.locator(".hero-note").waitFor({ state: "visible" });
+  await page.locator(".hero-clarifier-card").waitFor({ state: "visible" });
+  await page.locator("#proof").waitFor({ state: "visible" });
 
   const metrics = await page.evaluate(() => {
     const hero = document.querySelector(".hero");
@@ -52,7 +76,14 @@ for (const target of viewports) {
         .toLowerCase();
     const offerText = textFor('[data-review="offer"], h1');
     const audienceText = textFor('[data-review="audience"]');
-    const credibilityText = textFor('[data-review="credibility"], .chips');
+    const postureText = textFor('[data-review="credibility"], h1, .hero-text');
+    const workSectionText = (document.querySelector("#work")?.textContent ?? "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+    const workCardTitles = Array.from(document.querySelectorAll("#work .work-card .card-title")).map((element) =>
+      (element.textContent ?? "").replace(/\s+/g, " ").trim().toLowerCase(),
+    );
     const primaryBookingLink = Array.from(document.querySelectorAll("a")).find((link) =>
       /réserver|reserver/.test(link.textContent?.toLowerCase() ?? ""),
     );
@@ -81,7 +112,7 @@ for (const target of viewports) {
       ((focusStyle?.outlineStyle !== "none" && focusStyle?.outlineWidth !== "0px") ||
         (focusStyle?.boxShadow !== "none" && focusStyle?.boxShadow !== focusBeforeBoxShadow));
     const proofElements = Array.from(
-      document.querySelectorAll("[data-proof-status], [data-supported-claim]"),
+      document.querySelectorAll("#proof [data-proof-status], #proof [data-supported-claim]"),
     );
     const proofGovernance = proofElements.map((element) => ({
       status: element.getAttribute("data-proof-status"),
@@ -98,27 +129,42 @@ for (const target of viewports) {
       scrollWidth: document.documentElement.scrollWidth,
       sectionCount: document.querySelectorAll("main section").length,
       heroWidth: hero?.getBoundingClientRect().width ?? 0,
-      hasBubble: Boolean(document.querySelector(".hero-bubble")),
-      hasStickyNote: Boolean(document.querySelector(".hero-note")),
       hasPersona: Boolean(document.querySelector(".character-asset")),
       hasOfferAboveFold: offerText.includes("60 minutes"),
       hasAudienceAboveFold:
-        audienceText.includes("équipes tech") ||
-        audienceText.includes("equipes tech") ||
-        audienceText.includes("décideurs") ||
-        audienceText.includes("decideurs"),
-      hasCredibilityAboveFold:
-        credibilityText.includes("sre") &&
-        credibilityText.includes("observabilité") &&
-        (credibilityText.includes("grands comptes") ||
-          credibilityText.includes("orange") ||
-          credibilityText.includes("odigo") ||
-          credibilityText.includes("enedis")),
+        audienceText.includes("équipes tech") &&
+        audienceText.includes("profils seniors") &&
+        audienceText.includes("indépendants") &&
+        audienceText.includes("décideurs"),
+      hasPostureAboveFold:
+        postureText.includes("amine") ||
+        postureText.includes("unreliable engineer") ||
+        postureText.includes("problèmes flous"),
+      hasCentralCapability:
+        workSectionText.includes("elle vend une capacité") &&
+        workSectionText.includes("rendre le sujet lisible") &&
+        workSectionText.includes("choisir la bonne suite"),
+      hasExpectedSuiteCount:
+        workSectionText.includes("quatre suites possibles") &&
+        workCardTitles.length === 4 &&
+        workCardTitles.includes("cadrage technique") &&
+        workCardTitles.includes("accompagnement senior") &&
+        workCardTitles.includes("positionnement et opportunités") &&
+        workCardTitles.includes("mise en relation qualifiée"),
+      avoidsServiceMenuFraming:
+        workSectionText.includes("ne vend pas une liste de services concurrents") &&
+        !workSectionText.includes("trois suites possibles") &&
+        !workSectionText.includes("menu de prestations"),
+      workCardTitles,
       hasPrimaryBookingAboveFold: primaryBookingAboveFold,
       primaryBookingHref: primaryBookingLink?.getAttribute("href") ?? null,
       hasVisibleFocus,
       proofGovernance,
       hasCompleteProofGovernance,
+      hasReducedMotionNeutralized:
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+        window.getComputedStyle(document.querySelector(".signal-map")).transform === "none" &&
+        window.getComputedStyle(document.body, "::after").opacity === "0",
     };
   });
 
@@ -139,10 +185,14 @@ for (const target of viewports) {
   for (const [label, passed] of [
     ["60-minute offer above fold", metrics.hasOfferAboveFold],
     ["target audience above fold", metrics.hasAudienceAboveFold],
-    ["credibility proof above fold", metrics.hasCredibilityAboveFold],
+    ["person/posture above fold", metrics.hasPostureAboveFold],
+    ["central capability framing", metrics.hasCentralCapability],
+    ["four expected next-step suites", metrics.hasExpectedSuiteCount],
+    ["no service-menu framing in suites", metrics.avoidsServiceMenuFraming],
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],
+    ["reduced-motion neutralization", metrics.hasReducedMotionNeutralized],
   ]) {
     if (!passed) {
       throw new Error(`${target.name}: missing ${label}`);
@@ -180,6 +230,56 @@ for (const target of viewports) {
   report.push({ viewport: target.name, ...metrics });
   await page.close();
 }
+
+const motionPage = await browser.newPage({
+  viewport: { width: 1512, height: 982 },
+  colorScheme: "light",
+  reducedMotion: "no-preference",
+  deviceScaleFactor: 1,
+});
+
+await motionPage.goto(url, { waitUntil: "networkidle", timeout: 30000 });
+await motionPage.locator(".signal-map").waitFor({ state: "visible" });
+
+const motionBefore = await motionPage.evaluate(() => ({
+  pointerX: getComputedStyle(document.documentElement).getPropertyValue("--pointer-x").trim(),
+  signalCoreAnimationName: getComputedStyle(document.querySelector(".signal-core")).animationName,
+  signalMapTransform: getComputedStyle(document.querySelector(".signal-map")).transform,
+}));
+
+await motionPage.mouse.move(240, 180);
+await motionPage.mouse.move(1100, 420);
+await motionPage.waitForTimeout(80);
+
+const pointerAfterMove = await motionPage.evaluate(() => ({
+  pointerX: getComputedStyle(document.documentElement).getPropertyValue("--pointer-x").trim(),
+  pointerNx: getComputedStyle(document.documentElement).getPropertyValue("--pointer-nx").trim(),
+}));
+
+const motionMetrics = {
+  viewport: "motion",
+  hasSignalAnimation: motionBefore.signalCoreAnimationName !== "none",
+  hasSignalParallaxTransform: motionBefore.signalMapTransform !== "none",
+  hasPointerTracking:
+    motionBefore.pointerX !== pointerAfterMove.pointerX &&
+    pointerAfterMove.pointerX.endsWith("px") &&
+    Number.parseFloat(pointerAfterMove.pointerNx) > 0,
+  hasHoverRuleCoverage: requiredHoverSelectors.every((selector) => cssSource.includes(selector)),
+};
+
+for (const [label, passed] of [
+  ["signal animation", motionMetrics.hasSignalAnimation],
+  ["signal parallax transform", motionMetrics.hasSignalParallaxTransform],
+  ["pointer tracking", motionMetrics.hasPointerTracking],
+  ["hover rule coverage", motionMetrics.hasHoverRuleCoverage],
+]) {
+  if (!passed) {
+    throw new Error(`motion: missing ${label}`);
+  }
+}
+
+report.push(motionMetrics);
+await motionPage.close();
 
 await browser.close();
 await writeFile(path.join(outputDir, "homepage-report.json"), JSON.stringify(report, null, 2));
