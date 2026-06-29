@@ -201,6 +201,7 @@ Browser review must save desktop and mobile screenshots under `artifacts/review/
 - no horizontal overflow;
 - no clipped title, CTA or persona block;
 - keyboard focus is visible;
+- pointer tracking, signal animation, parallax transform and hover rules are covered in normal-motion mode;
 - reduced-motion mode leaves content readable.
 
 ## Implementation Notes
