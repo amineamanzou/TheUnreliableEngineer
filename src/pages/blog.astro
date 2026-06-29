@@ -1,0 +1,89 @@
+---
+import Topbar from "../components/Topbar.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const articles = [
+  {
+    label: "Architecture",
+    title: "Notes longues sur les systèmes qui résistent mal au flou.",
+    body:
+      "Des articles pour documenter les arbitrages, les modèles mentaux, les retours terrain et les angles morts qu'un post social ne permet pas de traiter proprement.",
+  },
+  {
+    label: "Observabilité",
+    title: "Runbooks, incidents, signaux faibles et dette opérationnelle.",
+    body:
+      "Un espace pour publier des analyses durables: ce qui casse, ce qui alerte trop tard, ce qui rassure à tort, et ce qu'une équipe peut vraiment décider.",
+  },
+  {
+    label: "Indépendance",
+    title: "Construire hors plateforme, sans abandonner la conversation.",
+    body:
+      "Le blog sert de source canonique: LinkedIn, X ou YouTube peuvent relayer, mais les textes importants vivent ici.",
+  },
+];
+---
+
+<BaseLayout
+  title="Blog | The Unreliable Engineer"
+  description="Articles longs, notes techniques et retours d'expérience de The Unreliable Engineer, publiés hors plateforme sociale."
+>
+  <Topbar />
+
+  <main class="page blog-page">
+    <section class="blog-hero-band" id="top">
+      <div class="shell shell-wide blog-hero">
+        <article class="panel blog-hero-copy">
+          <div class="stack">
+            <div class="section-tag section-tag-light">Blog</div>
+            <h1>Un endroit à moi pour les textes qui doivent durer.</h1>
+            <p class="hero-text">
+              Les réseaux sociaux sont utiles pour distribuer. Ils ne doivent pas décider où vit la pensée
+              longue: architecture, observabilité, IA, production, indépendance et notes de terrain.
+            </p>
+          </div>
+        </article>
+
+        <aside class="panel blog-console" aria-label="Statut éditorial">
+          <div class="terminal-bar" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>blog.bootstrap</strong>
+          </div>
+          <div class="blog-console-body">
+            <p><strong>status</strong> route prête</p>
+            <p><strong>source</strong> TheUnreliableEngineer</p>
+            <p><strong>platform_lock_in</strong> false</p>
+            <p><strong>next</strong> brancher les premiers articles</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-block blog-index-section">
+      <div class="shell shell-wide">
+        <div class="section-heading">
+          <div class="stack">
+            <div class="section-tag">À publier ici</div>
+            <h2 class="section-title">Trois familles de textes pour commencer.</h2>
+          </div>
+          <p class="lede">
+            Cette page pose le socle. Les prochains contenus pourront devenir des fichiers Astro ou Markdown,
+            puis être relayés ailleurs sans que la source canonique dépende d'une plateforme.
+          </p>
+        </div>
+
+        <div class="blog-card-grid">
+          {articles.map((article) => (
+            <article class="panel blog-card">
+              <span class="kicker">{article.label}</span>
+              <h3 class="card-title">{article.title}</h3>
+              <p class="card-copy">{article.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

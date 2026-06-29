@@ -145,6 +145,14 @@ for (const target of viewports) {
     const socialLinks = Array.from(document.querySelectorAll("#social-signal .social-link")).map(
       (element) => element.getAttribute("href") ?? "",
     );
+    const topbar = document.querySelector(".topbar");
+    const topbarStyle = topbar ? window.getComputedStyle(topbar) : undefined;
+    const topbarLinks = Array.from(document.querySelectorAll(".topbar .nav a")).map((element) => ({
+      text: (element.textContent ?? "").replace(/\s+/g, " ").trim().toLowerCase(),
+      href: element.getAttribute("href") ?? "",
+      visible: isAboveFold(element),
+    }));
+    const visibleTopbarLinks = topbarLinks.filter((link) => link.visible);
 
     return {
       title: document.title,
@@ -182,6 +190,16 @@ for (const target of viewports) {
       hasPrimaryBookingAboveFold: primaryBookingAboveFold,
       primaryBookingHref: primaryBookingLink?.getAttribute("href") ?? null,
       hasVisibleFocus,
+      hasStickyTopbar:
+        topbarStyle?.position === "sticky" &&
+        topbarStyle?.top === "0px" &&
+        visibleTopbarLinks.some((link) => link.text === "blog" && link.href.endsWith("/blog/")) &&
+        visibleTopbarLinks.some((link) => /réserver|reserver/.test(link.text)),
+      hasHomepageAnchors:
+        topbarLinks.some((link) => link.href.includes("#work")) &&
+        topbarLinks.some((link) => link.href.includes("#proof")) &&
+        topbarLinks.some((link) => link.href.includes("#testimonials")) &&
+        topbarLinks.some((link) => link.href.includes("#contact")),
       proofGovernance,
       hasCompleteProofGovernance,
       testimonialLinks,
@@ -237,6 +255,8 @@ for (const target of viewports) {
     ["central capability framing", metrics.hasCentralCapability],
     ["four expected next-step suites", metrics.hasExpectedSuiteCount],
     ["no service-menu framing in suites", metrics.avoidsServiceMenuFraming],
+    ["sticky topbar with blog and CTA", metrics.hasStickyTopbar],
+    ["homepage anchors in topbar", metrics.hasHomepageAnchors],
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],

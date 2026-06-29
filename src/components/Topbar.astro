@@ -1,0 +1,42 @@
+---
+import { homepageFr } from "../data/homepage.fr";
+
+type Props = {
+  home?: boolean;
+};
+
+const { home = false } = Astro.props;
+const page = homepageFr;
+const assetPath = (path: string) =>
+  path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
+const homeHref = assetPath("/");
+const navHref = (href: string) => (href.startsWith("#") && !home ? `${homeHref}${href}` : href);
+---
+
+<header class="topbar">
+  <div class="shell shell-wide topbar-inner">
+    <a class="brand" href={home ? "#top" : homeHref} aria-label={`Accueil ${page.topbar.brand}`}>
+      <span class="brand-mark" aria-hidden="true">
+        <img
+          src={assetPath("/brand/web/characters/thinking.png")}
+          alt=""
+          loading="eager"
+          decoding="async"
+        />
+      </span>
+      <span class="brand-copy">
+        <span class="brand-title">{page.topbar.brand}</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Navigation principale">
+      {page.topbar.nav.map((item) => <a href={navHref(item.href)}>{item.label}</a>)}
+      <a class="nav-blog" href={assetPath(page.topbar.blog.href)} aria-current={home ? undefined : "page"}>
+        {page.topbar.blog.label}
+      </a>
+      <a class="button button-primary nav-cta" href={page.topbar.cta.href}>
+        {page.topbar.cta.label}
+      </a>
+    </nav>
+  </div>
+</header>
