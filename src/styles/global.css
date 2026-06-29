@@ -60,12 +60,10 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    repeating-linear-gradient(
-      -8deg,
-      rgba(255, 247, 232, 0.028) 0 2px,
-      transparent 2px 14px
-  );
-  opacity: 0.8;
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(255, 211, 61, 0.11), transparent 24rem),
+    linear-gradient(135deg, rgba(255, 247, 232, 0.028) 0 1px, transparent 1px);
+  background-size: auto, 56px 56px;
+  opacity: 0.9;
 }
 
 body::after {
@@ -278,9 +276,15 @@ h1,
   inset: auto 28px 24px 28px;
   height: 14px;
   border: 4px solid var(--ink);
-  background:
-    repeating-linear-gradient(90deg, var(--ink) 0 18px, transparent 18px 34px),
-    var(--accent);
+  background: var(--accent);
+  box-shadow:
+    inset 18px 0 0 var(--ink),
+    inset 54px 0 0 var(--accent),
+    inset 72px 0 0 var(--ink),
+    inset 108px 0 0 var(--accent),
+    inset 126px 0 0 var(--ink),
+    inset 162px 0 0 var(--accent),
+    inset 180px 0 0 var(--ink);
 }
 
 .hero-copy-stack {
@@ -458,6 +462,22 @@ h1 {
   pointer-events: none;
 }
 
+.hero-stage::after {
+  content: "kubectl describe ambiguity / otel span decision / rm -rf noise";
+  position: absolute;
+  right: -36px;
+  bottom: 36px;
+  color: rgba(255, 247, 232, 0.18);
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.72rem, 1vw, 0.94rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  transform: rotate(-90deg) translateX(calc(var(--scroll-progress) * -52px));
+  transform-origin: right bottom;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .hero-stage-board {
   position: relative;
   display: grid;
@@ -577,19 +597,38 @@ h1 {
   background: linear-gradient(180deg, transparent 0 48%, rgba(255, 211, 61, 0.24) 50%, transparent 54%);
   transform: translateY(calc(var(--scroll-progress) * 120px - 60px));
   opacity: 0.75;
+  animation: signal-sweep 4.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .signal-orbit,
 .signal-node,
-.signal-beam {
+.signal-beam,
+.signal-core,
+.signal-packet {
   position: absolute;
   display: block;
+}
+
+.signal-core {
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  border: 4px solid var(--signal);
+  background: var(--accent);
+  box-shadow:
+    0 0 0 8px rgba(255, 211, 61, 0.1),
+    0 0 34px rgba(255, 211, 61, 0.45);
+  transform: translate(-50%, -50%) rotate(45deg);
+  animation: signal-core 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .signal-orbit {
   inset: 50%;
   border: 2px solid rgba(255, 211, 61, 0.36);
   transform: translate(-50%, -50%) rotate(var(--orbit-angle, 0deg));
+  animation: orbit-breathe 5.2s ease-in-out infinite;
 }
 
 .signal-orbit-1 {
@@ -651,6 +690,7 @@ h1 {
   background: linear-gradient(90deg, transparent, var(--signal), transparent);
   transform-origin: left center;
   opacity: 0.78;
+  animation: beam-pulse 3.6s ease-in-out infinite;
 }
 
 .signal-beam-1 {
@@ -664,6 +704,29 @@ h1 {
   bottom: 62px;
   transform: rotate(21deg);
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation-delay: 1.4s;
+}
+
+.signal-packet {
+  z-index: 3;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--ink);
+  background: var(--signal);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.24);
+}
+
+.signal-packet-1 {
+  left: 24%;
+  top: 98px;
+  animation: packet-one 3.7s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.signal-packet-2 {
+  left: 42%;
+  bottom: 60px;
+  background: var(--accent);
+  animation: packet-two 4.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .case-caption {
@@ -798,6 +861,7 @@ h1 {
 }
 
 .client-logo-card {
+  position: relative;
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr);
   gap: 14px;
@@ -808,6 +872,38 @@ h1 {
   background: var(--paper);
   box-shadow: 6px 6px 0 var(--accent);
   color: var(--ink);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.client-logo-card::before {
+  content: attr(data-proof-status);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 6px;
+  background: var(--ink);
+  color: var(--signal);
+  font-family: "Courier New", monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.client-logo-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 10px 10px 0 var(--signal);
+}
+
+.client-logo-card:hover::before {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .client-logo-card img {
@@ -861,6 +957,10 @@ h1 {
   color: var(--ink);
   font-size: 0.78rem;
   text-transform: uppercase;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
 }
 
 .proof-item::before {
@@ -888,6 +988,12 @@ h1 {
   display: block;
   margin-top: 12px;
   text-transform: none;
+}
+
+.proof-item:hover {
+  background: var(--signal);
+  box-shadow: 10px 10px 0 var(--accent);
+  transform: translate(-3px, -3px);
 }
 
 .section-block {
@@ -934,9 +1040,15 @@ h1 {
   inset: auto 24px 24px 24px;
   height: 16px;
   border: 4px solid var(--ink);
-  background:
-    repeating-linear-gradient(90deg, var(--ink) 0 18px, transparent 18px 34px),
-    var(--signal);
+  background: var(--signal);
+  box-shadow:
+    inset 18px 0 0 var(--ink),
+    inset 54px 0 0 var(--signal),
+    inset 72px 0 0 var(--ink),
+    inset 108px 0 0 var(--signal),
+    inset 126px 0 0 var(--ink),
+    inset 162px 0 0 var(--signal),
+    inset 180px 0 0 var(--ink);
 }
 
 .work-card {
@@ -944,6 +1056,11 @@ h1 {
   min-height: 170px;
   padding: 28px;
   background: var(--paper);
+}
+
+.work-feature:hover,
+.work-card:hover {
+  box-shadow: 12px 12px 0 var(--signal);
 }
 
 .work-card-2 {
@@ -1140,6 +1257,103 @@ h1 {
   height: 11px;
   border: 2px solid var(--ink);
   background: var(--signal);
+}
+
+@keyframes signal-sweep {
+  0%,
+  100% {
+    transform: translateY(-70%);
+    opacity: 0;
+  }
+
+  18%,
+  72% {
+    opacity: 0.72;
+  }
+
+  82% {
+    transform: translateY(70%);
+    opacity: 0;
+  }
+}
+
+@keyframes signal-core {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 8px rgba(255, 211, 61, 0.1),
+      0 0 34px rgba(255, 211, 61, 0.45);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 16px rgba(255, 211, 61, 0.02),
+      0 0 48px rgba(255, 211, 61, 0.58);
+  }
+}
+
+@keyframes orbit-breathe {
+  0%,
+  100% {
+    opacity: 0.54;
+  }
+
+  50% {
+    opacity: 0.96;
+  }
+}
+
+@keyframes beam-pulse {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+
+  45% {
+    opacity: 1;
+  }
+}
+
+@keyframes packet-one {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  70% {
+    transform: translate(190px, -26px) rotate(45deg);
+    opacity: 1;
+  }
+
+  82% {
+    opacity: 0;
+  }
+}
+
+@keyframes packet-two {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  22% {
+    opacity: 1;
+  }
+
+  72% {
+    transform: translate(128px, -42px) rotate(45deg);
+    opacity: 1;
+  }
+
+  86% {
+    opacity: 0;
+  }
 }
 
 @media (max-width: 1250px) {
