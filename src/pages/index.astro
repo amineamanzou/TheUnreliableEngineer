@@ -173,13 +173,21 @@ const assetPath = (path: string) =>
           <p class="lede">{page.boundaries.intro}</p>
         </div>
 
-        <div class="boundary-grid">
-          {page.boundaries.items.map((item) => (
-            <article class="panel boundary-card">
-              <h3 class="card-title">{item.title}</h3>
-              <p class="card-copy">{item.body}</p>
-            </article>
-          ))}
+        <div class="panel boundary-console">
+          <div class="terminal-bar" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>guardrails.log</strong>
+          </div>
+          <ol class="boundary-list">
+            {page.boundaries.items.map((item) => (
+              <li>
+                <strong>{item.title}</strong>
+                <span>{item.body}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>
