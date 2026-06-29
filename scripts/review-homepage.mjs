@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "playwright-core";
 
@@ -13,6 +13,15 @@ const viewports = [
 ];
 
 await mkdir(outputDir, { recursive: true });
+
+const cssSource = await readFile(path.resolve("src/styles/global.css"), "utf8");
+const requiredHoverSelectors = [
+  ".button:hover",
+  ".panel:hover",
+  ".client-logo-card:hover",
+  ".proof-item:hover",
+  ".work-card:hover",
+];
 
 const browser = await chromium.launch({
   executablePath,
@@ -138,6 +147,10 @@ for (const target of viewports) {
       hasVisibleFocus,
       proofGovernance,
       hasCompleteProofGovernance,
+      hasReducedMotionNeutralized:
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+        window.getComputedStyle(document.querySelector(".signal-map")).transform === "none" &&
+        window.getComputedStyle(document.body, "::after").opacity === "0",
     };
   });
 
@@ -165,6 +178,7 @@ for (const target of viewports) {
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],
+    ["reduced-motion neutralization", metrics.hasReducedMotionNeutralized],
   ]) {
     if (!passed) {
       throw new Error(`${target.name}: missing ${label}`);
@@ -202,6 +216,56 @@ for (const target of viewports) {
   report.push({ viewport: target.name, ...metrics });
   await page.close();
 }
+
+const motionPage = await browser.newPage({
+  viewport: { width: 1512, height: 982 },
+  colorScheme: "light",
+  reducedMotion: "no-preference",
+  deviceScaleFactor: 1,
+});
+
+await motionPage.goto(url, { waitUntil: "networkidle", timeout: 30000 });
+await motionPage.locator(".signal-map").waitFor({ state: "visible" });
+
+const motionBefore = await motionPage.evaluate(() => ({
+  pointerX: getComputedStyle(document.documentElement).getPropertyValue("--pointer-x").trim(),
+  signalCoreAnimationName: getComputedStyle(document.querySelector(".signal-core")).animationName,
+  signalMapTransform: getComputedStyle(document.querySelector(".signal-map")).transform,
+}));
+
+await motionPage.mouse.move(240, 180);
+await motionPage.mouse.move(1100, 420);
+await motionPage.waitForTimeout(80);
+
+const pointerAfterMove = await motionPage.evaluate(() => ({
+  pointerX: getComputedStyle(document.documentElement).getPropertyValue("--pointer-x").trim(),
+  pointerNx: getComputedStyle(document.documentElement).getPropertyValue("--pointer-nx").trim(),
+}));
+
+const motionMetrics = {
+  viewport: "motion",
+  hasSignalAnimation: motionBefore.signalCoreAnimationName !== "none",
+  hasSignalParallaxTransform: motionBefore.signalMapTransform !== "none",
+  hasPointerTracking:
+    motionBefore.pointerX !== pointerAfterMove.pointerX &&
+    pointerAfterMove.pointerX.endsWith("px") &&
+    Number.parseFloat(pointerAfterMove.pointerNx) > 0,
+  hasHoverRuleCoverage: requiredHoverSelectors.every((selector) => cssSource.includes(selector)),
+};
+
+for (const [label, passed] of [
+  ["signal animation", motionMetrics.hasSignalAnimation],
+  ["signal parallax transform", motionMetrics.hasSignalParallaxTransform],
+  ["pointer tracking", motionMetrics.hasPointerTracking],
+  ["hover rule coverage", motionMetrics.hasHoverRuleCoverage],
+]) {
+  if (!passed) {
+    throw new Error(`motion: missing ${label}`);
+  }
+}
+
+report.push(motionMetrics);
+await motionPage.close();
 
 await browser.close();
 await writeFile(path.join(outputDir, "homepage-report.json"), JSON.stringify(report, null, 2));
