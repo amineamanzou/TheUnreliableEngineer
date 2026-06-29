@@ -22,6 +22,8 @@ const requiredHoverSelectors = [
   ".client-logo-card:hover",
   ".proof-item:hover",
   ".work-card:hover",
+  ".testimonial-card:hover",
+  ".social-link:hover",
 ];
 const forbiddenSourceFragments = [
   "trois suites possibles",
@@ -29,6 +31,8 @@ const forbiddenSourceFragments = [
   "diagnostic, contenu",
   "réserver une étude de cas",
   "reserver une etude de cas",
+  "Booking V1",
+  "Voir les témoignages",
 ];
 
 for (const fragment of forbiddenSourceFragments) {
@@ -122,6 +126,22 @@ for (const target of viewports) {
     const hasCompleteProofGovernance =
       proofGovernance.length > 0 &&
       proofGovernance.every((item) => Boolean(item.status) && Boolean(item.supportedClaim));
+    const testimonialLinks = Array.from(document.querySelectorAll("#testimonials .testimonial-card")).map(
+      (element) => ({
+        href: element.getAttribute("href"),
+        target: element.getAttribute("target"),
+        text: (element.textContent ?? "").replace(/\s+/g, " ").trim(),
+      }),
+    );
+    const socialStats = Array.from(document.querySelectorAll("#social-signal [data-count-to]")).map(
+      (element) => ({
+        value: element.getAttribute("data-stat-value"),
+        countTo: Number.parseInt(element.getAttribute("data-count-to") ?? "0", 10),
+      }),
+    );
+    const socialLinks = Array.from(document.querySelectorAll("#social-signal .social-link")).map(
+      (element) => element.getAttribute("href") ?? "",
+    );
 
     return {
       title: document.title,
@@ -161,6 +181,24 @@ for (const target of viewports) {
       hasVisibleFocus,
       proofGovernance,
       hasCompleteProofGovernance,
+      testimonialLinks,
+      hasLinkedTestimonialProof:
+        testimonialLinks.length === 3 &&
+        testimonialLinks.every(
+          (link) =>
+            link.href?.startsWith("https://www.linkedin.com/") &&
+            link.target === "_blank" &&
+            link.text.includes("Lire sur LinkedIn"),
+        ),
+      socialStats,
+      socialLinks,
+      hasSocialSignal:
+        socialStats.length === 3 &&
+        socialStats.some((stat) => stat.countTo === 48431) &&
+        socialStats.some((stat) => stat.countTo === 16) &&
+        socialStats.some((stat) => stat.countTo === 5963) &&
+        socialLinks.includes("https://www.linkedin.com/in/amineamanzou/") &&
+        socialLinks.includes("https://github.com/amineamanzou"),
       hasReducedMotionNeutralized:
         window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
         window.getComputedStyle(document.querySelector(".signal-map")).transform === "none" &&
@@ -192,6 +230,8 @@ for (const target of viewports) {
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],
+    ["linked testimonial proof", metrics.hasLinkedTestimonialProof],
+    ["social signal section", metrics.hasSocialSignal],
     ["reduced-motion neutralization", metrics.hasReducedMotionNeutralized],
   ]) {
     if (!passed) {
