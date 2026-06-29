@@ -15,14 +15,8 @@ const assetPath = (path: string) =>
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <span class="brand-title">{page.topbar.brand}</span>
-          <span class="brand-meta">{page.topbar.meta}</span>
         </span>
       </a>
-
-      <nav class="nav" aria-label="Navigation principale">
-        {page.topbar.nav.map((item) => <a href={item.href}>{item.label}</a>)}
-        <a class="button button-primary" href={page.topbar.cta.href}>{page.topbar.cta.label}</a>
-      </nav>
     </div>
   </header>
 
@@ -32,17 +26,9 @@ const assetPath = (path: string) =>
         <article class="panel hero-copy">
           <div class="stack hero-copy-stack">
             <div class="eyebrow" data-review="credibility">{page.hero.eyebrow}</div>
-            <p class="hero-offer-line" data-review="offer">
-              Offre principale: 60 minutes pour un problème technique ou stratégique.
-            </p>
-            <p class="hero-audience-kicker" data-review="audience">
-              Pour équipes tech, SRE, observabilité et décideurs techniques.
-            </p>
             <h1>{page.hero.title}</h1>
-            <p class="hero-text hero-audience">
-              Pour les equipes tech et decideurs techniques qui doivent trancher un sujet de
-              production, de fiabilite, d'observabilite ou d'architecture encore mal cadre.
-            </p>
+            <p class="hero-text hero-audience" data-review="audience">{page.hero.audience}</p>
+            <p class="hero-offer-line" data-review="offer">{page.hero.offerLine}</p>
             <p class="hero-text">{page.hero.body}</p>
             <div class="hero-actions">
               <a class="button button-primary" href={page.hero.primaryCta.href}>
@@ -52,60 +38,13 @@ const assetPath = (path: string) =>
                 {page.hero.secondaryCta.label}
               </a>
             </div>
-
-            <div class="ops-icons" aria-label="Univers ops">
-              <span>ssh</span>
-              <span>curl</span>
-              <span>logs</span>
-              <span>runbook</span>
-              <span>no magic</span>
-            </div>
-
-            <div class="hero-trust">
-              <div class="chips" aria-label="Pastilles de preuve">
-                {page.hero.chips.map((chip) => <span class="chip">{chip}</span>)}
-              </div>
-
-              <div class="hero-bubble" aria-label={page.hero.bubble.kicker}>
-                <span class="bubble-kicker">{page.hero.bubble.kicker}</span>
-                <p>{page.hero.bubble.body}</p>
-              </div>
-
-              <article class="proof-flash hero-proof" data-review="credibility">
-                <span class="meta">{page.hero.proofFlash.kicker}</span>
-                <strong>{page.hero.proofFlash.title}</strong>
-                <p>{page.hero.proofFlash.body}</p>
-              </article>
-            </div>
           </div>
         </article>
 
         <div class="hero-stage">
-          <article class="panel hero-stage-board">
+          <article class="panel hero-stage-board hero-clarifier-card">
             <div class="slot-label slot-label-ink">{page.hero.consultation.label}</div>
-            <div class="ops-console" aria-label={page.hero.terminal.title}>
-              <div class="console-bar">
-                <span class="console-dot"></span>
-                <span class="console-dot console-dot-warn"></span>
-                <span class="console-dot console-dot-ok"></span>
-                <strong>{page.hero.terminal.title}</strong>
-                <em>{page.hero.terminal.status}</em>
-              </div>
-              <div class="console-body">
-                {page.hero.terminal.lines.map((line) => (
-                  <div class="console-line">
-                    <span class="console-prompt">{line.prompt}</span>
-                    <code>{line.command}</code>
-                    <span>{line.output}</span>
-                  </div>
-                ))}
-              </div>
-              <div class="console-badges" aria-label="Private jokes ops">
-                {page.hero.terminal.badges.map((badge) => <span>{badge}</span>)}
-              </div>
-            </div>
-
-            <div class="hero-stage-main">
+            <div class="hero-clarifier-layout">
               <PersonaPlaceholder
                 src="/brand/web/characters/camera.png"
                 alt="The Unreliable Engineer présente son point de vue éditorial"
@@ -116,19 +55,6 @@ const assetPath = (path: string) =>
                 <strong>{page.hero.consultation.caption}</strong>
                 <p>{page.hero.consultation.body}</p>
               </div>
-            </div>
-          </article>
-
-          <aside class="sticky-note hero-note">
-            <span class="note-kicker">{page.hero.sticky.kicker}</span>
-            <strong>{page.hero.sticky.title}</strong>
-            <p>{page.hero.sticky.body}</p>
-          </aside>
-
-          <article class="spec-card">
-            <div class="slot-label slot-label-dark">Ce qu'on clarifie</div>
-            <div class="mini-terminal" aria-hidden="true">
-              <span>$ ./clarify --case réel --mode no-bullshit</span>
             </div>
             <ul class="spec-list">
               {page.hero.consultation.points.map((spec) => (
@@ -217,61 +143,6 @@ const assetPath = (path: string) =>
             <article class={`panel work-card work-card-${index + 1}`}>
               <span class="kicker">{card.kicker}</span>
               <h3 class="card-title">{card.title}</h3>
-              <p class="card-copy">{card.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="section-block" id="method">
-      <div class="shell shell-wide">
-        <div class="section-heading">
-          <div class="stack">
-            <div class="section-tag">{page.method.tag}</div>
-            <h2 class="section-title">{page.method.title}</h2>
-          </div>
-          <p class="lede">{page.method.intro}</p>
-        </div>
-
-        <div class="method-grid">
-          {page.method.steps.map((step) => (
-            <article class="panel method-card">
-              <span class="method-index">{step.index}</span>
-              <h3 class="card-title">{step.title}</h3>
-              <p class="card-copy">{step.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="section-block" id="editorial">
-      <div class="shell shell-wide">
-        <div class="section-heading">
-          <div class="stack">
-            <div class="section-tag">{page.editorial.tag}</div>
-            <h2 class="section-title">{page.editorial.title}</h2>
-          </div>
-          <p class="lede">{page.editorial.intro}</p>
-        </div>
-
-        <div class="territory-grid">
-          <article class="panel territory-feature">
-            <div class="slot-label">{page.editorial.featureLabel}</div>
-            <PersonaPlaceholder
-              src="/brand/web/characters/thinking.png"
-              alt="The Unreliable Engineer réfléchit à une décision technique"
-              class="feature-character"
-            />
-            <h3 class="card-title">{page.editorial.featureTitle}</h3>
-            <p class="card-copy">{page.editorial.featureBody}</p>
-            <p class="feature-note">{page.editorial.featureNote}</p>
-          </article>
-
-          {page.editorial.cards.map((card) => (
-            <article class="panel territory-card">
-              <p class="audience-label">{card.labels.join(" / ")}</p>
               <p class="card-copy">{card.body}</p>
             </article>
           ))}

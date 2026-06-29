@@ -34,7 +34,8 @@ for (const target of viewports) {
 
   await page.locator(".hero").waitFor({ state: "visible" });
   await page.locator(".hero-character").waitFor({ state: "visible" });
-  await page.locator(".hero-note").waitFor({ state: "visible" });
+  await page.locator(".hero-clarifier-card").waitFor({ state: "visible" });
+  await page.locator("#proof").waitFor({ state: "visible" });
 
   const metrics = await page.evaluate(() => {
     const hero = document.querySelector(".hero");
@@ -52,7 +53,7 @@ for (const target of viewports) {
         .toLowerCase();
     const offerText = textFor('[data-review="offer"], h1');
     const audienceText = textFor('[data-review="audience"]');
-    const credibilityText = textFor('[data-review="credibility"], .chips');
+    const postureText = textFor('[data-review="credibility"], h1, .hero-text');
     const primaryBookingLink = Array.from(document.querySelectorAll("a")).find((link) =>
       /réserver|reserver/.test(link.textContent?.toLowerCase() ?? ""),
     );
@@ -81,7 +82,7 @@ for (const target of viewports) {
       ((focusStyle?.outlineStyle !== "none" && focusStyle?.outlineWidth !== "0px") ||
         (focusStyle?.boxShadow !== "none" && focusStyle?.boxShadow !== focusBeforeBoxShadow));
     const proofElements = Array.from(
-      document.querySelectorAll("[data-proof-status], [data-supported-claim]"),
+      document.querySelectorAll("#proof [data-proof-status], #proof [data-supported-claim]"),
     );
     const proofGovernance = proofElements.map((element) => ({
       status: element.getAttribute("data-proof-status"),
@@ -98,22 +99,17 @@ for (const target of viewports) {
       scrollWidth: document.documentElement.scrollWidth,
       sectionCount: document.querySelectorAll("main section").length,
       heroWidth: hero?.getBoundingClientRect().width ?? 0,
-      hasBubble: Boolean(document.querySelector(".hero-bubble")),
-      hasStickyNote: Boolean(document.querySelector(".hero-note")),
       hasPersona: Boolean(document.querySelector(".character-asset")),
       hasOfferAboveFold: offerText.includes("60 minutes"),
       hasAudienceAboveFold:
-        audienceText.includes("équipes tech") ||
-        audienceText.includes("equipes tech") ||
-        audienceText.includes("décideurs") ||
-        audienceText.includes("decideurs"),
-      hasCredibilityAboveFold:
-        credibilityText.includes("sre") &&
-        credibilityText.includes("observabilité") &&
-        (credibilityText.includes("grands comptes") ||
-          credibilityText.includes("orange") ||
-          credibilityText.includes("odigo") ||
-          credibilityText.includes("enedis")),
+        audienceText.includes("équipes tech") &&
+        audienceText.includes("profils seniors") &&
+        audienceText.includes("indépendants") &&
+        audienceText.includes("décideurs"),
+      hasPostureAboveFold:
+        postureText.includes("amine") ||
+        postureText.includes("unreliable engineer") ||
+        postureText.includes("problèmes flous"),
       hasPrimaryBookingAboveFold: primaryBookingAboveFold,
       primaryBookingHref: primaryBookingLink?.getAttribute("href") ?? null,
       hasVisibleFocus,
@@ -139,7 +135,7 @@ for (const target of viewports) {
   for (const [label, passed] of [
     ["60-minute offer above fold", metrics.hasOfferAboveFold],
     ["target audience above fold", metrics.hasAudienceAboveFold],
-    ["credibility proof above fold", metrics.hasCredibilityAboveFold],
+    ["person/posture above fold", metrics.hasPostureAboveFold],
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],

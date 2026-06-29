@@ -19,20 +19,23 @@ The first viewport speaks primarily to the primary group. Secondary audiences ca
 
 ## Product Purpose
 
-The Unreliable Engineer sells focused strategic and technical clarification time: one 60-minute session around one real, poorly formulated problem, with the goal of making it clear enough to decide what should happen next.
+The Unreliable Engineer sells focused strategic and technical clarification for teams and senior technical operators who need to make a fuzzy subject decidable.
+
+The 60-minute session is the main entry point, not the whole product. It gives a fast, concrete way to test the working relationship, expose the real problem and decide whether the next useful move is a short framing engagement, a business introduction, a longer advisory relationship or no further work at all.
 
 The homepage must make four things immediately obvious:
 
-1. The concrete offer: reserve 60 minutes of clarification.
+1. The entry point: reserve 60 minutes of clarification.
 2. The audience: technical teams, senior technical profiles, freelancers or decision-makers dealing with a badly framed problem.
-3. The credibility basis: SRE, observability, production, large-account contexts and the ability to turn ambiguity into sharper decisions.
-4. The next action: book the session.
+3. The broader offers: short framing, business development / introductions and long-term advisory work.
+4. The credibility basis: SRE, observability, production, large-account contexts and the ability to turn ambiguity into sharper decisions.
+5. The next action: book the session.
 
-Success is not the number of sections or visual effects. Success is whether the first screen makes the offer, audience, proof and booking action understandable without inference.
+Success is not the number of sections or visual effects. Success is whether the first screen makes the person, posture, value proposition and booking action understandable without inference.
 
 ## Commercial Contract
 
-The primary commercial object is one 60-minute clarification session around one real, poorly formulated technical or strategic problem.
+The first commercial object is one 60-minute clarification session around one real, poorly formulated technical or strategic problem.
 
 The visitor should understand:
 
@@ -43,16 +46,26 @@ The visitor should understand:
 
 The page should not imply that one hour solves a whole system. It should imply that one hour can make the real problem visible enough to stop wasting motion.
 
+The broader offer map is:
+
+- **Clarification 60 minutes:** point d'entrée pour formuler le vrai problème, les contraintes et les décisions à isoler.
+- **Cadrage court / diagnostic:** quelques jours ou semaines pour cadrer un sujet de fiabilité, d'observabilité, d'architecture, de dette opérationnelle ou de positionnement avant d'engager une trajectoire.
+- **Apport d'affaires / mise en relation:** aider des profils, indépendants ou équipes à rendre leur valeur lisible et à créer les bonnes conversations avec le marché.
+- **Accompagnement long terme:** présence régulière auprès d'une équipe, d'un leader technique ou d'un profil senior pour garder le cap, challenger les décisions et transformer la clarté en mouvement.
+
 ## First Screen Contract
 
 Above the fold, the page must state:
 
-- the 60-minute offer;
+- who is speaking and from which posture;
+- the 60-minute clarification entry point;
 - the primary audience;
-- the credibility basis;
+- a clear value proposition;
 - one booking action.
 
-If any of these four require scrolling, guessing or reading multiple decorative modules, the redesign has failed.
+Client references should not appear in the hero. Proof belongs in the proof section immediately after the hero, where it can be contextualized properly.
+
+If any of these require scrolling, guessing or reading multiple decorative modules, the redesign has failed.
 
 ## Brand Personality
 
@@ -70,10 +83,10 @@ The brand is direct, lucid, slightly abrasive and memorable. It rejects consulti
 
 ## Design Principles
 
-1. **Offer first.** The first screen must say "60 minutes of clarification" before it tells the whole brand story.
+1. **Person and posture first.** The first screen must introduce Amine / The Unreliable Engineer before describing the commercial path.
 2. **Ambiguity becomes material.** The page should demonstrate that Amine can name, sort and make confused problems decidable.
 3. **Anti-corporate, not anti-clear.** The identity can be loud; the reading path cannot be.
-4. **Situated proof.** Orange, Odigo, Enedis, SRE, observability and production contexts must appear as proof of context, not as a decorative logo cloud.
+4. **Situated proof.** Orange, Odigo, Enedis, SRE, observability and production contexts must appear as proof of context in the proof section, not as hero decoration.
 5. **Trust layer first.** Premium infrastructure credibility carries the page; the satirical persona reinforces recognition but does not replace proof.
 6. **One primary action.** Booking is the priority path. Secondary links only support proof or comprehension.
 
@@ -97,4 +110,3 @@ Do not ship uncertain logos or claims as if they were approved. If a named refer
 - Avoid animations that are required to understand content.
 - Respect `prefers-reduced-motion`.
 - Explicitly test mobile sizes where large titles, buttons and framed panels can overflow or bury the CTA.
-

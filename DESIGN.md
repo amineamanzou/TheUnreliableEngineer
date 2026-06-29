@@ -62,26 +62,30 @@ Usage rules:
 
 The first screen must contain, without desktop scrolling at `1512x982`:
 
-- a clear offer phrase: "60 minutes pour clarifier un probleme technique ou strategique";
+- the person / posture first: Amine, The Unreliable Engineer, field-tested technical clarification;
+- a clear value proposition: rendre un problème technique, stratégique ou commercial assez net pour décider;
+- the 60-minute session as the first entry point, not as the whole product;
 - a primary audience statement: teams, senior technical profiles and decision-makers dealing with a badly framed problem;
-- a credibility statement: SRE, observability, production, large-account contexts;
-- a visible primary CTA: "Reserver 60 minutes";
+- a visible primary CTA: "Réserver 60 minutes";
 - a quieter secondary CTA: "Voir les preuves".
+
+Client references must not appear in the hero. The proof section handles them with context.
 
 Recommended composition:
 
-- Left: offer line, H1, audience, credibility, CTAs.
-- Right: one persona/decision module, not a collage.
-- Near the fold: compact proof rail with Orange, Odigo, Enedis or descriptor-first alternatives, each with context.
+- Left: person/posture line, H1, value proposition, audience, CTAs.
+- Right: one "Clarifier le problème" decision module, not a collage.
+- Near the fold: proof section with Orange, Odigo, Enedis or descriptor-first alternatives, each with context.
 
 ## Sections
 
 ### Hero / Offer
 
-- Reduce chips to two or three maximum.
 - Remove competing bubbles if they repeat the offer.
-- Replace "reserver une etude de cas" with the more immediate "Reserver 60 minutes".
+- Replace "réserver une étude de cas" with the more immediate "Réserver 60 minutes".
 - Show what the visitor brings and what they leave with.
+- Introduce the person before the offer, while keeping the offer visible quickly.
+- Do not repeat client references in the hero.
 
 ### Proof
 
@@ -90,17 +94,14 @@ Recommended composition:
 - Pair each proof with context: telecom production, operational systems, energy-scale information systems, SRE/observability.
 - Prefer qualitative proof over invented metrics.
 
-### For Whom
+### Offers
 
-- Keep the primary audience dominant: technical teams and decision-makers with unclear production, reliability, observability or architecture problems.
-- Introduce senior/freelance positioning as a secondary use case after proof.
-- Avoid a sea of labels; clear sentences beat many tags.
-
-### Format
-
-- Make the method read as a session contract: before, during, after.
-- Three steps are enough if four cards dilute the point.
-- Do not make the process look like a proprietary miracle method.
+- Explain the offer map without making the page feel like a menu of unrelated services.
+- Keep clarification 60 minutes as the point of entry.
+- Add short framing / diagnostic for situations that need more than one hour but not a large mission.
+- Add business development / introductions for profiles and teams that need the right conversations, positioning and market access.
+- Add long-term advisory for teams, leaders or senior profiles that need regular challenge and continuity.
+- Avoid spammy section names, decorative card grids and repeated labels.
 
 ### Testimonials
 
@@ -130,12 +131,11 @@ Do not ship uncertain logos. Pair proof with the claim it supports. Descriptor-f
 
 Target structure:
 
-1. one hero offer module;
+1. one hero person/posture module;
 2. one proof rail;
-3. one audience/use-case module;
-4. one method module;
-5. one testimonial proof module;
-6. one final CTA.
+3. one offers module;
+4. one testimonial proof module;
+5. one final CTA.
 
 Remove repeated card grids, repeated uppercase tags and decorative frames unless they improve scanning. A strong reading order is more important than preserving every current visual motif.
 
@@ -146,6 +146,7 @@ Remove repeated card grids, repeated uppercase tags and decorative frames unless
 - `Tag`: rare metadata or proof label, not section decoration.
 - `Proof item`: logo or descriptor, context, supported claim and permission status.
 - `Persona frame`: a brand-recognition device, not a filler image slot.
+- `Clarification module`: one concise visual explanation of entry, work and exit.
 - `CTA panel`: strong red/black close with one action.
 
 ## Responsive
@@ -178,7 +179,8 @@ Required commands:
 
 Browser review must save desktop and mobile screenshots under `artifacts/review/` and explicitly verify:
 
-- first viewport contains offer, audience, proof and booking action;
+- first viewport contains person/posture, value proposition, audience and booking action;
+- proof is rendered after the hero with governance metadata;
 - no horizontal overflow;
 - no clipped title, CTA or persona block;
 - keyboard focus is visible;
@@ -191,4 +193,3 @@ Browser review must save desktop and mobile screenshots under `artifacts/review/
 - Do not add SSR, backend, database or homemade booking logic.
 - Keep content in `src/data/homepage.fr.ts` and rendering in `src/pages/index.astro`.
 - Use the existing brand token values unless there is a direct readability problem.
-
