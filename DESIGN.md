@@ -6,6 +6,8 @@ The homepage should move from a dense comic poster toward a sharper decision dos
 
 The desired impression is an engineer arriving with a marker, cutting through noise and writing the real problem on the board. Less sticker energy. More signal.
 
+The "wow" layer should feel like observability applied to a fuzzy decision: traces, signal paths, terminal labels, diagnostic nodes and pointer-aware interaction. It should not become a decorative dashboard for its own sake.
+
 ## Art Direction Guardrail
 
 The new direction is a clarification and decision dossier, not a stationery theme.
@@ -98,10 +100,16 @@ Recommended composition:
 
 - Explain the offer map without making the page feel like a menu of unrelated services.
 - Keep clarification 60 minutes as the point of entry.
-- Add short framing / diagnostic for situations that need more than one hour but not a large mission.
-- Add business development / introductions for profiles and teams that need the right conversations, positioning and market access.
-- Add long-term advisory for teams, leaders or senior profiles that need regular challenge and continuity.
+- Add technical framing for situations that need more than one hour but not a large mission.
+- Add senior accompaniment for teams, leaders or senior profiles that need regular challenge and continuity.
+- Add positioning / introductions for profiles and teams that need the right conversations, positioning and market access.
 - Avoid spammy section names, decorative card grids and repeated labels.
+
+### Boundaries
+
+- Keep a compact "what this is not" section if it reduces confusion.
+- Use it to reject the wrong promises: generic coaching, 40-page audit, automatic intro and magical AI.
+- Do not let it become another offer grid.
 
 ### Testimonials
 
@@ -134,8 +142,9 @@ Target structure:
 1. one hero person/posture module;
 2. one proof rail;
 3. one offers module;
-4. one testimonial proof module;
-5. one final CTA.
+4. one compact boundaries module;
+5. one testimonial proof module;
+6. one final CTA.
 
 Remove repeated card grids, repeated uppercase tags and decorative frames unless they improve scanning. A strong reading order is more important than preserving every current visual motif.
 

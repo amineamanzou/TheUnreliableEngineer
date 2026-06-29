@@ -44,6 +44,16 @@ const assetPath = (path: string) =>
         <div class="hero-stage">
           <article class="panel hero-stage-board hero-clarifier-card">
             <div class="slot-label slot-label-ink">{page.hero.consultation.label}</div>
+            <div class="signal-map" aria-hidden="true">
+              <span class="signal-orbit signal-orbit-1"></span>
+              <span class="signal-orbit signal-orbit-2"></span>
+              <span class="signal-orbit signal-orbit-3"></span>
+              <span class="signal-node signal-node-a">symptôme</span>
+              <span class="signal-node signal-node-b">contrainte</span>
+              <span class="signal-node signal-node-c">décision</span>
+              <span class="signal-beam signal-beam-1"></span>
+              <span class="signal-beam signal-beam-2"></span>
+            </div>
             <div class="hero-clarifier-layout">
               <PersonaPlaceholder
                 src="/brand/web/characters/camera.png"
@@ -150,6 +160,27 @@ const assetPath = (path: string) =>
       </div>
     </section>
 
+    <section class="section-block boundary-section" id="boundaries">
+      <div class="shell shell-wide">
+        <div class="section-heading boundary-heading">
+          <div class="stack">
+            <div class="section-tag">{page.boundaries.tag}</div>
+            <h2 class="section-title">{page.boundaries.title}</h2>
+          </div>
+          <p class="lede">{page.boundaries.intro}</p>
+        </div>
+
+        <div class="boundary-grid">
+          {page.boundaries.items.map((item) => (
+            <article class="panel boundary-card">
+              <h3 class="card-title">{item.title}</h3>
+              <p class="card-copy">{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <section class="section-block" id="testimonials">
       <div class="shell shell-wide">
         <div class="section-heading">
@@ -207,4 +238,28 @@ const assetPath = (path: string) =>
       </div>
     </section>
   </main>
+
+  <script>
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!motionQuery.matches) {
+      const root = document.documentElement;
+      const updatePointer = (event: PointerEvent) => {
+        root.style.setProperty("--pointer-x", `${event.clientX}px`);
+        root.style.setProperty("--pointer-y", `${event.clientY}px`);
+        root.style.setProperty("--pointer-nx", `${event.clientX / window.innerWidth - 0.5}`);
+        root.style.setProperty("--pointer-ny", `${event.clientY / window.innerHeight - 0.5}`);
+      };
+
+      window.addEventListener("pointermove", updatePointer, { passive: true });
+
+      const updateScroll = () => {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+        root.style.setProperty("--scroll-progress", progress.toFixed(4));
+      };
+
+      updateScroll();
+      window.addEventListener("scroll", updateScroll, { passive: true });
+    }
+  </script>
 </BaseLayout>
