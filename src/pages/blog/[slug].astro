@@ -1,21 +1,40 @@
 ---
-import { blogArticles } from "../../data/blogArticles";
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import Topbar from "../../components/Topbar.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-export function getStaticPaths() {
-  return blogArticles.map((article) => ({
-    params: { slug: article.slug },
-    props: { article },
+type Props = {
+  article: CollectionEntry<"articles">;
+  slug: string;
+};
+
+const assetPath = (path: string) =>
+  path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
+const formatDate = (isoDate: string) =>
+  new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(
+    new Date(`${isoDate}T00:00:00`),
+  );
+export async function getStaticPaths() {
+  const articles = await getCollection("articles");
+  const getSlug = (article: { id: string; slug?: string }) =>
+    article.slug ?? article.id.replace(/\.mdx?$/, "").replace(/\/index$/, "");
+
+  return articles.map((article) => ({
+    params: { slug: getSlug(article) },
+    props: { article, slug: getSlug(article) },
   }));
 }
 
-const { article } = Astro.props;
+const { article, slug } = Astro.props;
+const { Content } = await render(article);
+const articleDate = formatDate(article.data.publishedAt);
+const heroImage = article.data.heroImage ? assetPath(article.data.heroImage) : undefined;
 ---
 
 <BaseLayout
-  title={`${article.title} | The Unreliable Engineer`}
-  description={article.excerpt}
+  title={`${article.data.title} | The Unreliable Engineer`}
+  description={article.data.excerpt}
 >
   <Topbar />
 
@@ -24,15 +43,24 @@ const { article } = Astro.props;
       <div class="shell shell-wide">
         <div class="panel article-panel">
           <div class="article-meta">
-            <span class="kicker">{article.label}</span>
-            <span>{article.date}</span>
-            <span>{article.readTime}</span>
+            <span class="kicker">{article.data.label}</span>
+            <span>{articleDate}</span>
+            <span>{article.data.readTime}</span>
           </div>
 
           <div class="article-layout">
             <header class="article-head">
-              <h1>{article.title}</h1>
-              <p class="hero-text">{article.excerpt}</p>
+              <h1>{article.data.title}</h1>
+              <p class="hero-text">{article.data.excerpt}</p>
+              {heroImage && (
+                <img
+                  class="article-hero-image"
+                  src={heroImage}
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                />
+              )}
             </header>
 
             <aside class="article-source">
@@ -40,21 +68,17 @@ const { article } = Astro.props;
                 <span></span>
                 <span></span>
                 <span></span>
-                <strong>source.linkedIn</strong>
+                <strong>{slug}.linkedin</strong>
               </div>
-              <p>Version importée depuis le dernier historique d'articles LinkedIn.</p>
-              <a class="button button-primary" href={article.sourceUrl} target="_blank" rel="noreferrer">
-                Lire sur LinkedIn
+              <p>Commentaires, réactions et discussion restent ouverts sur le post d'origine.</p>
+              <a class="button button-primary" href={article.data.sourceUrl} target="_blank" rel="noreferrer">
+                Réagir sur LinkedIn
               </a>
             </aside>
           </div>
 
           <div class="article-body">
-            <p>{article.intro}</p>
-            <h2>Ce que l'article travaille</h2>
-            <ul class="list">
-              {article.points.map((point) => <li>{point}</li>)}
-            </ul>
+            <Content />
           </div>
         </div>
       </div>

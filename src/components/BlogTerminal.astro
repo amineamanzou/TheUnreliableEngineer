@@ -1,0 +1,392 @@
+---
+type TerminalArticle = {
+  slug: string;
+  label: string;
+  title: string;
+  publishedAt: string;
+  date: string;
+  readTime: string;
+  excerpt: string;
+  href: string;
+};
+
+type Props = {
+  articles: TerminalArticle[];
+  internetDeletedHref: string;
+};
+
+const { articles, internetDeletedHref } = Astro.props;
+const terminalArticlesJson = JSON.stringify(articles);
+---
+
+<section class="panel blog-terminal-panel" aria-label="Terminal de recherche du blog">
+  <div class="terminal-bar" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <strong>~/articles</strong>
+  </div>
+  <div class="blog-terminal-screen" data-terminal-output>
+    <p><span>$</span> help</p>
+    <p class="terminal-result">
+      <strong>fzf · ls · find · rg · ripgrep · open · read · cat</strong>
+      <small>Tab complète, ↑ ↓ rejouent l'historique, fzf ouvre une recherche interactive.</small>
+    </p>
+    <div class="terminal-fzf" data-fzf-panel hidden></div>
+  </div>
+  <form class="blog-terminal-input" data-terminal-form>
+    <label for="blog-terminal-command">$</label>
+    <input
+      id="blog-terminal-command"
+      name="command"
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      value="fzf"
+      aria-label="Commande terminal"
+    />
+    <button type="submit">run</button>
+  </form>
+  <div class="terminal-command-rail" aria-label="Commandes disponibles">
+    {["fzf", "ls", "find", "rg", "ripgrep", "open", "read", "cat"].map((command) => (
+      <button type="button" data-terminal-command={command}>{command}</button>
+    ))}
+  </div>
+</section>
+
+<script is:inline define:vars={{ terminalArticlesJson, internetDeletedHref }}>
+  const articles = JSON.parse(terminalArticlesJson);
+  const terminalOutput = document.querySelector("[data-terminal-output]");
+  const terminalForm = document.querySelector("[data-terminal-form]");
+  const terminalInput = terminalForm?.querySelector("input");
+  const commandButtons = Array.from(document.querySelectorAll("[data-terminal-command]"));
+  const fzfPanel = document.querySelector("[data-fzf-panel]");
+  const commands = ["fzf", "ls", "find", "rg", "ripgrep", "open", "read", "cat", "help"];
+  const helpByCommand = {
+    fzf: "Usage: fzf [query] · ouvre une recherche interactive, ↑ ↓ sélectionnent, Enter ouvre l'article.",
+    ls: "Usage: ls · liste les articles par date de publication.",
+    find: "Usage: find <texte> · filtre les titres, slugs, labels et extraits.",
+    rg: "Usage: rg <texte> · cherche dans les titres, labels et extraits.",
+    ripgrep: "Usage: ripgrep <texte> · alias bavard de rg.",
+    open: "Usage: open <index|slug|texte> · ouvre l'article local correspondant.",
+    read: "Usage: read <index|slug|texte> · ouvre l'article local correspondant.",
+    cat: "Usage: cat <index|slug|texte> · ouvre l'article local correspondant.",
+    help: "Usage: help [commande] · affiche les commandes disponibles ou l'aide d'une commande.",
+  };
+  let mode = "command";
+  let history = [];
+  let historyIndex = 0;
+  let selectedIndex = 0;
+  let query = "";
+  let fzfMatches = articles;
+
+  const escapeHtml = (value) =>
+    String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+
+  const normalize = (value) =>
+    String(value)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+  const searchFields = (article) => [article.slug, article.title, article.label, article.excerpt, article.publishedAt];
+
+  const matchesQuery = (article, value) => {
+    const normalized = normalize(value);
+    return !normalized || searchFields(article).some((field) => normalize(field).includes(normalized));
+  };
+
+  const filterArticles = (value) => articles.filter((article) => matchesQuery(article, value));
+
+  const pushOutput = (html) => {
+    if (!terminalOutput || !fzfPanel) {
+      return;
+    }
+    fzfPanel.insertAdjacentHTML("beforebegin", html);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  };
+
+  const renderArticleLine = (article, index) =>
+    `<p class="terminal-result"><span>${index + 1}</span><strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(
+      article.label,
+    )} · ${escapeHtml(article.date)} · ${escapeHtml(article.readTime)}</small></p>`;
+
+  const renderHelp = (command) => {
+    if (command && helpByCommand[command]) {
+      return `<p class="terminal-result terminal-help"><strong>${escapeHtml(helpByCommand[command])}</strong><small>Astuce: Tab complète les commandes et les articles.</small></p>`;
+    }
+
+    return `<p class="terminal-result terminal-help"><strong>Usage: help [commande]</strong><small>${commands
+      .map((item) => `${item} --help`)
+      .join(" · ")}</small></p>`;
+  };
+
+  const resolveArticle = (target) => {
+    const value = target.trim();
+    if (!value) {
+      return articles[0];
+    }
+
+    const byIndex = Number.parseInt(value, 10);
+    if (Number.isInteger(byIndex) && articles[byIndex - 1]) {
+      return articles[byIndex - 1];
+    }
+
+    const normalized = normalize(value);
+    return (
+      articles.find((article) => normalize(article.slug) === normalized) ??
+      articles.find((article) => searchFields(article).some((field) => normalize(field).includes(normalized)))
+    );
+  };
+
+  const renderReadPreview = (article) =>
+    `<p class="terminal-result terminal-read"><strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(
+      article.excerpt,
+    )}</small><a href="${article.href}">open ${escapeHtml(article.slug)}</a></p>`;
+
+  const updateFzf = () => {
+    if (!fzfPanel) {
+      return;
+    }
+
+    fzfMatches = filterArticles(query);
+    if (selectedIndex >= fzfMatches.length) {
+      selectedIndex = Math.max(0, fzfMatches.length - 1);
+    }
+
+    const selected = fzfMatches[selectedIndex];
+    const rows = fzfMatches
+      .map(
+        (article, index) => `
+          <button class="terminal-fzf-row${index === selectedIndex ? " is-selected" : ""}" type="button" data-fzf-index="${index}">
+            <span>${index === selectedIndex ? ">" : " "}</span>
+            <strong>${escapeHtml(article.title)}</strong>
+            <small>${escapeHtml(article.slug)}</small>
+          </button>`,
+      )
+      .join("");
+
+    fzfPanel.hidden = false;
+    fzfPanel.innerHTML = `
+      <div class="terminal-fzf-head">
+        <strong>fzf articles</strong>
+        <span>${fzfMatches.length} résultat${fzfMatches.length > 1 ? "s" : ""}</span>
+      </div>
+      <div class="terminal-fzf-query">query&gt; ${escapeHtml(query || "")}</div>
+      <div class="terminal-fzf-grid">
+        <div class="terminal-fzf-list">${rows || '<p class="terminal-fzf-empty">no match</p>'}</div>
+        <aside class="terminal-fzf-preview">
+          ${
+            selected
+              ? `<strong>${escapeHtml(selected.title)}</strong><span>${escapeHtml(selected.date)} · ${escapeHtml(
+                  selected.readTime,
+                )}</span><p>${escapeHtml(selected.excerpt)}</p>`
+              : "<strong>no preview</strong><p>Change la recherche avec fzf &lt;texte&gt;.</p>"
+          }
+        </aside>
+      </div>`;
+  };
+
+  const enterFzf = (initialQuery = "") => {
+    mode = "fzf";
+    query = initialQuery;
+    selectedIndex = 0;
+    pushOutput(`<p><span>$</span> fzf ${escapeHtml(initialQuery)}</p>`);
+    updateFzf();
+  };
+
+  const leaveFzf = () => {
+    mode = "command";
+    query = "";
+    selectedIndex = 0;
+    if (fzfPanel) {
+      fzfPanel.hidden = true;
+      fzfPanel.innerHTML = "";
+    }
+  };
+
+  const openArticle = (article) => {
+    if (article?.href) {
+      window.location.href = article.href;
+    }
+  };
+
+  const completeInput = () => {
+    if (!terminalInput) {
+      return;
+    }
+
+    const value = terminalInput.value;
+    const [name = "", ...rest] = value.trim().split(/\s+/);
+    const partial = rest.join(" ");
+
+    if (!partial && name) {
+      const command = commands.find((item) => item.startsWith(name));
+      if (command) {
+        terminalInput.value = command;
+      }
+      return;
+    }
+
+    if (!commands.includes(name)) {
+      const command = commands.find((item) => item.startsWith(name));
+      if (command) {
+        terminalInput.value = `${command} `;
+      }
+      return;
+    }
+
+    const article = resolveArticle(partial);
+    if (article && ["find", "fzf", "rg", "ripgrep", "open", "read", "cat"].includes(name)) {
+      terminalInput.value = `${name} ${article.slug}`;
+    }
+  };
+
+  const submitCommand = (rawCommand) => {
+    const command = rawCommand.trim();
+    if (!command) {
+      return;
+    }
+
+    history.push(command);
+    historyIndex = history.length;
+
+    if (command === "rm -rf /") {
+      pushOutput(
+        '<p><span>$</span> rm -rf /</p><p class="terminal-result"><strong>internet:</strong><small>deleting indexes, memes, DNS caches...</small></p>',
+      );
+      window.setTimeout(() => {
+        window.location.href = internetDeletedHref;
+      }, 500);
+      return;
+    }
+
+    const [name = "", ...rest] = command.split(/\s+/);
+    const queryText = rest.join(" ").replace(/^["']|["']$/g, "");
+    const helpRequested = queryText === "--help" || rest.includes("--help");
+
+    if (helpRequested) {
+      pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${renderHelp(name)}`);
+      return;
+    }
+
+    if (name === "help") {
+      const requestedCommand = rest[0];
+      pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${renderHelp(requestedCommand)}`);
+      return;
+    }
+
+    if (name === "fzf") {
+      enterFzf(queryText);
+      return;
+    }
+
+    if (name === "ls") {
+      pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${articles.map(renderArticleLine).join("")}`);
+      return;
+    }
+
+    if (name === "find" || name === "rg" || name === "ripgrep") {
+      const matches = filterArticles(queryText);
+      pushOutput(
+        `<p><span>$</span> ${escapeHtml(command)}</p>${
+          matches.length
+            ? matches.map(name === "find" ? renderArticleLine : renderReadPreview).join("")
+            : '<p class="terminal-result"><strong>0 match</strong><small>try rg "observabilité"</small></p>'
+        }`,
+      );
+      return;
+    }
+
+    if (name === "open" || name === "read" || name === "cat") {
+      const article = resolveArticle(queryText);
+      if (article) {
+        pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${renderReadPreview(article)}`);
+        window.setTimeout(() => openArticle(article), 90);
+      } else {
+        pushOutput(
+          `<p><span>$</span> ${escapeHtml(command)}</p><p class="terminal-result"><strong>file not found</strong><small>ls articles first</small></p>`,
+        );
+      }
+      return;
+    }
+
+    pushOutput(
+      `<p><span>$</span> ${escapeHtml(command)}</p><p class="terminal-result"><strong>command not found</strong><small>try fzf, ls, find, rg, ripgrep, open, read, cat, help</small></p>`,
+    );
+  };
+
+  terminalForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    submitCommand(terminalInput?.value ?? "");
+    if (terminalInput) {
+      terminalInput.value = "";
+      terminalInput.focus();
+    }
+  });
+
+  terminalInput?.addEventListener("keydown", (event) => {
+    if (mode === "fzf") {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, Math.max(0, fzfMatches.length - 1));
+        updateFzf();
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        selectedIndex = Math.max(0, selectedIndex - 1);
+        updateFzf();
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        openArticle(fzfMatches[selectedIndex]);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        leaveFzf();
+      } else if (event.key === "Tab") {
+        event.preventDefault();
+        const selected = fzfMatches[selectedIndex];
+        if (selected && terminalInput) {
+          terminalInput.value = `open ${selected.slug}`;
+          leaveFzf();
+        }
+      }
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      historyIndex = Math.max(0, historyIndex - 1);
+      terminalInput.value = history[historyIndex] ?? "";
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      historyIndex = Math.min(history.length, historyIndex + 1);
+      terminalInput.value = history[historyIndex] ?? "";
+    } else if (event.key === "Tab") {
+      event.preventDefault();
+      completeInput();
+    }
+  });
+
+  fzfPanel?.addEventListener("click", (event) => {
+    const row = event.target.closest?.("[data-fzf-index]");
+    if (!row) {
+      return;
+    }
+    selectedIndex = Number(row.getAttribute("data-fzf-index"));
+    updateFzf();
+  });
+
+  commandButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const command = button.getAttribute("data-terminal-command") ?? "ls";
+      if (terminalInput) {
+        terminalInput.value = command;
+        terminalInput.focus();
+      }
+      submitCommand(command);
+    });
+  });
+</script>
