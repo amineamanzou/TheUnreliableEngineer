@@ -43,7 +43,6 @@ export type SocialStat = {
   countTo: number;
   suffix: string;
   label: string;
-  detail: string;
 };
 
 export type SocialLink = {
@@ -289,37 +288,59 @@ export const homepageFr = {
       "Je publie pour tester les angles, documenter les systèmes et exposer les frictions réelles: observabilité, agents IA, production, freelance et outillage maison.",
     stats: [
       {
-        value: "48k",
-        countTo: 48431,
+        value: "350+",
+        countTo: 350,
         suffix: "",
-        label: "impressions sur le meilleur post LinkedIn",
-        detail: "Snapshot LinkedIn Analytics · 30/03/2026",
+        label: "publications visibles sur les plateformes",
       },
       {
-        value: "16",
-        countTo: 16,
+        value: "326k+",
+        countTo: 326000,
         suffix: "",
-        label: "carrousels LinkedIn vérifiés",
-        detail: "Ledger contenu · 07/06/2026",
+        label: "vues et impressions vérifiées",
       },
       {
-        value: "5.9k",
-        countTo: 5963,
+        value: "550+",
+        countTo: 550,
         suffix: "",
-        label: "impressions cumulées sur ces carrousels",
-        detail: "Audit publication LinkedIn · 07/06/2026",
+        label: "commentaires vérifiés",
       },
     ] satisfies SocialStat[],
     links: [
       {
         label: "LinkedIn",
         href: "https://www.linkedin.com/in/amineamanzou/",
-        meta: "Posts, recommandations et carrousels techniques",
+        meta: "Recommandations, posts longs et angles observabilité",
       },
       {
-        label: "GitHub",
-        href: "https://github.com/amineamanzou",
-        meta: "Labs, outils et systèmes construits en public",
+        label: "TikTok",
+        href: "https://www.tiktok.com/@theunreliableengi",
+        meta: "Shorts, tests d'angles et formats plus directs",
+      },
+      {
+        label: "Instagram",
+        href: "https://www.instagram.com/theunreliableengineer/",
+        meta: "Carrousels, stories et présence visuelle de marque",
+      },
+      {
+        label: "Facebook",
+        href: "https://www.facebook.com/profile.php?id=61570743494074",
+        meta: "Page The Unreliable Engineer",
+      },
+      {
+        label: "X",
+        href: "https://x.com/TheUnreliableEn",
+        meta: "Notes courtes, build logs et signaux faibles",
+      },
+      {
+        label: "Threads",
+        href: "https://www.threads.com/@theunreliableengineer",
+        meta: "Posts courts et conversations tech",
+      },
+      {
+        label: "YouTube",
+        href: "https://www.youtube.com/@theunreliableengineer",
+        meta: "Vidéos longues, shorts et posts communauté",
       },
     ] satisfies SocialLink[],
   },
