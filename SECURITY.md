@@ -18,6 +18,18 @@ In scope:
 - GitHub Actions workflows used to validate or publish the site.
 - Dependency and supply-chain issues that affect the built site or CI/CD path.
 
+## Supply Chain Policy
+
+Routine dependency, GitHub Actions, and Docker image updates should not be
+installed immediately after publication. Dependabot version updates use a
+48-hour cooldown, and CI checks the npm lockfile before `npm ci` to reject npm
+package versions published less than 48 hours ago.
+
+Security updates remain allowed to bypass the cooldown when they remediate an
+active vulnerability. In that case, the critical vulnerability gates, dependency
+review, Trivy scans, CodeQL, signed Docker digest, and maintainer review still
+apply.
+
 Out of scope:
 
 - Denial-of-service testing.
