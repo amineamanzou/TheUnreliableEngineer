@@ -68,8 +68,17 @@ servent de garde-fou pour l'artifact généré.
 ## Déploiement production
 
 Le workflow `.github/workflows/deploy-production.yml` se lance sur `main`.
-Il valide Astro, pousse l'image Docker sur GHCR, puis déploie le digest
-immutable via Ansible dans le dépôt privé `TheUnreliableInfrastructure`.
+Il valide Astro, construit une image Docker locale, bloque la publication si
+Trivy trouve une vulnérabilité critique, puis pousse l'image sur GHCR. Le digest
+GHCR réellement publié est ensuite scanné à son tour avant signature et
+déploiement. Le build publié émet SBOM et provenance Buildx, et le digest est
+signé puis vérifié avec Sigstore/Cosign avant d'être exposé au job de
+déploiement. Deux builds Docker sont utilisés: le premier alimente le scan
+local avant publication, le second produit le digest immutable publié et signé.
+Un dispatch manuel production n'est accepté que sur la référence `main`.
+
+Le déploiement consomme ensuite ce digest immutable via Ansible dans le dépôt
+privé `TheUnreliableInfrastructure`.
 
 Avant de merger sur `main`, créer l'environnement GitHub `production` et y
 ajouter les secrets:
@@ -90,3 +99,15 @@ pour le login registry côté serveur.
 Le dépôt infra doit contenir le contrat Ansible `web_runtime` introduit par le
 commit `348605b` ou plus récent. La production n'accepte qu'une image sous forme
 `ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest>`.
+
+La joignabilité SSH depuis les runners GitHub hébergés reste une contrainte
+infra séparée du durcissement build/publish.
+
+## Baseline sécurité CI/CD
+
+Le socle DevSecOps est documenté dans
+[ADR 0002](adr/0002-ci-cd-security-baseline.md). La V1 bloque les
+vulnérabilités critiques, publie les résultats SARIF dans GitHub Security,
+active CodeQL et Dependabot, et signe le digest Docker publié avant
+déploiement. Le blocage des secrets doit être activé côté GitHub avec Secret
+Scanning et Push Protection.
