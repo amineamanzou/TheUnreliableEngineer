@@ -78,7 +78,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Trivy SARIF scan
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.LOCAL_IMAGE_TAG }}
           format: sarif
@@ -101,7 +101,7 @@ jobs:
           if-no-files-found: error
 
       - name: Trivy critical vulnerability gate
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.LOCAL_IMAGE_TAG }}
           format: table
@@ -132,7 +132,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Trivy pushed digest critical gate
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         env:
           TRIVY_USERNAME: ${{ github.actor }}
           TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
