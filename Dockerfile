@@ -13,7 +13,7 @@ COPY src ./src
 
 RUN SITE_URL="${SITE_URL}" BASE_PATH="${BASE_PATH}" npm run build
 
-FROM caddy:2.11.2-alpine
+FROM caddy:2.11.3-alpine
 WORKDIR /srv
 
 ARG VCS_REF=unknown
