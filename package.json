@@ -12,6 +12,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "check:i18n": "node scripts/checks/i18n-content.mjs",
+    "check:dependencies-age": "node scripts/qa/dependency-age-check.mjs",
+    "compliance:plumber": "bash scripts/qa/plumber-check.sh",
     "review:homepage": "node scripts/review-homepage.mjs",
     "review:blog": "node scripts/review-blog.mjs"
   },

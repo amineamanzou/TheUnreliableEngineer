@@ -111,3 +111,9 @@ vulnérabilités critiques, publie les résultats SARIF dans GitHub Security,
 active CodeQL et Dependabot, et signe le digest Docker publié avant
 déploiement. Le blocage des secrets doit être activé côté GitHub avec Secret
 Scanning et Push Protection.
+
+La conformité CI/CD ajoute Plumber avec un seuil de 100, protection de `main`
+contre le force-push et la suppression, et un gate supply-chain qui refuse les
+versions npm publiées depuis moins de 48 heures avant toute installation
+`npm ci`. La protection n'impose pas de review CODEOWNERS: ce dépôt est maintenu
+par un maintainer solo.
