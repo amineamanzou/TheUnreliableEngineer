@@ -97,10 +97,20 @@ Rollback is the same command with an older known-good digest.
 
 ## Automatic Polling
 
-The included `CronWorkflow` checks `main` every 15 minutes:
+The included `CronWorkflow` checks `main` every 15 minutes, but it is shipped
+suspended until the GHCR and SSH deploy secrets have been created and a manual
+digest promotion has succeeded:
 
 ```bash
 kubectl -n the-unreliable-deploy get cronworkflow
+```
+
+Enable it after the first successful manual run:
+
+```bash
+kubectl -n the-unreliable-deploy patch cronworkflow the-unreliable-engineer-pull-deploy-main \
+  --type=merge \
+  -p '{"spec":{"suspend":false}}'
 ```
 
 The concurrency policy is `Forbid`, so a slow deployment blocks the next
