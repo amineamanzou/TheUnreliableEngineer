@@ -16,6 +16,7 @@ const ui = uiByLocale[locale];
 const { Content } = await render(article);
 const articleDate = formatArticleDate(article.data.publishedAt, locale);
 const heroImage = article.data.heroImage ? assetPath(article.data.heroImage) : undefined;
+const hasSource = Boolean(article.data.sourceUrl);
 const allArticles = await getCollection("articles");
 const alternates = allArticles
   .filter((candidate) => candidate.data.translationKey === article.data.translationKey)
@@ -52,7 +53,7 @@ const redirectPaths = {
             <span>{article.data.readTime}</span>
           </div>
 
-          <div class="article-layout">
+          <div class:list={["article-layout", !hasSource && "article-layout-full"]}>
             <header class="article-head">
               <h1>{article.data.title}</h1>
               <p class="hero-text">{article.data.excerpt}</p>
@@ -67,18 +68,20 @@ const redirectPaths = {
               )}
             </header>
 
-            <aside class="article-source">
-              <div class="terminal-bar" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-                <strong>{article.data.articleSlug}.linkedin</strong>
-              </div>
-              <p>{ui.article.sourceText}</p>
-              <a class="button button-primary" href={article.data.sourceUrl} target="_blank" rel="noreferrer">
-                {ui.article.sourceCta}
-              </a>
-            </aside>
+            {article.data.sourceUrl && (
+              <aside class="article-source">
+                <div class="terminal-bar" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <strong>{article.data.articleSlug}.linkedin</strong>
+                </div>
+                <p>{ui.article.sourceText}</p>
+                <a class="button button-primary" href={article.data.sourceUrl} target="_blank" rel="noreferrer">
+                  {ui.article.sourceCta}
+                </a>
+              </aside>
+            )}
           </div>
 
           <div class="article-body">
