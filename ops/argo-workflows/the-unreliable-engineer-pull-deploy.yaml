@@ -383,8 +383,10 @@ metadata:
   name: the-unreliable-engineer-pull-deploy-main
   namespace: the-unreliable-deploy
 spec:
-  schedule: "*/15 * * * *"
+  schedules:
+    - "*/15 * * * *"
   timezone: Europe/Paris
+  suspend: true
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 10
   failedJobsHistoryLimit: 20
