@@ -1,0 +1,401 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: the-unreliable-deploy
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: the-unreliable-engineer-deployer
+  namespace: the-unreliable-deploy
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: the-unreliable-engineer-deployer
+  namespace: the-unreliable-deploy
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - workflowtaskresults
+    verbs:
+      - create
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: the-unreliable-engineer-deployer
+  namespace: the-unreliable-deploy
+subjects:
+  - kind: ServiceAccount
+    name: the-unreliable-engineer-deployer
+    namespace: the-unreliable-deploy
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: the-unreliable-engineer-deployer
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: the-unreliable-engineer-pull-deploy
+  namespace: the-unreliable-deploy
+spec:
+  serviceAccountName: the-unreliable-engineer-deployer
+  entrypoint: release
+  arguments:
+    parameters:
+      - name: image-repository
+        value: ghcr.io/amineamanzou/the-unreliable-engineer
+      - name: tag
+        value: main
+      - name: image-ref
+        value: ""
+      - name: public-health-url
+        value: https://theunreliable.engineer/healthz
+  templates:
+    - name: release
+      dag:
+        tasks:
+          - name: resolve-image
+            template: resolve-image
+            arguments:
+              parameters:
+                - name: image-repository
+                  value: "{{workflow.parameters.image-repository}}"
+                - name: tag
+                  value: "{{workflow.parameters.tag}}"
+                - name: image-ref
+                  value: "{{workflow.parameters.image-ref}}"
+
+          - name: verify-signature
+            dependencies:
+              - resolve-image
+            template: verify-signature
+            arguments:
+              parameters:
+                - name: image-ref
+                  value: "{{tasks.resolve-image.outputs.parameters.image-ref}}"
+
+          - name: scan-image
+            dependencies:
+              - verify-signature
+            template: scan-image
+            arguments:
+              parameters:
+                - name: image-ref
+                  value: "{{tasks.resolve-image.outputs.parameters.image-ref}}"
+
+          - name: deploy-web-prod
+            dependencies:
+              - scan-image
+            template: deploy-web-prod
+            arguments:
+              parameters:
+                - name: image-ref
+                  value: "{{tasks.resolve-image.outputs.parameters.image-ref}}"
+
+          - name: healthcheck
+            dependencies:
+              - deploy-web-prod
+            template: healthcheck
+            arguments:
+              parameters:
+                - name: public-health-url
+                  value: "{{workflow.parameters.public-health-url}}"
+
+    - name: resolve-image
+      inputs:
+        parameters:
+          - name: image-repository
+          - name: tag
+          - name: image-ref
+      outputs:
+        parameters:
+          - name: image-ref
+            valueFrom:
+              path: /tmp/image-ref
+      script:
+        image: alpine:3.22@sha256:7c8cb692ae09657cbc4a3f3cbd0e8d5a2690ba38386aaaf252dbb060bf5eb2e6
+        command:
+          - sh
+        env:
+          - name: GHCR_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-ghcr
+                key: username
+          - name: GHCR_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-ghcr
+                key: token
+        source: |
+          set -eu
+          apk add --no-cache curl jq
+
+          image_repository="{{inputs.parameters.image-repository}}"
+          tag="{{inputs.parameters.tag}}"
+          requested_image_ref="{{inputs.parameters.image-ref}}"
+
+          if [ -n "$requested_image_ref" ]; then
+            case "$requested_image_ref" in
+              "$image_repository"@sha256:????????????????????????????????????????????????????????????????)
+                printf '%s\n' "$requested_image_ref" > /tmp/image-ref
+                exit 0
+                ;;
+              *)
+                echo "image-ref must be an immutable digest for $image_repository" >&2
+                exit 1
+                ;;
+            esac
+          fi
+
+          repository_path="${image_repository#ghcr.io/}"
+          token="$(
+            curl -fsSL \
+              -u "$GHCR_USERNAME:$GHCR_TOKEN" \
+              "https://ghcr.io/token?service=ghcr.io&scope=repository:${repository_path}:pull" |
+              jq -r '.token'
+          )"
+
+          digest="$(
+            curl -fsSI \
+              -H "Authorization: Bearer $token" \
+              -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json" \
+              "https://ghcr.io/v2/${repository_path}/manifests/${tag}" |
+              awk -F': ' 'tolower($1) == "docker-content-digest" { print $2 }' |
+              tr -d '\r'
+          )"
+
+          case "$digest" in
+            sha256:????????????????????????????????????????????????????????????????)
+              printf '%s@%s\n' "$image_repository" "$digest" > /tmp/image-ref
+              ;;
+            *)
+              echo "Could not resolve immutable digest for ${image_repository}:${tag}" >&2
+              exit 1
+              ;;
+          esac
+
+    - name: verify-signature
+      inputs:
+        parameters:
+          - name: image-ref
+      container:
+        image: ghcr.io/sigstore/cosign/cosign:v3.0.2@sha256:3db384ac964445d8fc521d9284d7a59e2c54796870b9eaa69ea4cff7d06a4ff2
+        command:
+          - cosign
+        args:
+          - verify
+          - "{{inputs.parameters.image-ref}}"
+          - --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          - --certificate-identity-regexp=^https://github.com/amineamanzou/TheUnreliableEngineer/\.github/workflows/deploy-production\.yml@refs/heads/main$
+
+    - name: scan-image
+      inputs:
+        parameters:
+          - name: image-ref
+      container:
+        image: aquasec/trivy:0.66.0@sha256:adbf5948d99de471725d37d2cfbd982178971d1cf081615284671d1c8ba99fb8
+        command:
+          - trivy
+        args:
+          - image
+          - --severity=CRITICAL
+          - --vuln-type=os,library
+          - --exit-code=1
+          - --no-progress
+          - "{{inputs.parameters.image-ref}}"
+        env:
+          - name: TRIVY_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-ghcr
+                key: username
+          - name: TRIVY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-ghcr
+                key: token
+
+    - name: deploy-web-prod
+      inputs:
+        parameters:
+          - name: image-ref
+      script:
+        image: alpine:3.22@sha256:7c8cb692ae09657cbc4a3f3cbd0e8d5a2690ba38386aaaf252dbb060bf5eb2e6
+        command:
+          - sh
+        env:
+          - name: WEB_PROD_SSH_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-web-prod-ssh
+                key: id_ed25519
+          - name: WEB_PROD_SSH_KNOWN_HOSTS
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-web-prod-ssh
+                key: known_hosts
+          - name: GHCR_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-ghcr
+                key: username
+          - name: GHCR_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: the-unreliable-engineer-ghcr
+                key: token
+        source: |
+          set -eu
+          apk add --no-cache openssh-client
+
+          image_ref="{{inputs.parameters.image-ref}}"
+          web_prod_host="10.42.1.30"
+
+          install -d -m 700 /tmp/ssh
+          printf '%s\n' "$WEB_PROD_SSH_PRIVATE_KEY" > /tmp/ssh/id_ed25519
+          printf '%s\n' "$WEB_PROD_SSH_KNOWN_HOSTS" > /tmp/ssh/known_hosts
+          chmod 600 /tmp/ssh/id_ed25519
+          chmod 600 /tmp/ssh/known_hosts
+
+          if [ "$web_prod_host" != "10.42.1.30" ]; then
+            echo "Refusing to deploy to unexpected host: $web_prod_host" >&2
+            exit 1
+          fi
+
+          ssh_base="ssh -i /tmp/ssh/id_ed25519 -o BatchMode=yes -o ConnectTimeout=30 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/tmp/ssh/known_hosts"
+          scp_base="scp -i /tmp/ssh/id_ed25519 -o BatchMode=yes -o ConnectTimeout=30 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/tmp/ssh/known_hosts"
+
+          case "$GHCR_USERNAME" in
+            *[!A-Za-z0-9_.-]*)
+              echo "GHCR username contains unsupported characters" >&2
+              exit 1
+              ;;
+          esac
+          printf '%s' "$GHCR_TOKEN" |
+            $ssh_base "root@${web_prod_host}" "docker login ghcr.io --username '$GHCR_USERNAME' --password-stdin"
+
+          printf 'THE_UNRELIABLE_ENGINEER_IMAGE=%s\n' "$image_ref" > /tmp/.env.release
+          $scp_base /tmp/.env.release "root@${web_prod_host}:/opt/web/.env.release.candidate"
+
+          $ssh_base "root@${web_prod_host}" sh -se <<'REMOTE'
+          set -eu
+          cd /opt/web
+
+          if [ -f .env.release ] && cmp -s .env.release .env.release.candidate; then
+            echo "Requested release is already active"
+            rm -f .env.release.candidate
+            exit 0
+          fi
+
+          if [ ! -f .env.release ]; then
+            echo "Missing /opt/web/.env.release; bootstrap the first release from TheUnreliableInfrastructure before using Argo promotions" >&2
+            rm -f .env.release.candidate
+            exit 1
+          fi
+
+          previous_release=".env.release.previous.$(date +%Y%m%d%H%M%S)"
+          cp .env.release "$previous_release"
+
+          rollback_release() {
+            status=$?
+            if [ -f "$previous_release" ]; then
+              echo "Rolling back to previous release env: $previous_release" >&2
+              cp "$previous_release" .env.release
+              docker compose \
+                -f compose.yaml \
+                -f sites/amineamanzou/compose.yaml \
+                -f sites/aminespired/compose.yaml \
+                -f sites/the-unreliable-engineer/compose.yaml \
+                --env-file .env.runtime \
+                --env-file .env.release \
+                --env-file .env \
+                up -d --no-deps the-unreliable-engineer || true
+            else
+              echo "No previous release env found; removing failed candidate" >&2
+            fi
+            rm -f .env.release.candidate
+            exit "$status"
+          }
+          trap rollback_release ERR
+
+          docker compose \
+            -f compose.yaml \
+            -f sites/amineamanzou/compose.yaml \
+            -f sites/aminespired/compose.yaml \
+            -f sites/the-unreliable-engineer/compose.yaml \
+            --env-file .env.runtime \
+            --env-file .env.release.candidate \
+            --env-file .env \
+            config -q
+          docker compose \
+            -f compose.yaml \
+            -f sites/amineamanzou/compose.yaml \
+            -f sites/aminespired/compose.yaml \
+            -f sites/the-unreliable-engineer/compose.yaml \
+            --env-file .env.runtime \
+            --env-file .env.release.candidate \
+            --env-file .env \
+            up -d --no-deps the-unreliable-engineer
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            if docker compose \
+              -f compose.yaml \
+              -f sites/amineamanzou/compose.yaml \
+              -f sites/aminespired/compose.yaml \
+              -f sites/the-unreliable-engineer/compose.yaml \
+              --env-file .env.runtime \
+              --env-file .env.release.candidate \
+              --env-file .env \
+              exec -T the-unreliable-engineer wget -qO- http://127.0.0.1:8080/healthz >/dev/null; then
+              install -m 0644 .env.release.candidate .env.release
+              rm -f .env.release.candidate
+              rm -f "$previous_release"
+              trap - ERR
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "The Unreliable Engineer container did not become healthy" >&2
+          exit 1
+          REMOTE
+
+    - name: healthcheck
+      inputs:
+        parameters:
+          - name: public-health-url
+      script:
+        image: alpine:3.22@sha256:7c8cb692ae09657cbc4a3f3cbd0e8d5a2690ba38386aaaf252dbb060bf5eb2e6
+        command:
+          - sh
+        source: |
+          set -eu
+          apk add --no-cache curl
+          curl -fsS --retry 12 --retry-delay 5 "{{inputs.parameters.public-health-url}}"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: the-unreliable-engineer-pull-deploy-main
+  namespace: the-unreliable-deploy
+spec:
+  schedules:
+    - "*/15 * * * *"
+  timezone: Europe/Paris
+  suspend: true
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 20
+  workflowSpec:
+    workflowTemplateRef:
+      name: the-unreliable-engineer-pull-deploy
+    arguments:
+      parameters:
+        - name: tag
+          value: main
+        - name: image-ref
+          value: ""
