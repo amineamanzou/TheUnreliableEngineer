@@ -70,38 +70,23 @@ servent de garde-fou pour l'artifact généré.
 Le workflow `.github/workflows/deploy-production.yml` se lance sur `main`.
 Il valide Astro, construit une image Docker locale, bloque la publication si
 Trivy trouve une vulnérabilité critique, puis pousse l'image sur GHCR. Le digest
-GHCR réellement publié est ensuite scanné à son tour avant signature et
-déploiement. Le build publié émet SBOM et provenance Buildx, et le digest est
-signé puis vérifié avec Sigstore/Cosign avant d'être exposé au job de
-déploiement. Deux builds Docker sont utilisés: le premier alimente le scan
+GHCR réellement publié est ensuite scanné à son tour avant signature. Le build
+publié émet SBOM et provenance Buildx, et le digest est signé puis vérifié avec
+Sigstore/Cosign. Deux builds Docker sont utilisés: le premier alimente le scan
 local avant publication, le second produit le digest immutable publié et signé.
 Un dispatch manuel production n'est accepté que sur la référence `main`.
 
-Le déploiement consomme ensuite ce digest immutable via Ansible dans le dépôt
-privé `TheUnreliableInfrastructure`.
-
-Avant de merger sur `main`, créer l'environnement GitHub `production` et y
-ajouter les secrets:
-
-- `INFRA_WORKFLOW_TOKEN`: token autorisé à cloner le dépôt privé infra.
-- `WEB_PROD_SSH_PRIVATE_KEY`: clé SSH capable de joindre `web-prod` via
-  `ops-gw`.
-- `SOPS_AGE_KEY`: clé age privée capable de déchiffrer les secrets SOPS infra.
-
-Secrets optionnels:
-
-- `GHCR_USERNAME`
-- `GHCR_READ_TOKEN`
-
-Sans secrets GHCR dédiés, le workflow utilise `github.actor` et `GITHUB_TOKEN`
-pour le login registry côté serveur.
+Le déploiement production est piloté depuis le bastion par Argo Workflows, en
+mode pull depuis GHCR. Le runbook du pilote est dans
+[`ops/argo-workflows/README.md`](ops/argo-workflows/README.md), et la décision
+est documentée dans [ADR 0003](adr/0003-argo-workflows-pull-deploy.md).
 
 Le dépôt infra doit contenir le contrat Ansible `web_runtime` introduit par le
 commit `348605b` ou plus récent. La production n'accepte qu'une image sous forme
 `ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest>`.
 
-La joignabilité SSH depuis les runners GitHub hébergés reste une contrainte
-infra séparée du durcissement build/publish.
+La joignabilité SSH depuis les runners GitHub hébergés n'est plus requise pour
+publier une release. Le bastion devient le point d'orchestration interne.
 
 ## Baseline sécurité CI/CD
 
