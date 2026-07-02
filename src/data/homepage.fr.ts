@@ -61,8 +61,8 @@ export const homepageFr = {
     brand: "The Unreliable Engineer",
     meta: "",
     nav: [
-      { label: "Suites", href: "#work" },
       { label: "Preuves", href: "#proof" },
+      { label: "Suites", href: "#work" },
       { label: "Témoignages", href: "#testimonials" },
       { label: "Commencer ici", href: "#contact" },
     ] satisfies NavItem[],
@@ -171,7 +171,7 @@ export const homepageFr = {
   },
   work: {
     tag: "Suites possibles",
-    title: "Un point d'entrée, quatre suites possibles.",
+    title: "Un point d'entrée, cinq suites possibles.",
     intro:
       "La page ne vend pas une liste de services concurrents. Elle vend une capacité: rendre le sujet lisible, puis choisir la bonne suite.",
     featured: {
@@ -284,7 +284,7 @@ export const homepageFr = {
   },
   socialSignal: {
     tag: "Signal public",
-    title: "Le contenu est aussi un laboratoire.",
+    title: "Je fais aussi de la création de contenu.",
     intro:
       "Je publie pour tester les angles, documenter les systèmes et exposer les frictions réelles: observabilité, agents IA, production, freelance et outillage maison.",
     stats: [
