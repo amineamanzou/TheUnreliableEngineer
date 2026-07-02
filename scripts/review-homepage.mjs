@@ -214,7 +214,7 @@ for (const target of viewports) {
         workSectionText.includes("rendre le sujet lisible") &&
         workSectionText.includes("choisir la bonne suite"),
       hasExpectedSuiteCount:
-        workSectionText.includes("quatre suites possibles") &&
+        workSectionText.includes("cinq suites possibles") &&
         workCardTitles.length === 4 &&
         workCardTitles.includes("cadrage technique") &&
         workCardTitles.includes("accompagnement senior") &&
@@ -238,6 +238,14 @@ for (const target of viewports) {
         topbarLinks.some((link) => isSameOriginHash(link.href, "#proof")) &&
         topbarLinks.some((link) => isSameOriginHash(link.href, "#testimonials")) &&
         topbarLinks.some((link) => isSameOriginHash(link.href, "#contact")),
+      hasHomepageAnchorOrder: ["#proof", "#work", "#testimonials", "#contact"].every((hash, index, hashes) => {
+        const currentIndex = topbarLinks.findIndex((link) => isSameOriginHash(link.href, hash));
+        const previousHash = hashes[index - 1];
+        const previousIndex =
+          index === 0 ? -1 : topbarLinks.findIndex((link) => isSameOriginHash(link.href, previousHash));
+
+        return currentIndex > previousIndex;
+      }),
       proofGovernance,
       hasCompleteProofGovernance,
       testimonialLinks,
@@ -316,10 +324,11 @@ for (const target of viewports) {
     ["target audience above fold", metrics.hasAudienceAboveFold],
     ["person/posture above fold", metrics.hasPostureAboveFold],
     ["central capability framing", metrics.hasCentralCapability],
-    ["four expected next-step suites", metrics.hasExpectedSuiteCount],
+    ["five expected next-step propositions", metrics.hasExpectedSuiteCount],
     ["no service-menu framing in suites", metrics.avoidsServiceMenuFraming],
     ["sticky topbar with blog and CTA", metrics.hasStickyTopbar],
     ["homepage anchors in topbar", metrics.hasHomepageAnchors],
+    ["homepage anchor order in topbar", metrics.hasHomepageAnchorOrder],
     ["primary booking CTA above fold", metrics.hasPrimaryBookingAboveFold],
     ["visible focus treatment", metrics.hasVisibleFocus],
     ["complete proof governance", metrics.hasCompleteProofGovernance],
