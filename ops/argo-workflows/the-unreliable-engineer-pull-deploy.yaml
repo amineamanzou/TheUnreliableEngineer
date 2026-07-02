@@ -118,7 +118,7 @@ spec:
             valueFrom:
               path: /tmp/image-ref
       script:
-        image: alpine:3.22@sha256:7c8cb692ae09657cbc4a3f3cbd0e8d5a2690ba38386aaaf252dbb060bf5eb2e6
+        image: alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce
         command:
           - sh
         env:
@@ -185,7 +185,7 @@ spec:
         parameters:
           - name: image-ref
       container:
-        image: ghcr.io/sigstore/cosign/cosign:v3.0.2@sha256:3db384ac964445d8fc521d9284d7a59e2c54796870b9eaa69ea4cff7d06a4ff2
+        image: ghcr.io/sigstore/cosign/cosign:v3.0.2@sha256:b29487e48205d875c324c79583e2806d9d269c0fa299e0861bbec023d8430c8b
         command:
           - cosign
         args:
@@ -199,7 +199,7 @@ spec:
         parameters:
           - name: image-ref
       container:
-        image: aquasec/trivy:0.66.0@sha256:adbf5948d99de471725d37d2cfbd982178971d1cf081615284671d1c8ba99fb8
+        image: aquasec/trivy:0.66.0@sha256:086971aaf400beebd94e8300fd8ea623774419597169156cec56eec5b00dfb1e
         command:
           - trivy
         args:
@@ -222,11 +222,14 @@ spec:
                 key: token
 
     - name: deploy-web-prod
+      podSpecPatch: |
+        hostNetwork: true
+        dnsPolicy: ClusterFirstWithHostNet
       inputs:
         parameters:
           - name: image-ref
       script:
-        image: alpine:3.22@sha256:7c8cb692ae09657cbc4a3f3cbd0e8d5a2690ba38386aaaf252dbb060bf5eb2e6
+        image: alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce
         command:
           - sh
         env:
@@ -322,28 +325,9 @@ spec:
             rm -f .env.release.candidate
             exit "$status"
           }
-          trap rollback_release ERR
 
-          docker compose \
-            -f compose.yaml \
-            -f sites/amineamanzou/compose.yaml \
-            -f sites/aminespired/compose.yaml \
-            -f sites/the-unreliable-engineer/compose.yaml \
-            --env-file .env.runtime \
-            --env-file .env.release.candidate \
-            --env-file .env \
-            config -q
-          docker compose \
-            -f compose.yaml \
-            -f sites/amineamanzou/compose.yaml \
-            -f sites/aminespired/compose.yaml \
-            -f sites/the-unreliable-engineer/compose.yaml \
-            --env-file .env.runtime \
-            --env-file .env.release.candidate \
-            --env-file .env \
-            up -d --no-deps the-unreliable-engineer
-          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
-            if docker compose \
+          deploy_release() {
+            docker compose \
               -f compose.yaml \
               -f sites/amineamanzou/compose.yaml \
               -f sites/aminespired/compose.yaml \
@@ -351,17 +335,38 @@ spec:
               --env-file .env.runtime \
               --env-file .env.release.candidate \
               --env-file .env \
-              exec -T the-unreliable-engineer wget -qO- http://127.0.0.1:8080/healthz >/dev/null; then
-              install -m 0644 .env.release.candidate .env.release
-              rm -f .env.release.candidate
-              rm -f "$previous_release"
-              trap - ERR
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "The Unreliable Engineer container did not become healthy" >&2
-          exit 1
+              config -q
+            docker compose \
+              -f compose.yaml \
+              -f sites/amineamanzou/compose.yaml \
+              -f sites/aminespired/compose.yaml \
+              -f sites/the-unreliable-engineer/compose.yaml \
+              --env-file .env.runtime \
+              --env-file .env.release.candidate \
+              --env-file .env \
+              up -d --no-deps the-unreliable-engineer
+            for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+              if docker compose \
+                -f compose.yaml \
+                -f sites/amineamanzou/compose.yaml \
+                -f sites/aminespired/compose.yaml \
+                -f sites/the-unreliable-engineer/compose.yaml \
+                --env-file .env.runtime \
+                --env-file .env.release.candidate \
+                --env-file .env \
+                exec -T the-unreliable-engineer wget -qO- http://127.0.0.1:8080/healthz >/dev/null; then
+                install -m 0644 .env.release.candidate .env.release
+                rm -f .env.release.candidate
+                rm -f "$previous_release"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "The Unreliable Engineer container did not become healthy" >&2
+            return 1
+          }
+
+          deploy_release || rollback_release
           REMOTE
 
     - name: healthcheck
@@ -369,7 +374,7 @@ spec:
         parameters:
           - name: public-health-url
       script:
-        image: alpine:3.22@sha256:7c8cb692ae09657cbc4a3f3cbd0e8d5a2690ba38386aaaf252dbb060bf5eb2e6
+        image: alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce
         command:
           - sh
         source: |
@@ -386,7 +391,7 @@ spec:
   schedules:
     - "*/15 * * * *"
   timezone: Europe/Paris
-  suspend: true
+  suspend: false
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 10
   failedJobsHistoryLimit: 20
