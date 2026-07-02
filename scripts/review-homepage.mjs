@@ -145,6 +145,25 @@ for (const target of viewports) {
     const socialLinks = Array.from(document.querySelectorAll("#social-signal .social-link")).map(
       (element) => element.getAttribute("href") ?? "",
     );
+    const parseUrl = (href) => {
+      try {
+        return href ? new URL(href, window.location.href) : null;
+      } catch {
+        return null;
+      }
+    };
+    const socialLinkUrls = socialLinks.map(parseUrl).filter(Boolean);
+    const urlsMatch = (actual, expected) =>
+      actual.protocol === expected.protocol &&
+      actual.hostname === expected.hostname &&
+      actual.pathname === expected.pathname &&
+      actual.search === expected.search &&
+      actual.hash === expected.hash;
+    const hasSocialLink = (expectedHref) => {
+      const expected = parseUrl(expectedHref);
+
+      return Boolean(expected) && socialLinkUrls.some((actual) => urlsMatch(actual, expected));
+    };
     const topbar = document.querySelector(".topbar");
     const topbarStyle = topbar ? window.getComputedStyle(topbar) : undefined;
     const topbarLinks = Array.from(document.querySelectorAll(".topbar .nav a")).map((element) => ({
@@ -153,6 +172,25 @@ for (const target of viewports) {
       visible: isAboveFold(element),
     }));
     const visibleTopbarLinks = topbarLinks.filter((link) => link.visible);
+    const isSameOriginPath = (href, pathname) => {
+      const parsedUrl = parseUrl(href);
+
+      return (
+        parsedUrl?.origin === window.location.origin &&
+        parsedUrl.pathname === pathname &&
+        parsedUrl.hash === ""
+      );
+    };
+    const isSameOriginHash = (href, hash) => {
+      const parsedUrl = parseUrl(href);
+
+      return parsedUrl?.origin === window.location.origin && parsedUrl.hash === hash;
+    };
+    const isLinkedInUrl = (href) => {
+      const parsedUrl = parseUrl(href);
+
+      return parsedUrl?.protocol === "https:" && parsedUrl.hostname === "www.linkedin.com";
+    };
 
     return {
       title: document.title,
@@ -193,13 +231,13 @@ for (const target of viewports) {
       hasStickyTopbar:
         topbarStyle?.position === "sticky" &&
         topbarStyle?.top === "0px" &&
-        visibleTopbarLinks.some((link) => link.text === "blog" && link.href.endsWith("/blog/")) &&
+        visibleTopbarLinks.some((link) => link.text === "blog" && isSameOriginPath(link.href, "/blog/")) &&
         visibleTopbarLinks.some((link) => /réserver|reserver/.test(link.text)),
       hasHomepageAnchors:
-        topbarLinks.some((link) => link.href.includes("#work")) &&
-        topbarLinks.some((link) => link.href.includes("#proof")) &&
-        topbarLinks.some((link) => link.href.includes("#testimonials")) &&
-        topbarLinks.some((link) => link.href.includes("#contact")),
+        topbarLinks.some((link) => isSameOriginHash(link.href, "#work")) &&
+        topbarLinks.some((link) => isSameOriginHash(link.href, "#proof")) &&
+        topbarLinks.some((link) => isSameOriginHash(link.href, "#testimonials")) &&
+        topbarLinks.some((link) => isSameOriginHash(link.href, "#contact")),
       proofGovernance,
       hasCompleteProofGovernance,
       testimonialLinks,
@@ -207,7 +245,7 @@ for (const target of viewports) {
         testimonialLinks.length === 3 &&
         testimonialLinks.every(
           (link) =>
-            link.href?.startsWith("https://www.linkedin.com/") &&
+            isLinkedInUrl(link.href) &&
             link.target === "_blank" &&
             link.text.includes("Lire sur LinkedIn"),
         ),
@@ -219,14 +257,14 @@ for (const target of viewports) {
         socialStats.some((stat) => stat.countTo === 527032) &&
         socialStats.some((stat) => stat.countTo === 22069) &&
         socialStatDetails.length === 0 &&
-        socialLinks.includes("https://www.linkedin.com/in/amineamanzou/") &&
-        socialLinks.includes("https://www.tiktok.com/@theunreliableengi") &&
-        socialLinks.includes("https://www.instagram.com/theunreliableengineer/") &&
-        socialLinks.includes("https://www.facebook.com/profile.php?id=61570743494074") &&
-        socialLinks.includes("https://x.com/TheUnreliableEn") &&
-        socialLinks.includes("https://www.threads.com/@theunreliableengineer") &&
-        socialLinks.includes("https://www.youtube.com/@theunreliableengineer") &&
-        socialLinks.includes("https://github.com/amineamanzou"),
+        hasSocialLink("https://www.linkedin.com/in/amineamanzou/") &&
+        hasSocialLink("https://www.tiktok.com/@theunreliableengi") &&
+        hasSocialLink("https://www.instagram.com/theunreliableengineer/") &&
+        hasSocialLink("https://www.facebook.com/profile.php?id=61570743494074") &&
+        hasSocialLink("https://x.com/TheUnreliableEn") &&
+        hasSocialLink("https://www.threads.com/@theunreliableengineer") &&
+        hasSocialLink("https://www.youtube.com/@theunreliableengineer") &&
+        hasSocialLink("https://github.com/amineamanzou"),
       hasReducedMotionNeutralized:
         window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
         window.getComputedStyle(document.querySelector(".signal-map")).transform === "none" &&
