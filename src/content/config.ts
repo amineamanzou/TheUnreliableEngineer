@@ -11,7 +11,7 @@ const articles = defineCollection({
     label: z.string(),
     readTime: z.string(),
     excerpt: z.string(),
-    sourceUrl: z.string().url(),
+    sourceUrl: z.string().url().optional(),
     heroImage: z.string().optional(),
   }),
 });

@@ -39,7 +39,7 @@ for (const file of files) {
     throw new Error(`${file}: missing articleSlug or translationKey`);
   }
 
-  if (!sourceUrl?.startsWith("https://www.linkedin.com/")) {
+  if (sourceUrl && !sourceUrl.startsWith("https://www.linkedin.com/")) {
     throw new Error(`${file}: sourceUrl must keep the LinkedIn source`);
   }
 
