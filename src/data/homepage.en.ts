@@ -19,8 +19,8 @@ export const homepageEn = {
     brand: "The Unreliable Engineer",
     meta: "",
     nav: [
-      { label: "Paths", href: "#work" },
       { label: "Proof", href: "#proof" },
+      { label: "Paths", href: "#work" },
       { label: "Testimonials", href: "#testimonials" },
       { label: "Start here", href: "#contact" },
     ] satisfies NavItem[],
@@ -129,7 +129,7 @@ export const homepageEn = {
   },
   work: {
     tag: "Possible paths",
-    title: "One entry point, four possible paths.",
+    title: "One entry point, five possible paths.",
     intro:
       "This page does not sell a competing menu of services. It sells one capability: make the topic readable, then choose the right next step.",
     featured: {
@@ -242,7 +242,7 @@ export const homepageEn = {
   },
   socialSignal: {
     tag: "Public signal",
-    title: "Content is also a lab.",
+    title: "I also create content.",
     intro:
       "I publish to test angles, document systems and expose real frictions: observability, AI agents, production, freelancing and homemade tooling.",
     stats: [
