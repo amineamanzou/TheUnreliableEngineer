@@ -391,7 +391,7 @@ spec:
   schedules:
     - "*/15 * * * *"
   timezone: Europe/Paris
-  suspend: true
+  suspend: false
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 10
   failedJobsHistoryLimit: 20
