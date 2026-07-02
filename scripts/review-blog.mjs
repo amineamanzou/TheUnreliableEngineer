@@ -55,10 +55,10 @@ for (const command of ["fzf", "ls", "find", "rg", "ripgrep", "open", "read", "ca
   await page.getByText(`Usage: ${command}`).waitFor({ timeout: 5000 });
 }
 
-await terminalInput.fill("rg obs");
+await terminalInput.fill("rg deck");
 await terminalInput.press("Tab");
 const completedSearch = await terminalInput.inputValue();
-if (!/observ/i.test(completedSearch)) {
+if (!/deck-tracker/i.test(completedSearch)) {
   throw new Error(`tab autocomplete did not complete article query, got: ${completedSearch}`);
 }
 
@@ -94,7 +94,7 @@ await page.waitForURL(/\/blog\/.*deck.*\/$/, { timeout: 5000 });
 
 await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
 for (const command of ["open", "read", "cat"]) {
-  await terminalInput.fill(`${command} opamp`);
+  await terminalInput.fill(`${command} opamp-fleet-management-agents`);
   await page.locator("[data-terminal-form]").evaluate((form) => form.requestSubmit());
   await page.waitForURL("**/blog/opamp-fleet-management-agents/", { timeout: 5000 });
   if (command !== "cat") {
