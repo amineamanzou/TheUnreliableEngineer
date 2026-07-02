@@ -68,25 +68,37 @@ servent de garde-fou pour l'artifact généré.
 ## Déploiement production
 
 Le workflow `.github/workflows/deploy-production.yml` se lance sur `main`.
-Il valide Astro, pousse l'image Docker sur GHCR, puis déploie le digest
-immutable via Ansible dans le dépôt privé `TheUnreliableInfrastructure`.
+Il valide Astro, construit une image Docker locale, bloque la publication si
+Trivy trouve une vulnérabilité critique, puis pousse l'image sur GHCR. Le digest
+GHCR réellement publié est ensuite scanné à son tour avant signature. Le build
+publié émet SBOM et provenance Buildx, et le digest est signé puis vérifié avec
+Sigstore/Cosign. Deux builds Docker sont utilisés: le premier alimente le scan
+local avant publication, le second produit le digest immutable publié et signé.
+Un dispatch manuel production n'est accepté que sur la référence `main`.
 
-Avant de merger sur `main`, créer l'environnement GitHub `production` et y
-ajouter les secrets:
-
-- `INFRA_WORKFLOW_TOKEN`: token autorisé à cloner le dépôt privé infra.
-- `WEB_PROD_SSH_PRIVATE_KEY`: clé SSH capable de joindre `web-prod` via
-  `ops-gw`.
-- `SOPS_AGE_KEY`: clé age privée capable de déchiffrer les secrets SOPS infra.
-
-Secrets optionnels:
-
-- `GHCR_USERNAME`
-- `GHCR_READ_TOKEN`
-
-Sans secrets GHCR dédiés, le workflow utilise `github.actor` et `GITHUB_TOKEN`
-pour le login registry côté serveur.
+Le déploiement production est piloté depuis le bastion par Argo Workflows, en
+mode pull depuis GHCR. Le runbook du pilote est dans
+[`ops/argo-workflows/README.md`](ops/argo-workflows/README.md), et la décision
+est documentée dans [ADR 0003](adr/0003-argo-workflows-pull-deploy.md).
 
 Le dépôt infra doit contenir le contrat Ansible `web_runtime` introduit par le
 commit `348605b` ou plus récent. La production n'accepte qu'une image sous forme
 `ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest>`.
+
+La joignabilité SSH depuis les runners GitHub hébergés n'est plus requise pour
+publier une release. Le bastion devient le point d'orchestration interne.
+
+## Baseline sécurité CI/CD
+
+Le socle DevSecOps est documenté dans
+[ADR 0002](adr/0002-ci-cd-security-baseline.md). La V1 bloque les
+vulnérabilités critiques, publie les résultats SARIF dans GitHub Security,
+active CodeQL et Dependabot, et signe le digest Docker publié avant
+déploiement. Le blocage des secrets doit être activé côté GitHub avec Secret
+Scanning et Push Protection.
+
+La conformité CI/CD ajoute Plumber avec un seuil de 100, protection de `main`
+contre le force-push et la suppression, et un gate supply-chain qui refuse les
+versions npm publiées depuis moins de 48 heures avant toute installation
+`npm ci`. La protection n'impose pas de review CODEOWNERS: ce dépôt est maintenu
+par un maintainer solo.
