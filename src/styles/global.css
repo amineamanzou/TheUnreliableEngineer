@@ -695,6 +695,10 @@ h1,
   margin-top: 28px;
 }
 
+.article-layout-full {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .article-head {
   display: grid;
   gap: 22px;
