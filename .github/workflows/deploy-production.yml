@@ -26,6 +26,8 @@ jobs:
       packages: write
       id-token: write
       security-events: write
+      attestations: write
+      artifact-metadata: write
     outputs:
       image: ${{ steps.release.outputs.image }}
       digest: ${{ steps.push.outputs.digest }}
@@ -81,6 +83,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Trivy SARIF scan
+        id: trivy_sarif
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ${{ env.LOCAL_IMAGE_TAG }}
@@ -103,7 +106,26 @@ jobs:
           path: trivy-results.sarif
           if-no-files-found: error
 
+      - name: Generate image SBOM
+        id: image_sbom
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.LOCAL_IMAGE_TAG }}
+          format: cyclonedx
+          output: image-sbom.cdx.json
+          severity: MEDIUM,HIGH,CRITICAL
+          vuln-type: os,library
+          exit-code: "0"
+
+      - name: Upload image SBOM artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: image-sbom-cyclonedx
+          path: image-sbom.cdx.json
+          if-no-files-found: error
+
       - name: Trivy critical vulnerability gate
+        id: trivy_critical
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ${{ env.LOCAL_IMAGE_TAG }}
@@ -135,6 +157,7 @@ jobs:
             VCS_REF=${{ github.sha }}
 
       - name: Trivy pushed digest critical gate
+        id: trivy_pushed_digest
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         env:
           TRIVY_USERNAME: ${{ github.actor }}
@@ -150,6 +173,7 @@ jobs:
         uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3
 
       - name: Sign pushed digest
+        id: cosign_sign
         env:
           COSIGN_EXPERIMENTAL: "1"
           IMAGE_REF: ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
@@ -158,6 +182,7 @@ jobs:
           cosign sign --yes "$IMAGE_REF"
 
       - name: Verify pushed digest signature
+        id: cosign_verify
         env:
           COSIGN_EXPERIMENTAL: "1"
           IMAGE_REF: ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
@@ -166,6 +191,36 @@ jobs:
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
             --certificate-identity-regexp="^https://github.com/${{ github.repository }}/\\.github/workflows/deploy-production\\.yml@refs/.+$"
 
+      - name: Attest image provenance
+        id: attest_provenance
+        uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763 # v4.1.1
+        with:
+          subject-name: ${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+      - name: Attest image SBOM
+        id: attest_sbom
+        uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763 # v4.1.1
+        with:
+          subject-name: ${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          sbom-path: image-sbom.cdx.json
+          push-to-registry: true
+
+      - name: Verify image provenance attestation
+        id: verify_attestation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE_REF: ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
+        run: |
+          gh attestation verify "oci://${IMAGE_REF}" \
+            --repo "${{ github.repository }}" \
+            --signer-workflow "${{ github.repository }}/.github/workflows/deploy-production.yml" \
+            --source-ref "${{ github.ref }}" \
+            --source-digest "${{ github.sha }}" \
+            --predicate-type "https://slsa.dev/provenance/v1"
+
       - name: Release digest
         id: release
         run: |
@@ -173,3 +228,32 @@ jobs:
           echo "image=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
           echo "image_ref=${IMAGE_NAME}@${{ steps.push.outputs.digest }}" >> "$GITHUB_OUTPUT"
           echo "Published signed digest ${IMAGE_NAME}@${{ steps.push.outputs.digest }}"
+
+      - name: Emit production CI/CD event
+        if: always()
+        env:
+          IMAGE_DIGEST: ${{ steps.push.outputs.digest }}
+          IMAGE_REF: ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
+          TRIVY_STATUS: ${{ steps.trivy_pushed_digest.outcome || steps.trivy_critical.outcome || 'unknown' }}
+          COSIGN_STATUS: ${{ steps.cosign_verify.outcome || steps.cosign_sign.outcome || 'unknown' }}
+          ATTESTATION_STATUS: ${{ steps.verify_attestation.outcome || steps.attest_provenance.outcome || 'unknown' }}
+        run: |
+          node scripts/qa/emit-cicd-event.mjs \
+            --kind production-deploy \
+            --status completed \
+            --conclusion "${{ job.status }}" \
+            --image-name "${IMAGE_NAME}" \
+            --image-digest "${IMAGE_DIGEST}" \
+            --image-ref "${IMAGE_REF}" \
+            --check trivy="${TRIVY_STATUS}" \
+            --check cosign="${COSIGN_STATUS}" \
+            --check attestation="${ATTESTATION_STATUS}" \
+            --out cicd-event-production.json
+
+      - name: Upload production CI/CD event
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cicd-event-production
+          path: cicd-event-production.json
+          if-no-files-found: error

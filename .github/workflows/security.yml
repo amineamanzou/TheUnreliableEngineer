@@ -3,7 +3,7 @@ name: Security
 on:
   pull_request:
   push:
-    branches: [main, dev]
+    branches: [main]
   schedule:
     - cron: "17 4 * * 1"
   workflow_dispatch:
@@ -84,6 +84,23 @@ jobs:
         with:
           fail-on-severity: critical
 
+  gitleaks:
+    name: Gitleaks secret scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Scan secrets
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
   trivy_filesystem:
     name: Trivy filesystem scan
     runs-on: ubuntu-latest
@@ -130,6 +147,133 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Validate GitHub Actions workflows
-        uses: docker://rhysd/actionlint:1.7.7
+        uses: docker://rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 # v1.7.12
         with:
           args: -color
+
+  openssf_scorecard:
+    name: OpenSSF Scorecard
+    runs-on: ubuntu-latest
+    outputs:
+      scorecard_outcome: ${{ steps.scorecard.outcome }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Analyze repository posture
+        id: scorecard
+        uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a # v2.4.3
+        continue-on-error: true
+        with:
+          results_file: scorecard-results.json
+          results_format: json
+          repo_token: ${{ github.token }}
+          publish_results: false
+
+      - name: Summarize Scorecard
+        if: always()
+        run: |
+          if [ ! -s scorecard-results.json ]; then
+            {
+              echo "### OpenSSF Scorecard"
+              echo ""
+              echo "Scorecard did not produce a report."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          node --input-type=module <<'NODE'
+          import { readFileSync, appendFileSync } from "node:fs";
+
+          const report = JSON.parse(readFileSync("scorecard-results.json", "utf8"));
+          const score = report.score ?? report.aggregate_score ?? "unknown";
+          const checks = Array.isArray(report.checks) ? report.checks : [];
+          const risks = checks
+            .filter((check) => typeof check.score === "number" && check.score >= 0 && check.score < 7)
+            .sort((left, right) => left.score - right.score)
+            .slice(0, 5);
+
+          const lines = [
+            "### OpenSSF Scorecard",
+            "",
+            `Score: ${score}`,
+            "",
+          ];
+
+          if (risks.length > 0) {
+            lines.push("Lowest checks:", "");
+            for (const check of risks) {
+              lines.push(`- ${check.name}: ${check.score}`);
+            }
+            lines.push("");
+          }
+
+          lines.push("Report-only gate for now; secrets and critical vulnerabilities remain blocking.");
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
+          NODE
+
+      - name: Upload Scorecard report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: openssf-scorecard-results
+          path: scorecard-results.json
+          if-no-files-found: warn
+
+  emit_cicd_event:
+    name: Emit CI/CD security event
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - dependency_release_age
+      - plumber_compliance
+      - npm_audit
+      - dependency_review
+      - trivy_filesystem
+      - actionlint
+      - gitleaks
+      - openssf_scorecard
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Emit security CI/CD event
+        env:
+          SECURITY_CONCLUSION: ${{ contains(needs.*.result, 'failure') && 'failure' || contains(needs.*.result, 'cancelled') && 'cancelled' || 'success' }}
+          DEPENDENCY_AGE_RESULT: ${{ needs.dependency_release_age.result }}
+          PLUMBER_RESULT: ${{ needs.plumber_compliance.result }}
+          NPM_AUDIT_RESULT: ${{ needs.npm_audit.result }}
+          DEPENDENCY_REVIEW_RESULT: ${{ needs.dependency_review.result }}
+          TRIVY_RESULT: ${{ needs.trivy_filesystem.result }}
+          ACTIONLINT_RESULT: ${{ needs.actionlint.result }}
+          GITLEAKS_RESULT: ${{ needs.gitleaks.result }}
+          SCORECARD_RESULT: ${{ needs.openssf_scorecard.outputs.scorecard_outcome || needs.openssf_scorecard.result }}
+        run: |
+          node scripts/qa/emit-cicd-event.mjs \
+            --kind security \
+            --status completed \
+            --conclusion "${SECURITY_CONCLUSION}" \
+            --check dependency-age="${DEPENDENCY_AGE_RESULT}" \
+            --check plumber="${PLUMBER_RESULT}" \
+            --check npm-audit="${NPM_AUDIT_RESULT}" \
+            --check dependency-review="${DEPENDENCY_REVIEW_RESULT}" \
+            --check trivy="${TRIVY_RESULT}" \
+            --check actionlint="${ACTIONLINT_RESULT}" \
+            --check gitleaks="${GITLEAKS_RESULT}" \
+            --check scorecard="${SCORECARD_RESULT}" \
+            --check codeql="separate-workflow" \
+            --out cicd-event-security.json
+
+      - name: Upload security CI/CD event
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cicd-event-security
+          path: cicd-event-security.json
+          if-no-files-found: error

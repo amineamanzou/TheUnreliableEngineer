@@ -102,3 +102,8 @@ contre le force-push et la suppression, et un gate supply-chain qui refuse les
 versions npm publiées depuis moins de 48 heures avant toute installation
 `npm ci`. La protection n'impose pas de review CODEOWNERS: ce dépôt est maintenu
 par un maintainer solo.
+
+Le workflow sécurité ajoute aussi Gitleaks en gate bloquant et OpenSSF Scorecard
+en observation. Le workflow production publie une SBOM CycloneDX, signe le
+digest GHCR avec Cosign, crée des attestations GitHub provenance/SBOM et dépose
+des artifacts JSON `cicd-event-*` prêts pour une ingestion observabilité future.
