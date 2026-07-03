@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:26-alpine AS build
 WORKDIR /app
 
 ARG SITE_URL
@@ -13,7 +13,7 @@ COPY src ./src
 
 RUN SITE_URL="${SITE_URL}" BASE_PATH="${BASE_PATH}" npm run build
 
-FROM caddy:2.11.3-alpine
+FROM caddy:2.11.4-alpine
 WORKDIR /srv
 
 ARG VCS_REF=unknown
