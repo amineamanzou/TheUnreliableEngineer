@@ -30,6 +30,47 @@ active vulnerability. In that case, the critical vulnerability gates, dependency
 review, Trivy scans, CodeQL, signed Docker digest, and maintainer review still
 apply.
 
+## CI/CD Security Chain
+
+The repository-side chain is:
+
+1. Pull request checks validate Astro, i18n content, dependency release age,
+   critical npm vulnerabilities, dependency review, Trivy filesystem scan,
+   CodeQL, Plumber compliance, and Gitleaks.
+2. After merge to `main`, the production workflow builds a local Docker image,
+   generates Trivy SARIF, generates a CycloneDX image SBOM, and blocks on
+   critical image vulnerabilities before publishing.
+3. The published GHCR digest is scanned again, signed with Sigstore/Cosign, and
+   verified before release metadata is emitted.
+4. GitHub artifact attestations are created for image provenance and the
+   CycloneDX SBOM, then provenance is verified with `gh attestation verify`.
+5. The workflows upload structured JSON event artifacts:
+   `cicd-event-security` and `cicd-event-production`. These artifacts are the
+   repo-side contract for future ClickStack ingestion; no network shipping is
+   performed by this repository yet.
+
+Manual verification commands:
+
+```bash
+npm run compliance:plumber
+npm run check:dependencies-age
+gh attestation verify oci://ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest> \
+  --repo amineamanzou/TheUnreliableEngineer \
+  --signer-workflow amineamanzou/TheUnreliableEngineer/.github/workflows/deploy-production.yml \
+  --source-ref refs/heads/main \
+  --source-digest <commit-sha> \
+  --predicate-type https://slsa.dev/provenance/v1
+cosign verify ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest> \
+  --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+  --certificate-identity-regexp='^https://github.com/amineamanzou/TheUnreliableEngineer/\.github/workflows/deploy-production\.yml@refs/.+$'
+```
+
+The current gating policy is progressive. Secrets, critical dependency
+vulnerabilities, critical image vulnerabilities, Cosign verification, and
+production attestations are blocking. OpenSSF Scorecard starts as report-only so
+the solo-maintainer workflow does not break on governance checks that are not
+yet realistic for this repository.
+
 Out of scope:
 
 - Denial-of-service testing.
