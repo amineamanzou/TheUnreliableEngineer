@@ -13,6 +13,7 @@ type Props = {
   enableLocaleRedirect?: boolean;
   localeRedirectPath?: string;
   localeRedirectPaths?: { fr: string; en: string };
+  bodyClass?: string;
 };
 
 const {
@@ -25,6 +26,7 @@ const {
   enableLocaleRedirect = false,
   localeRedirectPath = "/",
   localeRedirectPaths,
+  bodyClass,
 } = Astro.props;
 const pageLocale = locale ?? lang ?? "fr";
 const canonicalUrl = canonicalPath && Astro.site ? new URL(assetPath(canonicalPath), Astro.site).toString() : undefined;
@@ -52,7 +54,7 @@ const xDefaultPath =
     {alternateLinks.map((alternate) => <link rel="alternate" hreflang={alternate.locale} href={alternate.href} />)}
     {alternateLinks.length > 0 && Astro.site && <link rel="alternate" hreflang="x-default" href={new URL(assetPath(xDefaultPath), Astro.site).toString()} />}
   </head>
-  <body>
+  <body class={bodyClass}>
     {
       enableLocaleRedirect && (
         <script is:inline define:vars={{ baseUrl, redirectPathFr, redirectPathEn }}>

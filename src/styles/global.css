@@ -68,7 +68,7 @@ body::before {
   opacity: 0.9;
 }
 
-body::after {
+body.home-surface::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -610,6 +610,10 @@ h1,
   display: grid;
   align-content: start;
   gap: 18px;
+}
+
+.blog-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .blog-card .quote-link-label {
@@ -2472,7 +2476,7 @@ h1 {
     transform: none;
   }
 
-  body::after {
+  body.home-surface::after {
     opacity: 0;
   }
 
