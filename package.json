@@ -18,9 +18,9 @@
     "review:blog": "node scripts/review-blog.mjs"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.8",
-    "astro": "^5.13.5",
-    "playwright-core": "^1.59.1",
-    "typescript": "^5.9.3"
+    "@astrojs/check": "^0.9.9",
+    "astro": "^7.0.3",
+    "playwright-core": "^1.61.1",
+    "typescript": "^6.0.3"
   }
 }
