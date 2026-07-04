@@ -43,6 +43,6 @@ The required GitHub checks for protected branches should include:
 - `Security / Actionlint`
 - `CodeQL / Analyze JavaScript and TypeScript`
 
-The production deploy still depends on SSH reachability from the selected
-runner to `REDACTED_GATEWAY` and `REDACTED_RUNTIME`. That network execution model is explicitly
-outside this ADR and should be handled as an infrastructure goal.
+Runtime promotion is intentionally outside this public application repository.
+This ADR covers the repository-side build, scan, signing, and publication
+contract only.

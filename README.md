@@ -76,17 +76,9 @@ Sigstore/Cosign. Deux builds Docker sont utilisés: le premier alimente le scan
 local avant publication, le second produit le digest immutable publié et signé.
 Un dispatch manuel production n'est accepté que sur la référence `main`.
 
-Le déploiement production est piloté depuis le private orchestrator par private deploy controller Workflows, en
-mode pull depuis GHCR. Le runbook du pilote est dans
-[`ops/private-deploy-controller-workflows/README.md`](ops/private-deploy-controller-workflows/README.md), et la décision
-est documentée dans [ADR 0003](adr/0003-private-deploy-controller-workflows-pull-deploy.md).
-
-Le dépôt infra doit contenir le contrat Ansible `web_runtime` introduit par le
-commit `348605b` ou plus récent. La production n'accepte qu'une image sous forme
-`ghcr.io/amineamanzou/the-unreliable-engineer@sha256:<digest>`.
-
-La joignabilité SSH depuis les runners GitHub hébergés n'est plus requise pour
-publier une release. Le private orchestrator devient le point d'orchestration interne.
+Le dépôt applicatif s'arrête au contrat public de livraison: construire,
+scanner, signer et publier une image immutable sur GHCR. La promotion runtime
+est gérée par une infrastructure privée hors de ce dépôt.
 
 ## Baseline sécurité CI/CD
 
