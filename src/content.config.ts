@@ -15,6 +15,7 @@ const articles = defineCollection({
     excerpt: z.string(),
     sourceUrl: z.url().optional(),
     heroImage: z.string().optional(),
+    heroImageAlt: z.string(),
   }),
 });
 

@@ -5,6 +5,8 @@ import { homepageEn } from "../data/homepage.en";
 import { homepageFr } from "../data/homepage.fr";
 import type { Locale } from "../data/i18n";
 import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import { homeJsonLd, localizedHomeImage } from "../data/seo";
+import { defaultSocialImage } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 type Props = {
@@ -27,6 +29,15 @@ const localePath = localizedPath(locale, "/");
     { locale: "fr", path: localizedPath("fr", "/") },
     { locale: "en", path: localizedPath("en", "/") },
   ]}
+  image={defaultSocialImage}
+  imageAlt={localizedHomeImage(locale)}
+  jsonLd={homeJsonLd({
+    path: localePath,
+    title: page.meta.title,
+    description: page.meta.description,
+    locale,
+    site: Astro.site,
+  })}
   enableLocaleRedirect={enableLocaleRedirect}
   localeRedirectPath="/"
   bodyClass="home-surface"

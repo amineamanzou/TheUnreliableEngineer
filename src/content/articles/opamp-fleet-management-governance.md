@@ -8,6 +8,7 @@ label: "OpAMP / Gouvernance de flotte"
 readTime: "8 min"
 excerpt: "Dans les grands parcs d'observabilité, le fleet management ne veut pas seulement dire pousser une configuration. Il sert surtout à rendre visibles les droits, les coûts, l'audit, les rollbacks et les responsabilités."
 heroImage: "/blog/opamp-fleet-management-governance/cover.png"
+heroImageAlt: "Carte visuelle des enjeux de gouvernance derrière le fleet management d'observabilité"
 ---
 
 Dans les missions d'observabilité, la demande arrive rarement avec le mot gouvernance.

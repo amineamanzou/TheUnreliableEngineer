@@ -6,6 +6,8 @@ import Topbar from "./Topbar.astro";
 import { getArticleCards } from "../data/articles";
 import type { Locale } from "../data/i18n";
 import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import { blogJsonLd, localizedBlogImageAlt } from "../data/seo";
+import { defaultSocialImage } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 type Props = {
@@ -32,6 +34,15 @@ const blogPath = localizedPath(locale, "/blog/");
     { locale: "fr", path: localizedPath("fr", "/blog/") },
     { locale: "en", path: localizedPath("en", "/blog/") },
   ]}
+  image={defaultSocialImage}
+  imageAlt={localizedBlogImageAlt(locale)}
+  jsonLd={blogJsonLd({
+    path: blogPath,
+    title: ui.blog.title,
+    description: ui.blog.description,
+    locale,
+    site: Astro.site,
+  })}
   enableLocaleRedirect={enableLocaleRedirect}
   localeRedirectPath="/blog/"
 >

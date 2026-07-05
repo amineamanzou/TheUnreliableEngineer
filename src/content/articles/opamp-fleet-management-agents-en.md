@@ -9,6 +9,7 @@ readTime: "11 min"
 excerpt: "In large fleets, the question is no longer only which agent to install. It becomes: who really controls the fleet that produces logs, metrics and traces?"
 sourceUrl: "https://www.linkedin.com/pulse/qui-utilise-vraiment-opamp-pour-g%25C3%25A9rer-ses-agents-amine-amanzou-2qvte/"
 heroImage: "/blog/opamp-fleet-management-agents/cover.jpg"
+heroImageAlt: "Illustration of an OpAMP fleet management console for observability agents"
 ---
 
 When we talk about observability agents, the conversation often starts with the choice of agent. OpenTelemetry Collector, proprietary agent, vendor distribution, sidecar, daemonset, appliance, homemade binary. The debate quickly moves to performance, receivers, exporters, ingestion cost or Kubernetes support.

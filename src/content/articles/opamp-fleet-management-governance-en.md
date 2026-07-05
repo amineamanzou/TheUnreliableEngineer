@@ -8,6 +8,7 @@ label: "OpAMP / Fleet governance"
 readTime: "8 min"
 excerpt: "In large observability estates, fleet management is not only about pushing configuration. It is mostly about making permissions, costs, audit, rollbacks and ownership visible."
 heroImage: "/blog/opamp-fleet-management-governance/cover.png"
+heroImageAlt: "Visual map of governance concerns behind observability fleet management"
 ---
 
 In observability work, the request rarely starts with the word governance.
