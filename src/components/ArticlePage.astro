@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import Topbar from "./Topbar.astro";
 import { formatArticleDate } from "../data/articles";
 import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import { articleJsonLd } from "../data/seo";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 type Props = {
@@ -38,6 +39,17 @@ const redirectPaths = {
   locale={locale}
   canonicalPath={currentPath}
   alternates={alternates}
+  image={article.data.heroImage}
+  imageAlt={article.data.heroImageAlt}
+  ogType="article"
+  publishedAt={article.data.publishedAt}
+  modifiedAt={article.data.publishedAt}
+  jsonLd={articleJsonLd({
+    article,
+    path: currentPath,
+    image: article.data.heroImage,
+    site: Astro.site,
+  })}
   enableLocaleRedirect={locale === "fr"}
   localeRedirectPaths={redirectPaths}
 >
@@ -61,7 +73,7 @@ const redirectPaths = {
                 <img
                   class="article-hero-image"
                   src={heroImage}
-                  alt=""
+                  alt={article.data.heroImageAlt}
                   loading="eager"
                   decoding="async"
                 />
