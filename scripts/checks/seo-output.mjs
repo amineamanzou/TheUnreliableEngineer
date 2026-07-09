@@ -35,6 +35,53 @@ function assertNotIncludes(content, relativePath, needle) {
   }
 }
 
+function assertRobotsDirective(content, userAgent, directive, value) {
+  if (content === null) {
+    return;
+  }
+
+  const groups = [];
+  let group = null;
+
+  for (const rawLine of content.split(/\r?\n/)) {
+    const line = rawLine.replace(/\s*#.*$/, "").trim();
+    if (!line) {
+      continue;
+    }
+
+    const separator = line.indexOf(":");
+    if (separator === -1) {
+      continue;
+    }
+
+    const name = line.slice(0, separator).trim().toLowerCase();
+    const entryValue = line.slice(separator + 1).trim();
+
+    if (name === "user-agent") {
+      if (group === null || group.directives.length > 0) {
+        group = { userAgents: [], directives: [] };
+        groups.push(group);
+      }
+      group.userAgents.push(entryValue.toLowerCase());
+    } else if (group !== null) {
+      group.directives.push({ name, value: entryValue });
+    }
+  }
+
+  const matchingGroups = groups.filter((candidate) =>
+    candidate.userAgents.includes(userAgent.toLowerCase()),
+  );
+  const hasDirective = matchingGroups.some((candidate) =>
+    candidate.directives.some((entry) =>
+      entry.name === directive.toLowerCase() && entry.value === value,
+    ),
+  );
+
+  if (!hasDirective) {
+    fail(`robots.txt must set ${directive}: ${value} for ${userAgent}`);
+  }
+}
+
 function assertMetaTags(html, relativePath) {
   if (html === null) {
     return;
@@ -603,6 +650,22 @@ assertIncludes(
   `Sitemap: ${siteUrl}/sitemap.xml`,
   "the canonical sitemap directive",
 );
+for (const userAgent of [
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "Claude-SearchBot",
+  "Claude-User",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Googlebot",
+  "Google-Extended",
+  "*",
+]) {
+  assertRobotsDirective(robots, userAgent, "Allow", "/");
+}
+for (const userAgent of ["GPTBot", "ClaudeBot"]) {
+  assertRobotsDirective(robots, userAgent, "Disallow", "/");
+}
 
 assertIncludes(llms, "llms.txt", "# The Unreliable Engineer");
 assertIncludes(llms, "llms.txt", `${siteUrl}/`, "the canonical home link");
