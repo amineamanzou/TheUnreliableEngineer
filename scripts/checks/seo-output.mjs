@@ -611,6 +611,17 @@ async function assertCompleteSitemapInventory(sitemap) {
 
   for (const relativePath of await listHtmlFiles()) {
     const html = await readFile(path.join(distDir, relativePath), "utf8");
+
+    if (/^google[a-f0-9]+\.html$/.test(relativePath)) {
+      assertIncludes(
+        html,
+        relativePath,
+        `google-site-verification: ${relativePath}`,
+        "its matching Google site verification token",
+      );
+      continue;
+    }
+
     const outputUrl = urlForDistHtml(relativePath);
     if (hasNoindex(html) && inventory.has(outputUrl)) {
       fail(
