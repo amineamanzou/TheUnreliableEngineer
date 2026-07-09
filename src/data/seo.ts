@@ -178,7 +178,7 @@ export const articleJsonLd = ({
   headline: article.data.title,
   description: article.data.excerpt,
   datePublished: article.data.publishedAt,
-  dateModified: article.data.publishedAt,
+  dateModified: article.data.modifiedAt ?? article.data.publishedAt,
   author: personJsonLd(site),
   publisher: {
     "@id": serviceId(site),

@@ -108,13 +108,8 @@ const xDefaultPath =
             ? window.location.pathname.slice(baseUrl.length - 1)
             : window.location.pathname;
           const preferredLocale = window.localStorage.getItem("preferredLocale");
-          const browserLocales = navigator.languages ?? [navigator.language ?? "fr"];
-          const preferredSupportedLocale = browserLocales
-            .map((value) => String(value).toLowerCase())
-            .map((value) => (value.startsWith("en") ? "en" : value.startsWith("fr") ? "fr" : null))
-            .find(Boolean);
 
-          if (!preferredLocale && relativePath === redirectPathFr.replace(baseUrl, "/") && preferredSupportedLocale === "en") {
+          if (preferredLocale === "en" && relativePath === redirectPathFr.replace(baseUrl, "/")) {
             window.location.replace(`${redirectPathEn}${window.location.hash}`);
           }
         </script>
