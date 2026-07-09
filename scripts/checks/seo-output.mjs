@@ -277,6 +277,7 @@ function parseSitemapEntries(xml) {
       return [];
     }
 
+    const lastmod = getChild(urlNode, "lastmod")?.text.trim();
     const alternates = getChildren(urlNode, "link")
       .filter((link) => link.attributes.rel?.toLowerCase() === "alternate")
       .map((link) => ({
@@ -284,8 +285,52 @@ function parseSitemapEntries(xml) {
         href: link.attributes.href,
       }));
 
-    return [{ loc, alternates }];
+    return [{ loc, lastmod, alternates }];
   });
+}
+
+function getJsonLdProperty(html, relativePath, expectedType, property) {
+  if (html === null) {
+    return null;
+  }
+
+  const values = [];
+  const visit = (value) => {
+    if (!value || typeof value !== "object") {
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach(visit);
+      return;
+    }
+
+    const types = Array.isArray(value["@type"]) ? value["@type"] : [value["@type"]];
+    if (types.includes(expectedType) && property in value) {
+      values.push(value[property]);
+    }
+    if (Array.isArray(value["@graph"])) {
+      value["@graph"].forEach(visit);
+    }
+  };
+
+  for (const script of html.matchAll(
+    /<script\s+[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  )) {
+    try {
+      visit(JSON.parse(script[1].trim()));
+    } catch (error) {
+      fail(`${relativePath} has invalid application/ld+json: ${error.message}`);
+    }
+  }
+
+  if (values.length !== 1) {
+    fail(
+      `${relativePath} must contain exactly one ${expectedType}.${property}; found ${values.length}`,
+    );
+    return null;
+  }
+
+  return values[0];
 }
 
 function getTagAttributes(html, tagName) {
@@ -488,6 +533,33 @@ async function assertCompleteSitemapInventory(sitemap) {
       entry.alternates,
       `${relativePath} for sitemap entry ${url.href}`,
     );
+
+    if (/\/(?:en\/)?blog\/[^/]+\/$/.test(url.pathname)) {
+      if (!entry.lastmod || Number.isNaN(Date.parse(entry.lastmod))) {
+        fail(`sitemap.xml article ${url.href} must contain a valid lastmod`);
+      } else {
+        const metaModified = getMetaContent(
+          html,
+          relativePath,
+          "property",
+          "article:modified_time",
+        );
+        const jsonLdModified = getJsonLdProperty(
+          html,
+          relativePath,
+          "BlogPosting",
+          "dateModified",
+        );
+
+        if (metaModified !== entry.lastmod) {
+          fail(`${relativePath} article:modified_time must match sitemap lastmod ${entry.lastmod}`);
+        }
+        if (jsonLdModified !== entry.lastmod) {
+          fail(`${relativePath} BlogPosting.dateModified must match sitemap lastmod ${entry.lastmod}`);
+        }
+      }
+    }
+
     pageDetails.set(url.href, { relativePath, alternates: pageAlternates });
   }
 
@@ -544,6 +616,8 @@ async function assertCompleteSitemapInventory(sitemap) {
       fail(
         `intentional noindex output ${relativePath} must not be listed in sitemap.xml as ${outputUrl}`,
       );
+    } else if (!hasNoindex(html) && !inventory.has(outputUrl)) {
+      fail(`indexable output ${relativePath} must be listed in sitemap.xml as ${outputUrl}`);
     }
   }
 }

@@ -43,7 +43,7 @@ const redirectPaths = {
   imageAlt={article.data.heroImageAlt}
   ogType="article"
   publishedAt={article.data.publishedAt}
-  modifiedAt={article.data.publishedAt}
+  modifiedAt={article.data.modifiedAt ?? article.data.publishedAt}
   jsonLd={articleJsonLd({
     article,
     path: currentPath,
