@@ -94,7 +94,7 @@ export async function GET({ site }: APIContext) {
 
     entries.push({
       path: getArticlePath(article),
-      lastmod: article.data.publishedAt,
+      lastmod: article.data.modifiedAt ?? article.data.publishedAt,
       alternates,
     });
   }
