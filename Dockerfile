@@ -19,7 +19,7 @@ WORKDIR /src
 RUN apk add --no-cache ca-certificates git
 RUN CGO_ENABLED=0 go install -trimpath -ldflags="-s -w -X github.com/caddyserver/caddy/v2.CustomVersion=v2.11.4" github.com/caddyserver/caddy/v2/cmd/caddy@v2.11.4
 
-FROM alpine:3.22
+FROM alpine:3.24
 WORKDIR /srv
 
 ARG VCS_REF=unknown
