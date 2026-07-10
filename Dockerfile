@@ -3,15 +3,28 @@ WORKDIR /app
 
 ARG SITE_URL
 ARG BASE_PATH=/
+ARG VCS_REF=unknown
 
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm ci && npm audit --omit=dev --audit-level=high
 
 COPY astro.config.mjs tsconfig.json ./
+COPY Dockerfile ./Dockerfile
+COPY .github/workflows ./.github/workflows
 COPY public ./public
+COPY scripts ./scripts
 COPY src ./src
 
-RUN SITE_URL="${SITE_URL}" BASE_PATH="${BASE_PATH}" npm run build
+# P1 rollout gate: production images remain off-only until the portfolio canary
+# has completed its 24-48 hour acceptance window.
+RUN SITE_URL="${SITE_URL}" \
+  BASE_PATH="${BASE_PATH}" \
+  PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false \
+  npm run build \
+  && npm run check:browser-observability -- --mode=off \
+  && npm run check:i18n \
+  && npm run check:seo \
+  && npm run review:static
 
 FROM golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2 AS caddy-build
 WORKDIR /src

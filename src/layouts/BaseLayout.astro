@@ -9,6 +9,7 @@ import {
   type JsonLd,
 } from "../data/seo";
 import { defaultSocialImage } from "../data/site";
+import SiteFooter from "../components/SiteFooter.astro";
 
 type Props = {
   title: string;
@@ -71,6 +72,10 @@ const redirectPathFr = assetPath(localeRedirectPaths?.fr ?? localizedPath("fr", 
 const redirectPathEn = assetPath(localeRedirectPaths?.en ?? localizedPath("en", localeRedirectPath));
 const xDefaultPath =
   alternates.find((alternate) => alternate.locale === "fr")?.path ?? canonicalPath ?? "/";
+const browserObservabilityEnabled = import.meta.env.PUBLIC_BROWSER_OBSERVABILITY_ENABLED === "true" && !isPreviewBuild;
+const BrowserObservability = browserObservabilityEnabled
+  ? (await import("../components/BrowserObservability.astro")).default
+  : undefined;
 ---
 
 <!doctype html>
@@ -116,5 +121,7 @@ const xDefaultPath =
       )
     }
     <slot />
+    <SiteFooter locale={pageLocale} observabilityEnabled={browserObservabilityEnabled} />
+    {BrowserObservability && <BrowserObservability locale={pageLocale} />}
   </body>
 </html>

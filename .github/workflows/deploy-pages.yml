@@ -46,6 +46,7 @@ jobs:
           GITHUB_PAGES: "true"
           SITE_URL: "https://amineamanzou.github.io"
           BASE_PATH: "/TheUnreliableEngineer"
+          PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9

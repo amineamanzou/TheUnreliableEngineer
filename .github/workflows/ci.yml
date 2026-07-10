@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Reject high or critical production dependency vulnerabilities
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Astro check
         run: npm run check
 
@@ -39,6 +42,31 @@ jobs:
         env:
           SITE_URL: "https://theunreliable.engineer"
           BASE_PATH: "/"
+
+      - name: Verify browser observability is off by default
+        run: npm run check:browser-observability -- --mode=off
+
+      - name: Review static site
+        run: npm run review:static
+
+      - name: Build Browser RUM contract
+        run: npm run build
+        env:
+          SITE_URL: "https://theunreliable.engineer"
+          BASE_PATH: "/"
+          PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"
+          PUBLIC_BROWSER_OBSERVABILITY_URL: "https://otel.theunreliable.engineer"
+          PUBLIC_BROWSER_OBSERVABILITY_API_KEY: "browser-public"
+          PUBLIC_BROWSER_SERVICE_NAME: "the-unreliable-engineer-frontend"
+          PUBLIC_BROWSER_SERVICE_VERSION: ${{ github.sha }}
+          PUBLIC_BROWSER_SITE_NAME: "theunreliable.engineer"
+          PUBLIC_DEPLOYMENT_ENVIRONMENT: "production"
+
+      - name: Verify Browser RUM contract
+        run: npm run check:browser-observability -- --mode=on
+
+      - name: Review enabled Browser RUM test build
+        run: npm run review:static
 
       - name: SEO output check
         run: npm run check:seo
