@@ -46,6 +46,8 @@ export async function GET({ site }: APIContext) {
   const homeEn = localizedPath("en", "/");
   const blogFr = localizedPath("fr", "/blog/");
   const blogEn = localizedPath("en", "/blog/");
+  const privacyFr = "/confidentialite/";
+  const privacyEn = "/en/privacy/";
   const entries: SitemapEntry[] = [
     {
       path: homeFr,
@@ -77,6 +79,22 @@ export async function GET({ site }: APIContext) {
         { locale: "fr", href: absoluteUrl(blogFr, site) },
         { locale: "en", href: absoluteUrl(blogEn, site) },
         { locale: "x-default", href: absoluteUrl(blogFr, site) },
+      ],
+    },
+    {
+      path: privacyFr,
+      alternates: [
+        { locale: "fr", href: absoluteUrl(privacyFr, site) },
+        { locale: "en", href: absoluteUrl(privacyEn, site) },
+        { locale: "x-default", href: absoluteUrl(privacyFr, site) },
+      ],
+    },
+    {
+      path: privacyEn,
+      alternates: [
+        { locale: "fr", href: absoluteUrl(privacyFr, site) },
+        { locale: "en", href: absoluteUrl(privacyEn, site) },
+        { locale: "x-default", href: absoluteUrl(privacyFr, site) },
       ],
     },
   ];

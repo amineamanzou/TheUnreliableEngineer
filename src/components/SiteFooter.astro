@@ -1,0 +1,30 @@
+---
+import type { Locale } from "../data/i18n";
+import { assetPath, localizedPath } from "../data/i18n";
+
+type Props = {
+  locale: Locale;
+  observabilityEnabled?: boolean;
+};
+
+const { locale, observabilityEnabled = false } = Astro.props;
+const homeHref = assetPath(localizedPath(locale, "/"));
+const privacyHref = assetPath(locale === "fr" ? "/confidentialite/" : "/en/privacy/");
+const copy = locale === "fr"
+  ? { privacy: "Confidentialité", manage: "Gérer la mesure", home: "Accueil" }
+  : { privacy: "Privacy", manage: "Manage measurement", home: "Home" };
+---
+
+<footer class="site-footer">
+  <div class="shell shell-wide site-footer-inner">
+    <div>
+      <strong>The Unreliable Engineer</strong>
+      <span>© {new Date().getFullYear()} Amine Amanzou</span>
+    </div>
+    <nav aria-label={locale === "fr" ? "Liens de pied de page" : "Footer links"}>
+      <a href={homeHref}>{copy.home}</a>
+      <a href={privacyHref}>{copy.privacy}</a>
+      {observabilityEnabled && <button type="button" data-open-rum-settings>{copy.manage}</button>}
+    </nav>
+  </div>
+</footer>

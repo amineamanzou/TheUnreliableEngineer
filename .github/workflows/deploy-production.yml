@@ -48,6 +48,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Reject high or critical production dependency vulnerabilities
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Astro check
         run: npm run check
 
@@ -57,10 +60,14 @@ jobs:
       - name: Production SEO output check
         run: |
           npm run build
+          npm run check:browser-observability -- --mode=off
           npm run check:seo
+          npm run review:static
         env:
           SITE_URL: https://theunreliable.engineer
           BASE_PATH: /
+          # P1 rollout gate: no TUE activation before the portfolio 24-48h canary is accepted.
+          PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0

@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Topbar from "./Topbar.astro";
+import type { Locale } from "../data/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const path = locale === "fr" ? "/confidentialite/" : "/en/privacy/";
+const alternatePath = locale === "fr" ? "/en/privacy/" : "/confidentialite/";
+const observabilityEnabled = import.meta.env.PUBLIC_BROWSER_OBSERVABILITY_ENABLED === "true";
+const copy = locale === "fr"
+  ? {
+      title: "Confidentialité et mesure de fiabilité",
+      description: "Le contrat de données du canary Browser RUM de The Unreliable Engineer.",
+      eyebrow: "privacy.contract",
+      intro: "La mesure navigateur est désactivée par défaut et ne démarre qu’après votre accord explicite.",
+      purposeTitle: "Finalité",
+      purpose: "Comprendre les Web Vitals, les chargements lents et des catégories d’erreurs techniques afin d’améliorer la performance et la fiabilité du site.",
+      collectedTitle: "Données collectées",
+      collected: ["Web Vitals, chargement du document et tâches longues.", "Le SDK peut inclure transitoirement une URL complète, le user-agent, la taille d’écran ou des événements techniques dans la requête envoyée à l’ingress first-party.", "Le collector supprime ces attributs avant stockage dans ClickStack. Seuls une route fermée, une catégorie d’erreur, un type de ressource, la version, l’environnement et l’identité technique du service peuvent être conservés."],
+      excludedTitle: "Données exclues",
+      excluded: "Aucune session n’est rejouée et aucun corps de requête n’est journalisé. Le contenu du terminal, le texte des pages, les champs, les emails, la console, les messages d’erreur et les piles d’appels ne sont pas conservés dans ClickStack. Les instrumentations d’interaction, fetch et XHR sont désactivées.",
+      sessionTitle: "Session et conservation",
+      session: "Le cookie first-party __rum_sid expire après 15 minutes d’inactivité. Une session dure au maximum 4 heures. Les données sont conservées côté serveur pendant 30 jours.",
+      consentTitle: "Accord et retrait",
+      consent: "Le choix est enregistré localement avec une version et une date. En cas d’indisponibilité du stockage local lors d’un refus ou d’un retrait, le cookie first-party __rum_optout enregistre le refus pendant un an et reste prioritaire sur tout accord local. Vous pouvez modifier le choix avec Gérer la mesure dans le pied de page. Le retrait supprime __rum_sid et ne recharge la page qu’après relecture du refus persisté.",
+      keyTitle: "Clé navigateur",
+      key: "browser-public est une valeur publique et non authentifiante. Ce n’est pas une clé serveur ClickStack.",
+      manage: "Gérer la mesure",
+    }
+  : {
+      title: "Privacy and reliability measurement",
+      description: "The data contract for The Unreliable Engineer Browser RUM canary.",
+      eyebrow: "privacy.contract",
+      intro: "Browser measurement is disabled by default and starts only after your explicit consent.",
+      purposeTitle: "Purpose",
+      purpose: "Understand Web Vitals, slow loads and categories of technical errors to improve site performance and reliability.",
+      collectedTitle: "Data collected",
+      collected: ["Web Vitals, document load and long tasks.", "The SDK may transiently include a complete URL, user-agent, screen size or technical events in the request sent to the first-party ingress.", "The collector removes these attributes before ClickStack storage. Only a closed route, error category, resource type, version, environment and technical service identity may be retained."],
+      excludedTitle: "Data excluded",
+      excluded: "Sessions are never replayed and request bodies are not logged. Terminal content, page text, fields, emails, console output, error messages and stack traces are not retained in ClickStack. Interaction, fetch and XHR instrumentations are disabled.",
+      sessionTitle: "Session and retention",
+      session: "The first-party __rum_sid cookie expires after 15 minutes of inactivity. A session lasts no more than 4 hours. Data is retained server-side for 30 days.",
+      consentTitle: "Consent and withdrawal",
+      consent: "Your choice is stored locally with a version and decision date. If local storage is unavailable during refusal or withdrawal, the first-party __rum_optout cookie stores the refusal for one year and takes priority over any local grant. You can change the choice through Manage measurement in the footer. Withdrawal removes __rum_sid and reloads only after the persisted refusal is read back.",
+      keyTitle: "Browser key",
+      key: "browser-public is a public, non-authenticating value. It is not a ClickStack server key.",
+      manage: "Manage measurement",
+    };
+---
+
+<BaseLayout
+  title={`${copy.title} | The Unreliable Engineer`}
+  description={copy.description}
+  locale={locale}
+  canonicalPath={path}
+  alternates={[{ locale: "fr", path: "/confidentialite/" }, { locale: "en", path: "/en/privacy/" }]}
+>
+  <Topbar locale={locale} currentPath={path} alternatePath={alternatePath} />
+  <main class="page privacy-page">
+    <section class="section-block" id="top">
+      <div class="shell privacy-shell">
+        <article class="panel privacy-panel">
+          <span class="section-tag">{copy.eyebrow}</span>
+          <h1>{copy.title}</h1>
+          <p class="hero-text">{copy.intro}</p>
+
+          <div class="privacy-grid">
+            <section><h2>{copy.purposeTitle}</h2><p>{copy.purpose}</p></section>
+            <section><h2>{copy.collectedTitle}</h2><ul>{copy.collected.map((item) => <li>{item}</li>)}</ul></section>
+            <section><h2>{copy.excludedTitle}</h2><p>{copy.excluded}</p></section>
+            <section><h2>{copy.sessionTitle}</h2><p>{copy.session}</p></section>
+            <section><h2>{copy.consentTitle}</h2><p>{copy.consent}</p></section>
+            <section><h2>{copy.keyTitle}</h2><p>{copy.key}</p></section>
+          </div>
+
+          {observabilityEnabled && <button class="button button-primary" type="button" data-open-rum-settings>{copy.manage}</button>}
+        </article>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

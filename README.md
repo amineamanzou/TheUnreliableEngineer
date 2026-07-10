@@ -80,6 +80,22 @@ Le dépôt applicatif s'arrête au contrat public de livraison: construire,
 scanner, signer et publier une image immutable sur GHCR. La promotion runtime
 est gérée par une infrastructure privée hors de ce dépôt.
 
+## Canary Browser RUM
+
+L'observabilité navigateur reste désactivée dans les builds ordinaires, la
+prévisualisation GitHub Pages et tous les builds de production, y compris les
+dispatches manuels. Le Dockerfile et le workflow de livraison ne proposent
+temporairement aucun input d'activation. Ce gate ne sera rouvert qu'après 24 à
+48 heures de canary validé sur le portfolio Amine Amanzou. La CI conserve
+uniquement un build activé non publiable pour vérifier le contrat technique.
+
+Le SDK HyperDX est chargé dynamiquement uniquement après un accord explicite.
+Le rejeu de session, la console, les interactions, le contenu du terminal et
+les requêtes réseau sont exclus. Les contrats complets sont publiés dans
+`/confidentialite/` et `/en/privacy/`. La valeur `browser-public` est publique,
+non authentifiante et ne doit jamais être remplacée par une clé serveur
+ClickStack.
+
 ## Baseline sécurité CI/CD
 
 Le socle DevSecOps est documenté dans

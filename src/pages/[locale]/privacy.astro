@@ -1,0 +1,9 @@
+---
+import PrivacyPage from "../../components/PrivacyPage.astro";
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" } }];
+}
+---
+
+<PrivacyPage locale="en" />
