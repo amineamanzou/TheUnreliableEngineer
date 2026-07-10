@@ -5,6 +5,9 @@ const site = process.env.SITE_URL ?? (isGitHubPages ? "https://amineamanzou.gith
 const base = process.env.BASE_PATH ?? (isGitHubPages ? "/TheUnreliableEngineer" : undefined);
 
 export default defineConfig({
+  build: {
+    inlineStylesheets: "always",
+  },
   devToolbar: {
     enabled: false,
   },
