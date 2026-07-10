@@ -83,10 +83,18 @@ const localePath = localizedPath(locale, "/");
             </div>
             <div class="hero-clarifier-layout">
               <PersonaPlaceholder
-                src="/brand/web/characters/camera.png"
+                src="/brand/web/characters/camera-480.webp"
+                sources={[
+                  { src: "/brand/web/characters/camera-240.webp", width: 240 },
+                  { src: "/brand/web/characters/camera-480.webp", width: 480 },
+                ]}
+                sizes="(max-width: 760px) 220px, 260px"
+                width={480}
+                height={504}
                 alt={ui.home.characterAlt}
                 class="hero-character"
                 loading="eager"
+                fetchpriority="high"
               />
               <div class="case-caption">
                 <strong>{page.hero.consultation.caption}</strong>
@@ -126,6 +134,8 @@ const localePath = localizedPath(locale, "/");
               >
                 <img
                   src={assetPath(logo.src)}
+                  width="200"
+                  height="200"
                   alt={`Logo ${logo.label}`}
                   loading="lazy"
                   decoding="async"

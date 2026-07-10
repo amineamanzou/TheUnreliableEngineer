@@ -55,10 +55,18 @@ const blogPath = localizedPath(locale, "/blog/");
 
         <aside class="blog-character-stage" aria-label={ui.blog.terminalAsideAria}>
           <PersonaPlaceholder
-            src="/brand/web/characters/thinking.png"
+            src="/brand/web/characters/thinking-640.webp"
+            sources={[
+              { src: "/brand/web/characters/thinking-320.webp", width: 320 },
+              { src: "/brand/web/characters/thinking-640.webp", width: 640 },
+            ]}
+            sizes="(max-width: 760px) 320px, 410px"
+            width={640}
+            height={853}
             alt={ui.blog.terminalAsideAlt}
             class="blog-thinking-character"
             loading="eager"
+            fetchpriority="high"
           />
         </aside>
       </div>

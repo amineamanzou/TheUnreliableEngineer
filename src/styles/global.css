@@ -2017,15 +2017,13 @@ h1 {
 @keyframes signal-core {
   0%,
   100% {
-    box-shadow:
-      0 0 0 8px rgba(255, 211, 61, 0.1),
-      0 0 34px rgba(255, 211, 61, 0.45);
+    opacity: 0.84;
+    transform: translate(-50%, -50%) rotate(45deg) scale(0.94);
   }
 
   50% {
-    box-shadow:
-      0 0 0 16px rgba(255, 211, 61, 0.02),
-      0 0 48px rgba(255, 211, 61, 0.58);
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.08);
   }
 }
 
