@@ -33,6 +33,7 @@ assert(source.includes('await import("@hyperdx/browser")'), "HyperDX must stay b
 assert(source.indexOf("validateConfig(config)") < source.indexOf('await import("@hyperdx/browser")'), "Runtime config must be validated before loading the SDK chunk");
 assert(source.includes("if (!(event.error instanceof Error)) return;"), "Runtime error actions must ignore non-Error payloads");
 assert(source.includes('"deployment.environment": config.environment'), "Browser resources must carry the deployment environment");
+assert(source.includes("tracePropagationTargets: []"), "Browser RUM must not propagate trace context to downstream requests");
 
 for (const setting of ["disableReplay: true", "disableIntercom: true", "consoleCapture: false", "advancedNetworkCapture: false", "maskAllInputs: true", "maskAllText: true", "recordCanvas: false"]) {
   assert(source.includes(setting), `Missing privacy gate: ${setting}`);
