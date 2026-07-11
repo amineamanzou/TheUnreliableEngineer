@@ -4,6 +4,12 @@ WORKDIR /app
 ARG SITE_URL
 ARG BASE_PATH=/
 ARG VCS_REF=unknown
+ARG PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false
+ARG PUBLIC_BROWSER_OBSERVABILITY_URL=
+ARG PUBLIC_BROWSER_OBSERVABILITY_API_KEY=
+ARG PUBLIC_BROWSER_SERVICE_NAME=the-unreliable-engineer-frontend
+ARG PUBLIC_BROWSER_SITE_NAME=theunreliable.engineer
+ARG PUBLIC_DEPLOYMENT_ENVIRONMENT=production
 
 COPY package.json package-lock.json* ./
 RUN npm ci && npm audit --omit=dev --audit-level=high
@@ -15,13 +21,21 @@ COPY public ./public
 COPY scripts ./scripts
 COPY src ./src
 
-# P1 rollout gate: production images remain off-only until the portfolio canary
-# has completed its 24-48 hour acceptance window.
 RUN SITE_URL="${SITE_URL}" \
   BASE_PATH="${BASE_PATH}" \
-  PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false \
+  PUBLIC_BROWSER_OBSERVABILITY_ENABLED="${PUBLIC_BROWSER_OBSERVABILITY_ENABLED}" \
+  PUBLIC_BROWSER_OBSERVABILITY_URL="${PUBLIC_BROWSER_OBSERVABILITY_URL}" \
+  PUBLIC_BROWSER_OBSERVABILITY_API_KEY="${PUBLIC_BROWSER_OBSERVABILITY_API_KEY}" \
+  PUBLIC_BROWSER_SERVICE_NAME="${PUBLIC_BROWSER_SERVICE_NAME}" \
+  PUBLIC_BROWSER_SERVICE_VERSION="${VCS_REF}" \
+  PUBLIC_BROWSER_SITE_NAME="${PUBLIC_BROWSER_SITE_NAME}" \
+  PUBLIC_DEPLOYMENT_ENVIRONMENT="${PUBLIC_DEPLOYMENT_ENVIRONMENT}" \
   npm run build \
-  && npm run check:browser-observability -- --mode=off \
+  && if [ "${PUBLIC_BROWSER_OBSERVABILITY_ENABLED}" = "true" ]; then \
+    npm run check:browser-observability -- --mode=on; \
+  else \
+    npm run check:browser-observability -- --mode=off; \
+  fi \
   && npm run check:i18n \
   && npm run check:seo \
   && npm run review:static
