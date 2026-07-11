@@ -5,9 +5,10 @@ import { assetPath, localizedPath } from "../data/i18n";
 type Props = {
   locale: Locale;
   observabilityEnabled?: boolean;
+  productAnalyticsEnabled?: boolean;
 };
 
-const { locale, observabilityEnabled = false } = Astro.props;
+const { locale, observabilityEnabled = false, productAnalyticsEnabled = false } = Astro.props;
 const homeHref = assetPath(localizedPath(locale, "/"));
 const privacyHref = assetPath(locale === "fr" ? "/confidentialite/" : "/en/privacy/");
 const copy = locale === "fr"
@@ -25,6 +26,7 @@ const copy = locale === "fr"
       <a href={homeHref}>{copy.home}</a>
       <a href={privacyHref}>{copy.privacy}</a>
       {observabilityEnabled && <button type="button" data-open-rum-settings>{copy.manage}</button>}
+      {productAnalyticsEnabled && <button type="button" data-open-analytics-settings>Analytics</button>}
     </nav>
   </div>
 </footer>

@@ -55,7 +55,13 @@ const localePath = localizedPath(locale, "/");
             <p class="hero-offer-line" data-review="offer">{page.hero.offerLine}</p>
             <p class="hero-text">{page.hero.body}</p>
             <div class="hero-actions">
-              <a class="button button-primary" href={page.hero.primaryCta.href}>
+              <a
+                class="button button-primary"
+                href={page.hero.primaryCta.href}
+                data-analytics-event="site.cta_click"
+                data-analytics-placement="hero"
+                data-analytics-cta-id="clarification_call"
+              >
                 {page.hero.primaryCta.label}
               </a>
               <a class="button button-secondary" href={page.hero.secondaryCta.href}>
@@ -245,6 +251,9 @@ const localePath = localizedPath(locale, "/");
               rel="noreferrer"
               data-proof-status={card.status}
               data-supported-claim={card.supportedClaim}
+              data-analytics-event="site.outbound_click"
+              data-analytics-placement="page"
+              data-analytics-destination="linkedin"
               aria-label={`${ui.home.testimonialsAria} ${card.attribution}`}
             >
               <p class="quote">"{card.quote}"</p>
@@ -275,7 +284,13 @@ const localePath = localizedPath(locale, "/");
               {page.contact.bullets.map((bullet) => <li>{bullet}</li>)}
             </ul>
             <div class="cta-actions">
-              <a class="button button-primary" href={page.contact.primaryCta.href}>
+              <a
+                class="button button-primary"
+                href={page.contact.primaryCta.href}
+                data-analytics-event="site.cta_click"
+                data-analytics-placement="contact_panel"
+                data-analytics-cta-id="clarification_call"
+              >
                 {page.contact.primaryCta.label}
               </a>
             </div>
@@ -310,7 +325,15 @@ const localePath = localizedPath(locale, "/");
 
           <div class="social-link-rail" aria-label={ui.home.socialLinksAria}>
             {page.socialSignal.links.map((link) => (
-              <a class="social-link" href={link.href} target="_blank" rel="noreferrer">
+              <a
+                class="social-link"
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                data-analytics-event={["linkedin", "youtube", "github"].includes(link.label.toLowerCase()) ? "site.outbound_click" : undefined}
+                data-analytics-placement="footer"
+                data-analytics-destination={["linkedin", "youtube", "github"].includes(link.label.toLowerCase()) ? link.label.toLowerCase() : undefined}
+              >
                 <span>{link.label}</span>
                 <small>{link.meta}</small>
               </a>

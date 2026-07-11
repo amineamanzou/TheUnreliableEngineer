@@ -16,6 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
 
+      - name: Validate workflow YAML
+        run: |
+          ruby -e 'require "yaml"; Dir[".github/workflows/*.yml"].each { |path| YAML.load_stream(File.read(path)); puts "ok #{path}" }'
+
       - name: Setup Node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
@@ -45,6 +49,9 @@ jobs:
 
       - name: Verify browser observability is off by default
         run: npm run check:browser-observability -- --mode=off
+
+      - name: Verify product analytics is off by default
+        run: npm run check:product-analytics -- --mode=off
 
       - name: Review static site
         run: npm run review:static
@@ -84,6 +91,42 @@ jobs:
           done
           curl --fail --silent http://127.0.0.1:4321/ > /dev/null
           npm run review:observability -- http://127.0.0.1:4321/
+
+      - name: Build product analytics contract
+        env:
+          SITE_URL: "https://theunreliable.engineer"
+          BASE_PATH: "/"
+          PUBLIC_PRODUCT_ANALYTICS_ENABLED: "true"
+          PUBLIC_POSTHOG_KEY: phc_0123456789abcdefghijklmnopqrstuvwxyzABCD
+          PUBLIC_POSTHOG_HOST: https://eu.i.posthog.com
+          PUBLIC_ANALYTICS_SITE_NAME: theunreliable.engineer
+          PUBLIC_SERVICE_VERSION: ${{ github.sha }}
+          PUBLIC_DEPLOYMENT_ENVIRONMENT: production
+        run: npm run build
+
+      - name: Verify product analytics enabled contract
+        run: npm run check:product-analytics -- --mode=on
+
+      - name: Exercise product analytics consent and privacy contract
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          PRODUCT_ANALYTICS_QA_URL: http://127.0.0.1:4321/
+        run: |
+          set -euo pipefail
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/the-unreliable-engineer-product-analytics-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error http://127.0.0.1:4321/ > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              cat /tmp/the-unreliable-engineer-product-analytics-preview.log
+              exit 1
+            fi
+            sleep 1
+          done
+          npm run review:product-analytics
 
       - name: SEO output check
         run: npm run check:seo

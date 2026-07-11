@@ -109,6 +109,28 @@ const terminalUiJson = JSON.stringify(ui);
 
   const filterArticles = (value) => articles.filter((article) => matchesQuery(article, value));
 
+  const lengthBucket = (length) => {
+    if (length <= 0) return "0";
+    if (length <= 8) return "1-8";
+    if (length <= 24) return "9-24";
+    if (length <= 64) return "25-64";
+    return "65+";
+  };
+
+  const captureTerminalUsage = (command, value, resultCount) => {
+    document.dispatchEvent(new CustomEvent("product-analytics:capture", {
+      detail: {
+        name: "site.blog_search",
+        placement: "terminal",
+        properties: {
+          command,
+          length_bucket: lengthBucket(String(value).length),
+          result_count: resultCount,
+        },
+      },
+    }));
+  };
+
   const pushOutput = (html) => {
     if (!terminalOutput || !fzfPanel) {
       return;
@@ -285,28 +307,33 @@ const terminalUiJson = JSON.stringify(ui);
     const helpRequested = queryText === "--help" || rest.includes("--help");
 
     if (helpRequested) {
+      captureTerminalUsage("help", queryText, 0);
       pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${renderHelp(name)}`);
       return;
     }
 
     if (name === "help") {
       const requestedCommand = rest[0];
+      captureTerminalUsage("help", requestedCommand ?? "", 0);
       pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${renderHelp(requestedCommand)}`);
       return;
     }
 
     if (name === "fzf") {
+      captureTerminalUsage("fzf", queryText, filterArticles(queryText).length);
       enterFzf(queryText);
       return;
     }
 
     if (name === "ls") {
+      captureTerminalUsage("ls", "", articles.length);
       pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${articles.map(renderArticleLine).join("")}`);
       return;
     }
 
     if (name === "find" || name === "rg" || name === "ripgrep") {
       const matches = filterArticles(queryText);
+      captureTerminalUsage("search", queryText, matches.length);
       pushOutput(
         `<p><span>$</span> ${escapeHtml(command)}</p>${
           matches.length
@@ -319,6 +346,7 @@ const terminalUiJson = JSON.stringify(ui);
 
     if (name === "open" || name === "read" || name === "cat") {
       const article = resolveArticle(queryText);
+      captureTerminalUsage(name, queryText, article ? 1 : 0);
       if (article) {
         pushOutput(`<p><span>$</span> ${escapeHtml(command)}</p>${renderReadPreview(article)}`);
         window.setTimeout(() => openArticle(article), 90);
