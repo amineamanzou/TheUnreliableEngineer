@@ -55,7 +55,7 @@ jobs:
           SITE_URL: "https://theunreliable.engineer"
           BASE_PATH: "/"
           PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"
-          PUBLIC_BROWSER_OBSERVABILITY_URL: "https://otel.theunreliable.engineer"
+          PUBLIC_BROWSER_OBSERVABILITY_URL: "https://otel.theunreliable.engineer.test"
           PUBLIC_BROWSER_OBSERVABILITY_API_KEY: "browser-public"
           PUBLIC_BROWSER_SERVICE_NAME: "the-unreliable-engineer-frontend"
           PUBLIC_BROWSER_SERVICE_VERSION: ${{ github.sha }}
@@ -67,6 +67,23 @@ jobs:
 
       - name: Review enabled Browser RUM test build
         run: npm run review:static
+
+      - name: Browser RUM payload and consent smoke
+        env:
+          BROWSER_OBSERVABILITY_OTLP_URL: "https://otel.theunreliable.engineer.test"
+          CHROME_PATH: "/usr/bin/google-chrome"
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/the-unreliable-engineer-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid"' EXIT
+          for _ in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4321/ > /dev/null
+          npm run review:observability -- http://127.0.0.1:4321/
 
       - name: SEO output check
         run: npm run check:seo
