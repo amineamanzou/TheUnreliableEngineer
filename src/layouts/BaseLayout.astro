@@ -10,6 +10,7 @@ import {
 } from "../data/seo";
 import { defaultSocialImage } from "../data/site";
 import SiteFooter from "../components/SiteFooter.astro";
+import type { AnalyticsPageType } from "../lib/analytics/events";
 
 type Props = {
   title: string;
@@ -76,6 +77,20 @@ const browserObservabilityEnabled = import.meta.env.PUBLIC_BROWSER_OBSERVABILITY
 const BrowserObservability = browserObservabilityEnabled
   ? (await import("../components/BrowserObservability.astro")).default
   : undefined;
+const productAnalyticsEnabled = import.meta.env.PUBLIC_PRODUCT_ANALYTICS_ENABLED === "true" && !isPreviewBuild && !noindex;
+const analyticsPath = (canonicalPath ?? Astro.url.pathname).split(/[?#]/, 1)[0].replace(/^\/en(?=\/|$)/, "") || "/";
+const analyticsPageType: AnalyticsPageType = analyticsPath === "/"
+  ? "home"
+  : analyticsPath === "/blog/"
+    ? "blog_index"
+    : analyticsPath.startsWith("/blog/")
+      ? "article"
+      : analyticsPath === "/confidentialite/" || analyticsPath === "/privacy/"
+        ? "privacy"
+        : "other";
+const AnalyticsConsent = productAnalyticsEnabled
+  ? (await import("../components/AnalyticsConsent.astro")).default
+  : undefined;
 ---
 
 <!doctype html>
@@ -121,7 +136,12 @@ const BrowserObservability = browserObservabilityEnabled
       )
     }
     <slot />
-    <SiteFooter locale={pageLocale} observabilityEnabled={browserObservabilityEnabled} />
+    <SiteFooter
+      locale={pageLocale}
+      observabilityEnabled={browserObservabilityEnabled}
+      productAnalyticsEnabled={productAnalyticsEnabled}
+    />
     {BrowserObservability && <BrowserObservability locale={pageLocale} />}
+    {AnalyticsConsent && <AnalyticsConsent locale={pageLocale} pageType={analyticsPageType} />}
   </body>
 </html>

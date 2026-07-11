@@ -8,6 +8,7 @@ const { locale } = Astro.props;
 const path = locale === "fr" ? "/confidentialite/" : "/en/privacy/";
 const alternatePath = locale === "fr" ? "/en/privacy/" : "/confidentialite/";
 const observabilityEnabled = import.meta.env.PUBLIC_BROWSER_OBSERVABILITY_ENABLED === "true";
+const productAnalyticsEnabled = import.meta.env.PUBLIC_PRODUCT_ANALYTICS_ENABLED === "true";
 const copy = locale === "fr"
   ? {
       title: "Confidentialité et mesure de fiabilité",
@@ -27,6 +28,9 @@ const copy = locale === "fr"
       keyTitle: "Clé navigateur",
       key: "browser-public est une valeur publique et non authentifiante. Ce n’est pas une clé serveur ClickStack.",
       manage: "Gérer la mesure",
+      productTitle: "Analytics produit distincts",
+      product: "Avec un accord séparé, PostHog Cloud EU reçoit des pages vues et une liste fermée d’actions : clic vers la session de clarification, ouverture d’article, commande du terminal sans texte saisi, et profondeur de lecture à 50 ou 90 %. L’autocapture, le replay, les heatmaps, les profils nommés et les URL complètes sont désactivés. L’adresse IP est écartée par PostHog après ses transformations réseau. La conservation du plan actuel est limitée à un an.",
+      productManage: "Gérer les analytics",
     }
   : {
       title: "Privacy and reliability measurement",
@@ -46,6 +50,9 @@ const copy = locale === "fr"
       keyTitle: "Browser key",
       key: "browser-public is a public, non-authenticating value. It is not a ClickStack server key.",
       manage: "Manage measurement",
+      productTitle: "Separate product analytics",
+      product: "With separate consent, PostHog Cloud EU receives page views and a closed list of actions: clarification-session clicks, article opens, terminal commands without entered text, and reading depth at 50 or 90%. Autocapture, replay, heatmaps, named profiles and complete URLs are disabled. PostHog discards the IP address after network transformations. Retention under the current plan is limited to one year.",
+      productManage: "Manage analytics",
     };
 ---
 
@@ -72,9 +79,11 @@ const copy = locale === "fr"
             <section><h2>{copy.sessionTitle}</h2><p>{copy.session}</p></section>
             <section><h2>{copy.consentTitle}</h2><p>{copy.consent}</p></section>
             <section><h2>{copy.keyTitle}</h2><p>{copy.key}</p></section>
+            <section><h2>{copy.productTitle}</h2><p>{copy.product}</p></section>
           </div>
 
           {observabilityEnabled && <button class="button button-primary" type="button" data-open-rum-settings>{copy.manage}</button>}
+          {productAnalyticsEnabled && <button class="button button-primary" type="button" data-open-analytics-settings>{copy.productManage}</button>}
         </article>
       </div>
     </section>

@@ -46,16 +46,32 @@ const navHref = (href: string) =>
 
     <nav class="nav" aria-label={ui.topbar.navAria}>
       {page.topbar.nav.map((item) => <a href={navHref(item.href)}>{item.label}</a>)}
-      <a class="nav-blog" href={assetPath(page.topbar.blog.href)} aria-current={home ? undefined : "page"}>
+      <a
+        class="nav-blog"
+        href={assetPath(page.topbar.blog.href)}
+        aria-current={home ? undefined : "page"}
+        data-analytics-event="site.cta_click"
+        data-analytics-placement="topbar"
+        data-analytics-cta-id="read_blog"
+      >
         {page.topbar.blog.label}
       </a>
-      <a class="button button-primary nav-cta" href={page.topbar.cta.href}>
+      <a
+        class="button button-primary nav-cta"
+        href={page.topbar.cta.href}
+        data-analytics-event="site.cta_click"
+        data-analytics-placement="topbar"
+        data-analytics-cta-id="clarification_call"
+      >
         {page.topbar.cta.label}
       </a>
       <a
         class="language-switch"
         href={alternateHref}
         data-locale-switch={alternateLocale}
+        data-analytics-event="site.locale_change"
+        data-analytics-placement="topbar"
+        data-analytics-target-locale={alternateLocale}
         aria-label={ui.language.ariaLabel}
       >
         {ui.language[alternateLocale]}

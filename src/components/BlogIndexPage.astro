@@ -80,7 +80,13 @@ const blogPath = localizedPath(locale, "/blog/");
 
         <div class="blog-card-grid" data-blog-list data-read-more={readMoreLabel}>
           {initialArticles.map((article) => (
-            <a class="panel blog-card" href={article.href}>
+            <a
+              class="panel blog-card"
+              href={article.href}
+              data-analytics-event="site.article_open"
+              data-analytics-placement="blog_index"
+              data-analytics-article-id={article.slug}
+            >
               <span class="kicker">{article.label}</span>
               <div class="article-meta">
                 <span>{article.date}</span>
@@ -117,6 +123,9 @@ const blogPath = localizedPath(locale, "/blog/");
       const link = document.createElement("a");
       link.className = "panel blog-card";
       link.href = article.href;
+      link.dataset.analyticsEvent = "site.article_open";
+      link.dataset.analyticsPlacement = "blog_index";
+      link.dataset.analyticsArticleId = article.slug;
       link.innerHTML = `
         <span class="kicker">${escapeHtml(article.label)}</span>
         <div class="article-meta">

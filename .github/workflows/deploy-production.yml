@@ -10,6 +10,11 @@ on:
         required: false
         type: boolean
         default: false
+      product_analytics:
+        description: Enable PostHog only after the P1 canary gate is accepted
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: production-the-unreliable-engineer
@@ -73,6 +78,23 @@ jobs:
           SITE_URL: https://theunreliable.engineer
           BASE_PATH: /
           PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"
+          PUBLIC_PRODUCT_ANALYTICS_ENABLED: "false"
+
+      - name: Verify exact product analytics canary build contract
+        if: inputs.product_analytics
+        env:
+          SITE_URL: https://theunreliable.engineer
+          BASE_PATH: /
+          PUBLIC_PRODUCT_ANALYTICS_ENABLED: "true"
+          PUBLIC_POSTHOG_KEY: ${{ vars.PUBLIC_POSTHOG_KEY }}
+          PUBLIC_POSTHOG_HOST: https://eu.i.posthog.com
+          PUBLIC_ANALYTICS_SITE_NAME: theunreliable.engineer
+          PUBLIC_SERVICE_VERSION: ${{ github.sha }}
+          PUBLIC_DEPLOYMENT_ENVIRONMENT: production
+        run: |
+          npm run build
+          npm run check:product-analytics -- --mode=on
+          npm run review:static
 
       - name: Verify exact enabled Browser RUM canary contract
         if: inputs.browser_observability
@@ -134,6 +156,10 @@ jobs:
             PUBLIC_BROWSER_SERVICE_NAME=the-unreliable-engineer-frontend
             PUBLIC_BROWSER_SITE_NAME=theunreliable.engineer
             PUBLIC_DEPLOYMENT_ENVIRONMENT=production
+            PUBLIC_PRODUCT_ANALYTICS_ENABLED=${{ inputs.product_analytics && 'true' || 'false' }}
+            PUBLIC_POSTHOG_KEY=${{ vars.PUBLIC_POSTHOG_KEY }}
+            PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
+            PUBLIC_ANALYTICS_SITE_NAME=theunreliable.engineer
 
       - name: Gate the exact pushed digest on critical vulnerabilities
         id: trivy_pushed_digest
