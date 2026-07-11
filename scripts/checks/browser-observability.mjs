@@ -69,13 +69,15 @@ assert(privacySource.includes("__rum_optout"), "Full privacy notice must documen
 
 assert(dockerfile.includes("npm ci && npm audit --omit=dev --audit-level=high"), "Docker build must reject high production dependency vulnerabilities");
 assert(dockerfile.includes("COPY scripts ./scripts"), "Docker build must include contract and review scripts");
-assert(dockerfile.includes("PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false"), "Docker production build must force Browser RUM off");
-assert(!dockerfile.includes("ARG PUBLIC_BROWSER_OBSERVABILITY_ENABLED"), "Docker must not expose a Browser RUM activation argument before the rollout gate");
-assert(dockerfile.includes("check:browser-observability -- --mode=off"), "Docker build must run the exact off contract");
+assert(dockerfile.includes("ARG PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false"), "Docker production builds must default Browser RUM to off");
+assert(dockerfile.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED="${PUBLIC_BROWSER_OBSERVABILITY_ENABLED}"'), "Docker must pass the explicit canary flag to the build");
+assert(dockerfile.includes("check:browser-observability -- --mode=off"), "Docker build must retain the exact off contract");
+assert(dockerfile.includes("check:browser-observability -- --mode=on"), "Docker build must verify the exact on contract when requested");
 assert(dockerfile.includes("npm run review:static"), "Docker build must run the static review");
-assert(!deployWorkflow.includes("browser_observability:"), "Production workflow must not expose a Browser RUM activation input");
-assert(!deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "Production workflow must never build enabled Browser RUM");
+assert(deployWorkflow.includes("browser_observability:"), "Production workflow must expose an explicit Browser RUM canary input");
+assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "Production workflow must verify the enabled Browser RUM canary contract");
 assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"'), "Production workflow must explicitly force Browser RUM off");
+assert(deployWorkflow.includes("inputs.browser_observability && 'true' || 'false'"), "Production image activation must be tied to the manual canary input");
 assert(deployWorkflow.includes("npm audit --omit=dev --audit-level=high"), "Production workflow must reject high dependency vulnerabilities");
 assert(deployWorkflow.includes("check:browser-observability -- --mode=off"), "Production workflow must verify the exact off contract");
 assert(ciWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "CI must retain a non-publishing enabled contract build");
