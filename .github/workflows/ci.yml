@@ -76,7 +76,7 @@ jobs:
           npm run preview -- --host 127.0.0.1 > /tmp/the-unreliable-engineer-preview.log 2>&1 &
           preview_pid=$!
           trap 'kill "$preview_pid"' EXIT
-          for attempt in {1..30}; do
+          for _ in {1..30}; do
             if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then
               break
             fi
