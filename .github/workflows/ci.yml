@@ -91,6 +91,7 @@ jobs:
           done
           curl --fail --silent http://127.0.0.1:4321/ > /dev/null
           npm run review:observability -- http://127.0.0.1:4321/
+          npm run review:legal -- http://127.0.0.1:4321/ --require=rum
 
       - name: Build product analytics contract
         env:
@@ -127,6 +128,50 @@ jobs:
             sleep 1
           done
           npm run review:product-analytics
+          npm run review:legal -- http://127.0.0.1:4321/ --require=analytics
+
+      - name: Build combined consent contract
+        env:
+          SITE_URL: "https://theunreliable.engineer"
+          BASE_PATH: "/"
+          PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"
+          PUBLIC_BROWSER_OBSERVABILITY_URL: "https://otel.theunreliable.engineer.test"
+          PUBLIC_BROWSER_OBSERVABILITY_API_KEY: "browser-public"
+          PUBLIC_BROWSER_SERVICE_NAME: "the-unreliable-engineer-frontend"
+          PUBLIC_BROWSER_SERVICE_VERSION: ${{ github.sha }}
+          PUBLIC_BROWSER_SITE_NAME: "theunreliable.engineer"
+          PUBLIC_PRODUCT_ANALYTICS_ENABLED: "true"
+          PUBLIC_POSTHOG_KEY: phc_0123456789abcdefghijklmnopqrstuvwxyzABCD
+          PUBLIC_POSTHOG_HOST: https://eu.i.posthog.com
+          PUBLIC_ANALYTICS_SITE_NAME: theunreliable.engineer
+          PUBLIC_SERVICE_VERSION: ${{ github.sha }}
+          PUBLIC_DEPLOYMENT_ENVIRONMENT: production
+        run: |
+          npm run build
+          npm run check:browser-observability -- --mode=on
+          npm run check:product-analytics -- --mode=on
+
+      - name: Exercise combined consent sequencing
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          PRODUCT_ANALYTICS_QA_URL: http://127.0.0.1:4321/
+        run: |
+          set -euo pipefail
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/the-unreliable-engineer-combined-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error http://127.0.0.1:4321/ > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              cat /tmp/the-unreliable-engineer-combined-preview.log
+              exit 1
+            fi
+            sleep 1
+          done
+          npm run review:product-analytics
+          npm run review:legal -- http://127.0.0.1:4321/ --require=both
 
       - name: SEO output check
         run: npm run check:seo

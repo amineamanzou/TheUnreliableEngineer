@@ -20,6 +20,7 @@
     "compliance:plumber": "bash scripts/qa/plumber-check.sh",
     "review:homepage": "node scripts/review-homepage.mjs",
     "review:blog": "node scripts/review-blog.mjs",
+    "review:legal": "node scripts/review-legal.mjs",
     "review:observability": "node scripts/qa/browser-observability-smoke.mjs",
     "review:product-analytics": "node scripts/qa/product-analytics-smoke.mjs",
     "review:static": "node scripts/qa/review-static-site.mjs"

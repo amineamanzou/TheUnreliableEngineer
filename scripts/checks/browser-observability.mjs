@@ -47,7 +47,7 @@ for (const instrumentation of ["document", "longtask", "webvitals"]) {
 for (const action of ["browser.error", "browser.unhandledrejection", "browser.resource.error"]) {
   assert(source.includes(`addAction("${action}"`), `Missing privacy-safe action: ${action}`);
 }
-for (const route of ["/", "/en/", "/blog/", "/en/blog/", "/confidentialite/", "/en/privacy/", "/blog/:slug/", "/en/blog/:slug/", "/other/"]) {
+for (const route of ["/", "/en/", "/blog/", "/en/blog/", "/confidentialite/", "/en/privacy/", "/conditions-utilisation/", "/en/terms/", "/suppression-des-donnees/", "/en/data-deletion/", "/blog/:slug/", "/en/blog/:slug/", "/other/"]) {
   assert(source.includes(`"${route}"`), `Closed route vocabulary is missing: ${route}`);
 }
 for (const forbidden of ["event.message", "event.filename", "window.location.href", "window.location.search", "window.location.hash", "recordException(", "userEmail", "userName", "terminal-command", "blog-terminal-input"]) {
@@ -96,8 +96,8 @@ if (mode === "off") {
   for (const expected of ["data-rum-consent", "the-unreliable-engineer-frontend", "web-frontend", "theunreliable.engineer", "browser-public"]) {
     assert(home.includes(expected) || source.includes(expected), `Enabled build is missing: ${expected}`);
   }
-  assert(privacyFr.includes("Confidentialité et mesure de fiabilité"), "French privacy page is missing");
-  assert(privacyEn.includes("Privacy and reliability measurement"), "English privacy page is missing");
+  assert(privacyFr.includes("Politique de confidentialité"), "French privacy page is missing");
+  assert(privacyEn.includes("Privacy policy"), "English privacy page is missing");
   assert(privacyFr.includes("data-open-rum-settings"), "Privacy page must expose a persistent consent control");
 
   const assetsDir = join(dist, "_astro");

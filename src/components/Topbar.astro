@@ -24,6 +24,9 @@ const alternateLocale = otherLocale(locale);
 const alternateHref = assetPath(alternatePath ?? swapLocalePath(locale, currentPath));
 const navHref = (href: string) =>
   href.startsWith("#") && !home ? `${localeHomeHref}${href}` : href;
+const blogPath = page.topbar.blog.href;
+const isBlogIndex = currentPath === blogPath;
+const isBlogArticle = !isBlogIndex && currentPath.startsWith(blogPath);
 ---
 
 <header class="topbar">
@@ -49,7 +52,7 @@ const navHref = (href: string) =>
       <a
         class="nav-blog"
         href={assetPath(page.topbar.blog.href)}
-        aria-current={home ? undefined : "page"}
+        aria-current={isBlogIndex ? "page" : isBlogArticle ? "location" : undefined}
         data-analytics-event="site.cta_click"
         data-analytics-placement="topbar"
         data-analytics-cta-id="read_blog"

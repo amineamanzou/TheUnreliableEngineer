@@ -20,6 +20,8 @@ export const analyticsPageTypes = [
   "blog_index",
   "article",
   "privacy",
+  "terms",
+  "data_deletion",
   "other",
 ] as const;
 
@@ -125,4 +127,3 @@ export function toLengthBucket(length: number): AnalyticsLengthBucket {
   if (length <= 64) return "25-64";
   return "65+";
 }
-
