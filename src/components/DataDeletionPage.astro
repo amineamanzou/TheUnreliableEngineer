@@ -1,0 +1,226 @@
+---
+import LegalPageLayout, { type LegalTocItem } from "./LegalPageLayout.astro";
+import { assetPath, type Locale } from "../data/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const path = locale === "fr" ? "/suppression-des-donnees/" : "/en/data-deletion/";
+const alternatePath = locale === "fr" ? "/en/data-deletion/" : "/suppression-des-donnees/";
+const privacyPath = assetPath(locale === "fr" ? "/confidentialite/" : "/en/privacy/");
+const requestHref = locale === "fr"
+  ? "mailto:admin@itart.studio?subject=%5BMeta%5D%20Suppression%20des%20donn%C3%A9es%20%E2%80%93%20Content%20Analytics"
+  : "mailto:admin@itart.studio?subject=%5BMeta%5D%20Data%20deletion%20%E2%80%93%20Content%20Analytics";
+
+const copy = locale === "fr"
+  ? {
+      title: "Instructions de suppression des données",
+      description: "Procédure publique et manuelle pour révoquer Content Analytics et demander la suppression des données Facebook et Instagram obtenues via Meta.",
+      tag: "data-deletion",
+      intro: "Vous pouvez couper l’accès Meta à tout moment et demander l’effacement manuel des données déjà enregistrées par le pilote interne Content Analytics. Cette page fonctionne sans compte et sans JavaScript.",
+      summaryItems: [
+        "Aucun mot de passe ou jeton ne vous sera demandé.",
+        "La révocation empêche tout nouvel appel Meta de l’Application.",
+        "Suppression traitée rapidement, au plus tard sous un mois.",
+      ],
+      toc: [
+        { id: "portee", label: "Ce que cette procédure couvre" },
+        { id: "demande", label: "Envoyer une demande" },
+        { id: "meta", label: "Révoquer depuis Meta" },
+        { id: "verification", label: "Vérification" },
+        { id: "effets", label: "Données supprimées" },
+        { id: "delai", label: "Délai et confirmation" },
+        { id: "exceptions", label: "Exceptions limitées" },
+        { id: "site", label: "Analytics du site" },
+      ] satisfies LegalTocItem[],
+      cta: "Demander la suppression par email",
+    }
+  : {
+      title: "Data deletion instructions",
+      description: "Public manual procedure to revoke Content Analytics and request deletion of Facebook and Instagram data obtained through Meta.",
+      tag: "data-deletion",
+      intro: "You can stop Meta access at any time and request manual erasure of data already stored by the internal Content Analytics pilot. This page works without an account and without JavaScript.",
+      summaryItems: [
+        "You will never be asked for a password or token.",
+        "Revocation prevents any new Meta call by the Application.",
+        "Deletion is handled promptly and no later than one month.",
+      ],
+      toc: [
+        { id: "scope", label: "What this procedure covers" },
+        { id: "request", label: "Send a request" },
+        { id: "meta", label: "Revoke through Meta" },
+        { id: "verification", label: "Verification" },
+        { id: "effects", label: "Data deleted" },
+        { id: "timeframe", label: "Timeframe and confirmation" },
+        { id: "exceptions", label: "Limited exceptions" },
+        { id: "website", label: "Website analytics" },
+      ] satisfies LegalTocItem[],
+      cta: "Request deletion by email",
+    };
+---
+
+<LegalPageLayout
+  locale={locale}
+  kind="deletion"
+  path={path}
+  alternatePath={alternatePath}
+  title={copy.title}
+  description={copy.description}
+  tag={copy.tag}
+  intro={copy.intro}
+  summaryItems={copy.summaryItems}
+  toc={copy.toc}
+>
+  {locale === "fr" ? (
+    <>
+      <section class="legal-section" id="portee">
+        <h2>Ce que cette procédure couvre</h2>
+        <p><strong>Content Analytics</strong> est aujourd’hui un pilote interne en développement avec une seule autorisation OAuth Meta enregistrée, mais aucune connexion d’actifs opérationnelle. Il est exploité par <strong>IT ART STUDIO</strong>, SARL au capital de 1&nbsp;000&nbsp;€, immatriculée au RCS de Lyon sous le numéro 915&nbsp;019&nbsp;129, dont le siège social est situé 143 rue René Tachon, 69250 Curis-au-Mont-d’Or, France.</p>
+        <p>Au 12 juillet 2026, le préflight a retourné 0 Page et 0 compte Instagram accessible et aucun appel Insights n’a été effectué. La procédure couvre actuellement le jeton OAuth, son état d’autorisation et un journal d’audit Git local versionné qui mentionne les noms publics de l’opérateur, du portefeuille et des actifs ainsi que leurs relations professionnelles observées manuellement. Elle couvrira aussi les pseudonymes d’actifs, métadonnées et métriques si une collecte devient opérationnelle dans le périmètre décrit par la politique de confidentialité.</p>
+        <div class="legal-note">
+          <strong>Deux actions différentes</strong>
+          <p>Retirer Content Analytics dans Meta arrête l’accès futur. Demander la suppression à Content Analytics efface les copies locales déjà enregistrées. Supprimer nos copies ne supprime pas votre compte, vos Pages, vos médias ou vos statistiques d’origine chez Meta.</p>
+        </div>
+      </section>
+
+      <section class="legal-section" id="demande">
+        <h2>Envoyer une demande de suppression</h2>
+        <p>Écrivez à <a href={requestHref}>admin@itart.studio</a> avec l’objet <code>[Meta] Suppression des données – Content Analytics</code>.</p>
+        <p>Le pilote n’a actuellement ni espace client, ni identifiant d’espace de travail, ni identifiant numérique d’actif stocké. Comme une seule autorisation OAuth interne existe, nous pouvons la retrouver manuellement à partir des éléments suivants :</p>
+        <ul>
+          <li>la date approximative à laquelle la connexion a été autorisée ;</li>
+          <li>la confirmation envoyée depuis l’adresse connue de l’opérateur qui a accordé l’autorisation ;</li>
+          <li>si des actifs deviennent ultérieurement accessibles, l’identifiant numérique de la Page Facebook ou du compte Instagram professionnel concerné ;</li>
+          <li>en complément uniquement, le nom de la Page ou le nom d’utilisateur Instagram ;</li>
+          <li>l’adresse à laquelle envoyer la confirmation.</li>
+        </ul>
+        <p><strong>N’envoyez jamais</strong> votre mot de passe Facebook ou Instagram, un App Secret, un code de connexion ou un jeton d’accès. Ces informations ne sont pas nécessaires pour traiter la demande.</p>
+      </section>
+
+      <section class="legal-section" id="meta">
+        <h2>Révoquer Content Analytics depuis Meta</h2>
+        <ol class="legal-steps">
+          <li><strong>Ouvrez Facebook</strong> avec le profil qui a autorisé Content Analytics.</li>
+          <li><strong>Accédez à Paramètres et confidentialité, puis Paramètres.</strong></li>
+          <li><strong>Ouvrez Applications et sites web</strong> — selon l’interface Business, cette rubrique peut apparaître sous « Intégrations professionnelles ».</li>
+          <li><strong>Sélectionnez Content Analytics</strong>, puis choisissez Supprimer ou Révoquer l’accès et confirmez.</li>
+        </ol>
+        <p>Vous pouvez essayer les raccourcis Meta vers <a href="https://www.facebook.com/settings?tab=applications" rel="external">Applications et sites web</a> ou <a href="https://www.facebook.com/settings?tab=business_tools" rel="external">Intégrations professionnelles</a>. Leur libellé peut varier selon le compte et l’interface.</p>
+        <p>Cette révocation empêche tout nouvel appel Meta par l’Application. Le pilote ne dispose actuellement d’aucune fonction de rappel de suppression (callback Meta), d’aucun point d’API de suppression ni d’autre mécanisme automatique : envoyez aussi l’email ci-dessus pour déclencher la procédure manuelle et obtenir l’effacement vérifié des copies déjà enregistrées.</p>
+      </section>
+
+      <section class="legal-section" id="verification">
+        <h2>Vérification raisonnable</h2>
+        <p>La vérification sert uniquement à éviter qu’un tiers supprime les données d’une autorisation ou d’un actif qu’il ne contrôle pas. Une réponse depuis l’adresse connue, la date d’autorisation ou, si des actifs sont ultérieurement connectés, une preuve de rôle Meta peut suffire.</p>
+        <p>Une pièce d’identité n’est pas demandée par défaut. Elle ne pourrait l’être qu’en dernier recours, en cas de doute raisonnable, avec occultation des informations inutiles.</p>
+      </section>
+
+      <section class="legal-section" id="effets">
+        <h2>Ce qui est supprimé</h2>
+        <p>Dans l’état actuel du pilote, la suppression manuelle couvre :</p>
+        <ul>
+          <li>le jeton d’accès Meta global utilisé par le pilote et son état d’autorisation ;</li>
+          <li>les preuves du préflight, les noms publics et relations professionnelles consignés, ainsi que les journaux techniques encore directement rattachables, sauf exception légale limitée.</li>
+        </ul>
+        <p>Un opérateur révoque l’autorisation lorsque cela est possible, efface le jeton du fichier de secrets local, expurge le document d’audit courant et vérifie les objets encore accessibles dans l’historique Git local. Lorsque l’effacement l’exige, cet historique doit être réécrit avant confirmation. Aucun alias HMAC, identifiant de média, réponse d’Insights ou métrique normalisée n’est stocké à ce jour.</p>
+        <p>Avant toute collecte opérationnelle d’actifs, IT ART STUDIO devra documenter et tester une purge manuelle idempotente couvrant les alias HMAC, liaisons entre comptes et médias, réponses brutes, métriques normalisées, reçus et journaux associés. Cette page sera mise à jour avec la procédure vérifiée avant l’ouverture correspondante.</p>
+      </section>
+
+      <section class="legal-section" id="delai">
+        <h2>Délai et confirmation</h2>
+        <p>La demande est traitée dans les meilleurs délais. Le délai maximal est d’un mois à compter de sa réception et de la vérification nécessaire. En cas de demande exceptionnellement complexe, une prolongation permise par le RGPD peut être appliquée ; vous en serez informé et le motif sera expliqué pendant le premier mois.</p>
+        <p>Une confirmation est envoyée à l’adresse indiquée lorsque la révocation et la suppression vérifiables sont terminées. Si certaines données ne peuvent pas être isolées ou doivent être conservées, la réponse précise lesquelles, pourquoi et pendant combien de temps.</p>
+      </section>
+
+      <section class="legal-section" id="exceptions">
+        <h2>Exceptions et sauvegardes limitées</h2>
+        <p>Une conservation minimale peut subsister lorsqu’une obligation légale l’impose ou lorsqu’elle est strictement nécessaire à la constatation, l’exercice ou la défense d’un droit. Ces données sont isolées, leur usage est restreint et elles ne servent plus à l’analytics.</p>
+        <p>Aucun mécanisme de sauvegarde des Données de plateforme Meta n’est actif aujourd’hui. Avant l’activation éventuelle d’un tel mécanisme, cette politique et la procédure opérationnelle de suppression seront mises à jour pour préciser le cycle de conservation et la réapplication des demandes après restauration.</p>
+        <p>Lorsque le journal d’audit a été inclus dans une session d’assistance IA, IT ART STUDIO doit aussi utiliser le canal d’effacement applicable du fournisseur et vérifier le résultat avant de confirmer un effacement complet. La conservation contractuelle de cette copie fait partie de l’audit fournisseur encore requis.</p>
+      </section>
+
+      <section class="legal-section" id="site">
+        <h2>Suppression des analytics du site public</h2>
+        <p>Pour les mesures RUM ou PostHog de theunreliable.engineer, utilisez les réglages de confidentialité dans le pied de page pour arrêter les nouvelles mesures. Pour demander l’effacement d’événements déjà transmis, écrivez à <a href="mailto:admin@itart.studio">admin@itart.studio</a> en indiquant le site, une période approximative et, si vous le connaissez, l’identifiant technique aléatoire.</p>
+        <p>Pour connaître le détail des traitements et de vos droits, consultez la <a href={privacyPath}>politique de confidentialité</a>.</p>
+      </section>
+    </>
+  ) : (
+    <>
+      <section class="legal-section" id="scope">
+        <h2>What this procedure covers</h2>
+        <p><strong>Content Analytics</strong> is currently an internal pilot under development with one stored Meta OAuth authorisation but no operational asset connection. It is operated by <strong>IT ART STUDIO</strong>, a French SARL with share capital of €1,000, registered with the Lyon Trade and Companies Register under number 915&nbsp;019&nbsp;129, with registered office at 143 rue René Tachon, 69250 Curis-au-Mont-d’Or, France.</p>
+        <p>As of July 12, 2026, the preflight returned 0 accessible Pages and 0 accessible Instagram accounts, and no Insights call was made. The procedure currently covers the OAuth token, its authorisation state and a versioned local Git audit log naming the public operator, portfolio and assets together with professional relationships observed manually. It will also cover asset pseudonyms, metadata and metrics if collection becomes operational within the scope described by the privacy policy.</p>
+        <div class="legal-note">
+          <strong>Two different actions</strong>
+          <p>Removing Content Analytics through Meta stops future access. Requesting deletion from Content Analytics erases local copies already stored. Erasing our copies does not delete your Meta account, Pages, media or source insights.</p>
+        </div>
+      </section>
+
+      <section class="legal-section" id="request">
+        <h2>Send a deletion request</h2>
+        <p>Email <a href={requestHref}>admin@itart.studio</a> with the subject <code>[Meta] Data deletion – Content Analytics</code>.</p>
+        <p>The pilot currently has no client workspace, workspace identifier or stored numeric asset identifier. Because only one internal OAuth authorisation exists, we can locate it manually using the following details:</p>
+        <ul>
+          <li>the approximate date on which the connection was authorised;</li>
+          <li>confirmation sent from the known address of the operator who granted the authorisation;</li>
+          <li>if assets later become accessible, the numeric ID of the relevant Facebook Page or professional Instagram account;</li>
+          <li>only as secondary details, the Page name or Instagram username;</li>
+          <li>the address to which confirmation should be sent.</li>
+        </ul>
+        <p><strong>Never send</strong> a Facebook or Instagram password, App Secret, login code or access token. None is required to process the request.</p>
+      </section>
+
+      <section class="legal-section" id="meta">
+        <h2>Revoke Content Analytics through Meta</h2>
+        <ol class="legal-steps">
+          <li><strong>Open Facebook</strong> with the profile that authorised Content Analytics.</li>
+          <li><strong>Go to Settings &amp; privacy, then Settings.</strong></li>
+          <li><strong>Open Apps and websites</strong> — in a Business interface this may appear as “Business integrations”.</li>
+          <li><strong>Select Content Analytics</strong>, choose Remove or Revoke access, and confirm.</li>
+        </ol>
+        <p>You can try Meta’s shortcuts to <a href="https://www.facebook.com/settings?tab=applications" rel="external">Apps and websites</a> or <a href="https://www.facebook.com/settings?tab=business_tools" rel="external">Business integrations</a>. Labels may vary by account and interface.</p>
+        <p>Revocation prevents any new Meta call by the Application. The pilot currently has no Meta data-deletion callback, deletion API endpoint or other automatic mechanism: also send the email above to trigger the manual procedure and obtain verified erasure of already stored copies.</p>
+      </section>
+
+      <section class="legal-section" id="verification">
+        <h2>Reasonable verification</h2>
+        <p>Verification exists only to prevent a third party from deleting data for an authorisation or asset it does not control. A reply from the known address, the authorisation date or, if assets are later connected, fresh evidence of the Meta role may be enough.</p>
+        <p>Identity documents are not requested by default. One could be requested only as a last resort where reasonable doubt remains, with unnecessary information redacted.</p>
+      </section>
+
+      <section class="legal-section" id="effects">
+        <h2>Data deleted</h2>
+        <p>In the current state of the pilot, manual deletion covers:</p>
+        <ul>
+          <li>the global Meta access token used by the pilot and its authorisation state;</li>
+          <li>preflight evidence, recorded public names and professional relationships, and directly linkable technical logs, except for a limited legal exception.</li>
+        </ul>
+        <p>An operator revokes the authorisation where possible, erases the token from the local secrets file, redacts the current audit document and checks objects still reachable in local Git history. Where erasure requires it, that history must be rewritten before confirmation. No HMAC alias, media identifier, Insights response or normalised metric is stored to date.</p>
+        <p>Before any operational asset collection, IT ART STUDIO will have to document and test an idempotent manual purge covering HMAC aliases, account and media links, raw responses, normalised metrics, receipts and associated logs. This page will be updated with the verified procedure before that access is opened.</p>
+      </section>
+
+      <section class="legal-section" id="timeframe">
+        <h2>Timeframe and confirmation</h2>
+        <p>The request is handled promptly. The maximum period is one month from receipt and any necessary verification. For an exceptionally complex request, a GDPR-permitted extension may apply; you will be informed and given the reason within the first month.</p>
+        <p>A confirmation is sent to the stated address when verifiable revocation and deletion are complete. If any data cannot be isolated or must be retained, the response explains what, why and for how long.</p>
+      </section>
+
+      <section class="legal-section" id="exceptions">
+        <h2>Limited exceptions and backups</h2>
+        <p>Minimum data may remain where a legal obligation requires it or where strictly necessary to establish, exercise or defend a legal claim. Such data is isolated, use-restricted and no longer used for analytics.</p>
+        <p>No backup mechanism for Meta Platform Data is active today. Before any such mechanism is enabled, this policy and the operational deletion procedure will be updated to state the retention cycle and how deletion requests are reapplied after a restore.</p>
+        <p>Where the audit log was included in an AI-assistance session, IT ART STUDIO must also use the provider’s applicable deletion channel and verify the outcome before confirming complete erasure. Contractual retention of that copy forms part of the provider audit that is still required.</p>
+      </section>
+
+      <section class="legal-section" id="website">
+        <h2>Public website analytics deletion</h2>
+        <p>For RUM or PostHog measurement on theunreliable.engineer, use the privacy settings in the footer to stop new measurement. To request deletion of events already sent, email <a href="mailto:admin@itart.studio">admin@itart.studio</a> with the site, an approximate time range and, if known, the random technical identifier.</p>
+        <p>For full processing and rights information, read the <a href={privacyPath}>privacy policy</a>.</p>
+      </section>
+    </>
+  )}
+
+  <Fragment slot="actions">
+    <a class="button button-primary" href={requestHref}>{copy.cta}</a>
+  </Fragment>
+</LegalPageLayout>

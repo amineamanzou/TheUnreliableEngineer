@@ -1,0 +1,9 @@
+---
+import DataDeletionPage from "../../components/DataDeletionPage.astro";
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" } }];
+}
+---
+
+<DataDeletionPage locale="en" />

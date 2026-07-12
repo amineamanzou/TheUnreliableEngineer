@@ -11,9 +11,11 @@ type Props = {
 const { locale, observabilityEnabled = false, productAnalyticsEnabled = false } = Astro.props;
 const homeHref = assetPath(localizedPath(locale, "/"));
 const privacyHref = assetPath(locale === "fr" ? "/confidentialite/" : "/en/privacy/");
+const termsHref = assetPath(locale === "fr" ? "/conditions-utilisation/" : "/en/terms/");
+const deletionHref = assetPath(locale === "fr" ? "/suppression-des-donnees/" : "/en/data-deletion/");
 const copy = locale === "fr"
-  ? { privacy: "Confidentialité", manage: "Gérer la mesure", home: "Accueil" }
-  : { privacy: "Privacy", manage: "Manage measurement", home: "Home" };
+  ? { privacy: "Confidentialité", terms: "Conditions", deletion: "Suppression des données", manage: "Gérer la mesure", home: "Accueil" }
+  : { privacy: "Privacy", terms: "Terms", deletion: "Data deletion", manage: "Manage measurement", home: "Home" };
 ---
 
 <footer class="site-footer">
@@ -25,6 +27,8 @@ const copy = locale === "fr"
     <nav aria-label={locale === "fr" ? "Liens de pied de page" : "Footer links"}>
       <a href={homeHref}>{copy.home}</a>
       <a href={privacyHref}>{copy.privacy}</a>
+      <a href={termsHref}>{copy.terms}</a>
+      <a href={deletionHref}>{copy.deletion}</a>
       {observabilityEnabled && <button type="button" data-open-rum-settings>{copy.manage}</button>}
       {productAnalyticsEnabled && <button type="button" data-open-analytics-settings>Analytics</button>}
     </nav>

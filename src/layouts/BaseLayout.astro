@@ -30,6 +30,7 @@ type Props = {
   localeRedirectPath?: string;
   localeRedirectPaths?: { fr: string; en: string };
   bodyClass?: string;
+  consentPrompt?: "automatic" | "settings-only";
 };
 
 const {
@@ -50,6 +51,7 @@ const {
   localeRedirectPath = "/",
   localeRedirectPaths,
   bodyClass,
+  consentPrompt = "automatic",
 } = Astro.props;
 const pageLocale = locale ?? lang ?? "fr";
 const canonicalUrl = canonicalPath && Astro.site ? new URL(assetPath(canonicalPath), Astro.site).toString() : undefined;
@@ -87,7 +89,11 @@ const analyticsPageType: AnalyticsPageType = analyticsPath === "/"
       ? "article"
       : analyticsPath === "/confidentialite/" || analyticsPath === "/privacy/"
         ? "privacy"
-        : "other";
+        : analyticsPath === "/conditions-utilisation/" || analyticsPath === "/terms/"
+          ? "terms"
+          : analyticsPath === "/suppression-des-donnees/" || analyticsPath === "/data-deletion/"
+            ? "data_deletion"
+            : "other";
 const AnalyticsConsent = productAnalyticsEnabled
   ? (await import("../components/AnalyticsConsent.astro")).default
   : undefined;
@@ -141,7 +147,7 @@ const AnalyticsConsent = productAnalyticsEnabled
       observabilityEnabled={browserObservabilityEnabled}
       productAnalyticsEnabled={productAnalyticsEnabled}
     />
-    {BrowserObservability && <BrowserObservability locale={pageLocale} />}
-    {AnalyticsConsent && <AnalyticsConsent locale={pageLocale} pageType={analyticsPageType} />}
+    {BrowserObservability && <BrowserObservability locale={pageLocale} settingsOnly={consentPrompt === "settings-only"} />}
+    {AnalyticsConsent && <AnalyticsConsent locale={pageLocale} pageType={analyticsPageType} settingsOnly={consentPrompt === "settings-only"} />}
   </body>
 </html>

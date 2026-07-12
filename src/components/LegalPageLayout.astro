@@ -1,0 +1,142 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Topbar from "./Topbar.astro";
+import { assetPath, type Locale } from "../data/i18n";
+import { webPageJsonLd } from "../data/seo";
+
+export type LegalDocumentKind = "privacy" | "terms" | "deletion";
+export type LegalTocItem = { id: string; label: string };
+
+type Props = {
+  locale: Locale;
+  kind: LegalDocumentKind;
+  path: string;
+  alternatePath: string;
+  title: string;
+  description: string;
+  tag: string;
+  intro: string;
+  summaryItems: string[];
+  toc: LegalTocItem[];
+};
+
+const {
+  locale,
+  kind,
+  path,
+  alternatePath,
+  title,
+  description,
+  tag,
+  intro,
+  summaryItems,
+  toc,
+} = Astro.props;
+
+const updatedIso = "2026-07-12";
+const copy = locale === "fr"
+  ? {
+      skip: "Aller au contenu juridique",
+      center: "Centre juridique",
+      updated: "Mis à jour le 12 juillet 2026",
+      version: "Version 1.0",
+      toc: "Sur cette page",
+      nav: "Documents juridiques",
+      contactLabel: "Contact données",
+      documents: [
+        { kind: "privacy" as const, label: "Confidentialité", href: "/confidentialite/" },
+        { kind: "terms" as const, label: "Conditions d’utilisation", href: "/conditions-utilisation/" },
+        { kind: "deletion" as const, label: "Suppression des données", href: "/suppression-des-donnees/" },
+      ],
+    }
+  : {
+      skip: "Skip to legal content",
+      center: "Legal center",
+      updated: "Updated July 12, 2026",
+      version: "Version 1.0",
+      toc: "On this page",
+      nav: "Legal documents",
+      contactLabel: "Data contact",
+      documents: [
+        { kind: "privacy" as const, label: "Privacy", href: "/en/privacy/" },
+        { kind: "terms" as const, label: "Terms of service", href: "/en/terms/" },
+        { kind: "deletion" as const, label: "Data deletion", href: "/en/data-deletion/" },
+      ],
+    };
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  ...webPageJsonLd({ path, title, description, locale, site: Astro.site }),
+  dateModified: updatedIso,
+};
+---
+
+<BaseLayout
+  title={`${title} | The Unreliable Engineer`}
+  description={description}
+  locale={locale}
+  canonicalPath={path}
+  alternates={[{ locale: "fr", path: kind === "privacy" ? "/confidentialite/" : kind === "terms" ? "/conditions-utilisation/" : "/suppression-des-donnees/" }, { locale: "en", path: kind === "privacy" ? "/en/privacy/" : kind === "terms" ? "/en/terms/" : "/en/data-deletion/" }]}
+  jsonLd={jsonLd}
+  bodyClass="legal-surface"
+  consentPrompt="settings-only"
+>
+  <a class="skip-link" href="#main-content">{copy.skip}</a>
+  <Topbar locale={locale} currentPath={path} alternatePath={alternatePath} />
+
+  <main class="page legal-page" id="main-content">
+    <div class="shell legal-shell">
+      <header class="panel legal-hero">
+        <div class="legal-hero-copy">
+          <span class="legal-tag">{copy.center} / {tag}</span>
+          <h1>{title}</h1>
+          <p>{intro}</p>
+          <div class="legal-meta" aria-label={copy.updated}>
+            <time datetime={updatedIso}>{copy.updated}</time>
+            <span>{copy.version}</span>
+            <a href="mailto:admin@itart.studio">{copy.contactLabel}: admin@itart.studio</a>
+          </div>
+        </div>
+        <ul class="legal-summary" aria-label={locale === "fr" ? "Résumé" : "Summary"}>
+          {summaryItems.map((item) => <li>{item}</li>)}
+        </ul>
+      </header>
+
+      <nav class="legal-document-nav" aria-label={copy.nav}>
+        {copy.documents.map((document) => (
+          <a
+            href={assetPath(document.href)}
+            aria-current={document.kind === kind ? "page" : undefined}
+          >
+            {document.label}
+          </a>
+        ))}
+      </nav>
+
+      <details class="legal-toc-mobile">
+        <summary>{copy.toc}</summary>
+        <ol>
+          {toc.map((item) => <li><a href={`#${item.id}`}>{item.label}</a></li>)}
+        </ol>
+      </details>
+
+      <div class="legal-content-grid">
+        <aside class="legal-toc-desktop">
+          <nav aria-label={copy.toc}>
+            <strong>{copy.toc}</strong>
+            <ol>
+              {toc.map((item) => <li><a href={`#${item.id}`}>{item.label}</a></li>)}
+            </ol>
+          </nav>
+        </aside>
+
+        <article class="legal-document">
+          <slot />
+          <div class="legal-page-actions">
+            <slot name="actions" />
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

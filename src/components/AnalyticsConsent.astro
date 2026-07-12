@@ -5,9 +5,10 @@ import type { Locale } from "../data/i18n";
 type Props = {
   locale: Locale;
   pageType: AnalyticsPageType;
+  settingsOnly?: boolean;
 };
 
-const { locale, pageType } = Astro.props;
+const { locale, pageType, settingsOnly = false } = Astro.props;
 const consentVersion = "2026-07-11";
 const config = {
   apiKey: import.meta.env.PUBLIC_POSTHOG_KEY?.trim() ?? "",
@@ -26,7 +27,7 @@ const copy = locale === "fr"
       title: "Mesurer l’usage de ce site ?",
       description: "Avec votre accord, PostHog mesure les pages consultées et quelques actions fermées : ouverture d’un article, clic vers la prise de contact et profondeur de lecture.",
       excluded: "L’autocapture, les replays, les heatmaps, les profils personnels et les URL complètes sont désactivés. Le texte saisi dans une recherche ne quitte jamais le navigateur.",
-      retention: "Les données sont hébergées dans PostHog Cloud EU et conservées au maximum un an avec le plan actuel. Le choix reste propre à ce domaine et peut être retiré à tout moment.",
+      retention: "Les données sont hébergées dans PostHog Cloud EU. La politique cible une conservation maximale d’un an, mais ce plafond n’est pas encore vérifié comme règle techniquement appliquée dans le projet. Le choix reste propre à ce domaine et peut être retiré à tout moment.",
       accept: "Autoriser les analytics",
       decline: "Continuer sans analytics",
       withdraw: "Retirer mon accord",
@@ -40,7 +41,7 @@ const copy = locale === "fr"
       title: "Measure how this site is used?",
       description: "With your consent, PostHog measures page views and a small closed set of actions: opening an article, contact clicks and reading depth.",
       excluded: "Autocapture, replays, heatmaps, personal profiles and complete URLs are disabled. Text entered in a search never leaves the browser.",
-      retention: "Data is hosted in PostHog Cloud EU and retained for no more than one year under the current plan. The choice remains specific to this domain and can be withdrawn at any time.",
+      retention: "Data is hosted in PostHog Cloud EU. The policy target is a maximum one-year retention period, but that limit has not yet been verified as a technically enforced project rule. The choice remains specific to this domain and can be withdrawn at any time.",
       accept: "Allow analytics",
       decline: "Continue without analytics",
       withdraw: "Withdraw consent",
@@ -63,6 +64,7 @@ const copy = locale === "fr"
   data-version={config.version}
   data-locale={locale}
   data-page-type={pageType}
+  data-settings-only={settingsOnly ? "true" : undefined}
   data-privacy-signal={copy.privacySignal}
   data-unavailable={copy.unavailable}
 >
@@ -109,8 +111,10 @@ const copy = locale === "fr"
     const close = root.querySelector<HTMLButtonElement>("[data-analytics-close]");
     const status = root.querySelector<HTMLElement>("[data-analytics-status]");
     const version = root.dataset.consentVersion ?? "";
+    const settingsOnly = root.dataset.settingsOnly === "true";
     const storageKey = `tue-product-analytics-consent-${version}`;
     const optOutCookie = "__product_analytics_optout";
+    let lastTrigger: HTMLElement | null = null;
 
     const privacySignalEnabled = (): boolean => {
       const navigatorWithGpc = navigator as Navigator & { globalPrivacyControl?: boolean };
@@ -177,7 +181,13 @@ const copy = locale === "fr"
       if (!panel || !settings) return;
       panel.hidden = true;
       settings.hidden = false;
-      settings.focus();
+      const focusTarget = lastTrigger?.isConnected ? lastTrigger : settings;
+      focusTarget.focus();
+    };
+
+    const openSettings = (event: Event) => {
+      lastTrigger = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+      showSettings();
     };
 
     const start = async () => {
@@ -234,13 +244,13 @@ const copy = locale === "fr"
       if (persisted && readConsent() === "denied") window.location.reload();
       else showSettings();
     });
-    settings?.addEventListener("click", showSettings);
+    settings?.addEventListener("click", openSettings);
     close?.addEventListener("click", hidePanel);
     document.querySelectorAll<HTMLElement>("[data-open-analytics-settings]").forEach((control) => {
-      control.addEventListener("click", showSettings);
+      control.addEventListener("click", openSettings);
     });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && panel && !panel.hidden && readConsent() !== null) hidePanel();
+      if (event.key === "Escape" && panel && !panel.hidden && (settingsOnly || readConsent() !== null)) hidePanel();
     });
 
     const consent = readConsent();
@@ -248,6 +258,8 @@ const copy = locale === "fr"
       if (settings) settings.hidden = false;
       void start();
     } else if (consent === "denied") {
+      if (settings) settings.hidden = false;
+    } else if (settingsOnly) {
       if (settings) settings.hidden = false;
     } else {
       showWhenRumDecisionIsClosed();
@@ -262,10 +274,9 @@ const copy = locale === "fr"
   .analytics-panel { width: min(34rem, calc(100vw - 2rem)); max-height: min(80vh, 42rem); overflow: auto; border: 1px solid var(--color-border, #334155); border-radius: 1rem; padding: 1.25rem; background: var(--color-surface, #0f172a); color: var(--color-text, #f8fafc); box-shadow: 0 1.5rem 4rem rgb(0 0 0 / .28); }
   .analytics-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
   .analytics-heading h2 { margin: 0; font-size: 1.25rem; }
-  .analytics-close { border: 0; background: transparent; color: inherit; font-size: 1.5rem; }
+  .analytics-close { display: grid; min-width: 44px; min-height: 44px; place-items: center; border: 0; background: transparent; color: inherit; font-size: 1.5rem; }
   .analytics-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
   .analytics-withdraw { border: 0; background: transparent; color: inherit; text-decoration: underline; }
   .analytics-status:empty { display: none; }
   @media (max-width: 640px) { .analytics-consent { right: .75rem; bottom: 4.25rem; } }
 </style>
-

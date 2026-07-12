@@ -1,0 +1,9 @@
+---
+import TermsPage from "../../components/TermsPage.astro";
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" } }];
+}
+---
+
+<TermsPage locale="en" />

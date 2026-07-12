@@ -3,9 +3,10 @@ import type { Locale } from "../data/i18n";
 
 type Props = {
   locale: Locale;
+  settingsOnly?: boolean;
 };
 
-const { locale } = Astro.props;
+const { locale, settingsOnly = false } = Astro.props;
 const enabled = import.meta.env.PUBLIC_BROWSER_OBSERVABILITY_ENABLED === "true";
 const consentVersion = "2026-07-10";
 const config = {
@@ -74,6 +75,7 @@ const copy = locale === "fr"
     data-service={config.service}
     data-site={config.site}
     data-version={config.version}
+    data-settings-only={settingsOnly ? "true" : undefined}
     data-unavailable={copy.unavailable}
     data-denial-unavailable={copy.denialUnavailable}
     data-withdrawal-unavailable={copy.withdrawalUnavailable}
@@ -131,8 +133,10 @@ const copy = locale === "fr"
     const close = root.querySelector<HTMLButtonElement>("[data-rum-close]");
     const status = root.querySelector<HTMLElement>("[data-rum-status]");
     const consentVersion = root.dataset.consentVersion ?? "";
+    const settingsOnly = root.dataset.settingsOnly === "true";
     const consentKey = `tue-browser-observability-consent-${consentVersion}`;
     const optOutCookie = "__rum_optout";
+    let lastTrigger: HTMLElement | null = null;
 
     const readCookie = (name: string): string | null => {
       const prefix = `${encodeURIComponent(name)}=`;
@@ -201,7 +205,13 @@ const copy = locale === "fr"
       if (!panel || !settings) return;
       panel.hidden = true;
       settings.hidden = false;
-      settings.focus();
+      const focusTarget = lastTrigger?.isConnected ? lastTrigger : settings;
+      focusTarget.focus();
+    };
+
+    const openSettings = (event: Event) => {
+      lastTrigger = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+      showSettings();
     };
 
     const start = async () => {
@@ -253,13 +263,13 @@ const copy = locale === "fr"
         if (status) status.textContent = root.dataset.withdrawalUnavailable ?? "";
       }
     });
-    settings?.addEventListener("click", showSettings);
+    settings?.addEventListener("click", openSettings);
     close?.addEventListener("click", hidePanel);
     document.querySelectorAll<HTMLElement>("[data-open-rum-settings]").forEach((control) => {
-      control.addEventListener("click", showSettings);
+      control.addEventListener("click", openSettings);
     });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && panel && !panel.hidden && readConsent() !== null) hidePanel();
+      if (event.key === "Escape" && panel && !panel.hidden && (settingsOnly || readConsent() !== null)) hidePanel();
     });
 
     const consent = readConsent();
@@ -267,6 +277,8 @@ const copy = locale === "fr"
       if (settings) settings.hidden = false;
       void start();
     } else if (consent === "denied") {
+      if (settings) settings.hidden = false;
+    } else if (settingsOnly) {
       if (settings) settings.hidden = false;
     } else if (panel) {
       panel.hidden = false;

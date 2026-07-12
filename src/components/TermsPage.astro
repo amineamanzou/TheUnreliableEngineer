@@ -1,0 +1,237 @@
+---
+import LegalPageLayout, { type LegalTocItem } from "./LegalPageLayout.astro";
+import { assetPath, type Locale } from "../data/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const path = locale === "fr" ? "/conditions-utilisation/" : "/en/terms/";
+const alternatePath = locale === "fr" ? "/en/terms/" : "/conditions-utilisation/";
+const privacyPath = assetPath(locale === "fr" ? "/confidentialite/" : "/en/privacy/");
+const deletionPath = assetPath(locale === "fr" ? "/suppression-des-donnees/" : "/en/data-deletion/");
+
+const copy = locale === "fr"
+  ? {
+      title: "Conditions d’utilisation",
+      description: "Conditions d’utilisation de l’intégration Meta de Content Analytics, pilote interne en lecture seule pour des métriques sociales professionnelles autorisées.",
+      tag: "terms",
+      intro: "Ces conditions encadrent le pilote interne Content Analytics et l’usage des statistiques sociales qu’il est conçu pour obtenir lorsqu’un actif devient accessible après autorisation Meta.",
+      summaryItems: [
+        "Pilote interne mono-opérateur avec une autorisation OAuth enregistrée.",
+        "Accès Meta strictement en lecture seule sur le périmètre actuellement activé.",
+        "Aucun actif Meta accessible, compte client ou tableau de bord externe à ce jour.",
+      ],
+      toc: [
+        { id: "operateur", label: "Opérateur et acceptation" },
+        { id: "service", label: "Description du service" },
+        { id: "autorisation", label: "Autorité sur les actifs" },
+        { id: "connexion", label: "Connexion et sécurité" },
+        { id: "usages", label: "Usages autorisés et interdits" },
+        { id: "donnees", label: "Données et licence technique" },
+        { id: "meta", label: "Dépendance à Meta" },
+        { id: "disponibilite", label: "Disponibilité et suspension" },
+        { id: "resiliation", label: "Résiliation et suppression" },
+        { id: "responsabilite", label: "Responsabilité" },
+        { id: "droit", label: "Droit applicable et contact" },
+      ] satisfies LegalTocItem[],
+    }
+  : {
+      title: "Terms of service",
+      description: "Terms of service for the Content Analytics Meta integration, an internal read-only pilot for authorised professional social metrics.",
+      tag: "terms",
+      intro: "These terms govern the internal Content Analytics pilot and use of social insights it is designed to obtain once an asset becomes accessible after Meta authorisation.",
+      summaryItems: [
+        "Internal single-operator pilot with one stored OAuth authorisation.",
+        "Strictly read-only Meta access within the currently enabled scope.",
+        "No accessible Meta asset, client account or external dashboard to date.",
+      ],
+      toc: [
+        { id: "operator", label: "Operator and acceptance" },
+        { id: "service", label: "Service description" },
+        { id: "authority", label: "Authority over assets" },
+        { id: "connection", label: "Connection and security" },
+        { id: "acceptable-use", label: "Permitted and prohibited use" },
+        { id: "data", label: "Data and technical licence" },
+        { id: "meta", label: "Dependence on Meta" },
+        { id: "availability", label: "Availability and suspension" },
+        { id: "termination", label: "Termination and deletion" },
+        { id: "liability", label: "Liability" },
+        { id: "law", label: "Governing law and contact" },
+      ] satisfies LegalTocItem[],
+    };
+---
+
+<LegalPageLayout
+  locale={locale}
+  kind="terms"
+  path={path}
+  alternatePath={alternatePath}
+  title={copy.title}
+  description={copy.description}
+  tag={copy.tag}
+  intro={copy.intro}
+  summaryItems={copy.summaryItems}
+  toc={copy.toc}
+>
+  {locale === "fr" ? (
+    <>
+      <section class="legal-section" id="operateur">
+        <h2>Opérateur et acceptation</h2>
+        <p>Content Analytics est développé et exploité par <strong>IT ART STUDIO</strong>, SARL au capital de 1 000 €, immatriculée au RCS de Lyon sous le numéro 915 019 129, dont le siège social est situé 143 rue René Tachon, 69250 Curis-au-Mont-d’Or, France. Contact : <a href="mailto:admin@itart.studio">admin@itart.studio</a>.</p>
+        <p>Dans ces conditions, « l’Application » désigne uniquement l’intégration Meta du pilote Content Analytics présentée à Meta avec ces URLs, et non les autres connecteurs internes de veille ou d’import du projet.</p>
+        <p>Les « Données de plateforme Meta » ou « Platform Data » désignent les données obtenues de Meta ou par l’intermédiaire de l’autorisation Meta, selon les conditions applicables de la plateforme.</p>
+        <p>Le service est actuellement un pilote interne en développement utilisé par un seul opérateur. Une autorisation OAuth et son jeton sont enregistrés, mais le préflight n’a découvert aucune Page ni aucun compte Instagram et aucun appel Insights n’a été effectué. Il n’existe donc pas encore de connexion d’actifs opérationnelle, de compte utilisateur, d’espace client ou de tableau de bord externe.</p>
+        <p>L’autorisation d’une connexion Meta au moyen du flux OAuth ou Facebook Login for Business ne vaut pas, à elle seule, acceptation des présentes conditions. Avant tout onboarding externe, IT ART STUDIO mettra en place une acceptation explicite et conservera la date ainsi que la version des conditions acceptées. L’utilisateur externe devra alors disposer de la capacité juridique et de l’autorité nécessaires pour agir au nom du propriétaire des actifs connectés.</p>
+      </section>
+
+      <section class="legal-section" id="service">
+        <h2>Description du service</h2>
+        <p>Content Analytics est conçu pour collecter, normaliser et analyser des métriques sociales professionnelles en lecture seule. Au 12 juillet 2026, aucune métrique Meta n’a été collectée faute d’actif accessible. Le périmètre technique courant et les permissions accordées, appelées ou inactives sont détaillés dans la <a href={privacyPath}>politique de confidentialité</a>.</p>
+        <p>Le service est <strong>en lecture seule</strong> : il ne publie pas, ne modifie pas de contenu, n’envoie pas de message, ne gère pas de publicité et n’engage aucune dépense. Toute extension fonctionnelle ou ouverture à des utilisateurs externes nécessitera une mise à jour préalable de ce périmètre et des documents applicables.</p>
+      </section>
+
+      <section class="legal-section" id="autorisation">
+        <h2>Autorité sur les actifs connectés</h2>
+        <p>Dans le pilote interne actuel, l’autorisation OAuth vise uniquement des actifs professionnels qu’IT ART STUDIO est autorisée à administrer. Aucun actif n’est toutefois accessible au pipeline à ce jour et aucun tiers ne reçoit d’accès à un espace client ou à un tableau de bord.</p>
+        <p>Avant toute ouverture externe, chaque utilisateur devra confirmer qu’il dispose d’un rôle d’administration ou d’un mandat valable sur les actifs connectés. Il devra retirer les accès devenus inutiles, signaler les changements de rôle et respecter les conditions de Meta ainsi que les droits des personnes concernées par ses propres traitements.</p>
+      </section>
+
+      <section class="legal-section" id="connexion">
+        <h2>Connexion Meta et sécurité</h2>
+        <p>L’autorisation OAuth unique du pilote utilise le flux officiel Facebook Login for Business. L’Application ne demande jamais le mot de passe Meta. IT ART STUDIO est responsable de la sécurité du compte Meta, du jeton et de l’environnement interne utilisés pour ce pilote. L’accès aux actifs reste bloqué et doit être validé avant toute collecte opérationnelle.</p>
+        <p>L’autorisation peut être révoquée depuis Meta. La déconnexion et la suppression au sein de Content Analytics sont aujourd’hui réalisées manuellement par l’opérateur. Ne transmettez jamais un mot de passe, un App Secret ou un jeton d’accès par email ou dans une demande de support.</p>
+      </section>
+
+      <section class="legal-section" id="usages">
+        <h2>Usages autorisés et interdits</h2>
+        <p>Le pilote interne a pour objectif d’analyser les performances des actifs professionnels administrés par IT ART STUDIO et d’éclairer ses décisions éditoriales ou opérationnelles, une fois l’accès technique aux actifs débloqué. Si le service est ouvert à des tiers, ceux-ci ne pourront analyser que les actifs pour lesquels ils disposent d’une autorisation valable.</p>
+        <p>Il est interdit de :</p>
+        <ul>
+          <li>connecter ou consulter des actifs sans autorisation ;</li>
+          <li>vendre, louer, concéder ou transférer des Platform Data à un tiers non autorisé ;</li>
+          <li>utiliser les données pour surveiller des personnes, discriminer, établir un profil sensible ou prendre une décision produisant un effet juridique à leur égard ;</li>
+          <li>tenter de réidentifier des personnes à partir d’agrégats ou de pseudonymes ;</li>
+          <li>contourner les permissions, quotas, limites, contrôles de sécurité ou restrictions de l’API Meta ;</li>
+          <li>extraire massivement, sonder, perturber, rétroconcevoir ou utiliser le service d’une manière contraire à la loi ou aux conditions de Meta.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section" id="donnees">
+        <h2>Données, séparation et licence technique</h2>
+        <p>Dans le pilote actuel, IT ART STUDIO conserve pour Meta le jeton OAuth, son état d’autorisation et un journal d’audit local versionné mentionnant les noms publics de l’opérateur et des actifs ainsi que leurs relations professionnelles observées ; aucun identifiant numérique d’actif ni aucune métrique n’a été ingéré. Si un utilisateur externe autorise ultérieurement des actifs accessibles, il conservera ses droits sur ceux-ci et accordera au service une licence limitée, non exclusive, révocable et strictement nécessaire pour récupérer, mettre en cache, normaliser, calculer, stocker et afficher les données utiles au service.</p>
+        <p>Il n’existe aujourd’hui aucun mélange inter-client, puisque le pilote ne comporte qu’un opérateur, une autorisation OAuth et aucun actif accessible. Une isolation multi-tenant, des espaces clients distincts et des contrôles d’accès associés devront être mis en œuvre et vérifiés avant toute ouverture externe. Les données ne sont ni vendues ni utilisées pour entraîner un modèle général sans une base juridique et une information distinctes.</p>
+        <p>La marque, l’interface et le code du service restent protégés par les droits de propriété intellectuelle de leurs titulaires. Aucun droit n’est concédé au-delà de l’usage du service pendant la période autorisée.</p>
+      </section>
+
+      <section class="legal-section" id="meta">
+        <h2>Dépendance aux services Meta</h2>
+        <p>Content Analytics est indépendant de Meta et n’est ni sponsorisé ni approuvé par Meta. L’accès dépend des API, permissions, revues, quotas, définitions de métriques et politiques de Meta, qui peuvent évoluer.</p>
+        <p>Une métrique peut être retardée, vide, indisponible, retirée ou définie différemment selon le type de compte, la taille de l’audience et la version Graph API. Une absence de donnée n’est pas transformée en zéro et aucune métrique manquante n’est inventée.</p>
+      </section>
+
+      <section class="legal-section" id="disponibilite">
+        <h2>Disponibilité et suspension</h2>
+        <p>Le service est actuellement un pilote interne en développement, sans engagement de disponibilité envers des utilisateurs externes. Son fonctionnement peut être interrompu pour maintenance, sécurité, dérive d’API, révocation d’un jeton ou indisponibilité d’un fournisseur.</p>
+        <p>La connexion interne peut être suspendue immédiatement en cas de risque de sécurité, d’usage non autorisé, de demande de Meta ou d’obligation légale. Des engagements de service et modalités de suspension adaptés seront définis avant toute ouverture externe.</p>
+      </section>
+
+      <section class="legal-section" id="resiliation">
+        <h2>Résiliation, révocation et suppression</h2>
+        <p>L’autorisation Meta peut être révoquée à tout moment. La révocation arrête les nouvelles collectes mais ne garantit pas, à elle seule, l’effacement des données déjà stockées par l’Application.</p>
+        <p>La révocation et l’effacement sont actuellement traités manuellement par IT ART STUDIO. Pour les demander, suivez les <a href={deletionPath}>instructions de suppression des données</a>. Dans l’état actuel, l’opérateur supprime le jeton et les preuves techniques rattachables ; si des actifs deviennent ultérieurement accessibles, la procédure couvrira aussi leurs pseudonymes et Platform Data selon la politique de confidentialité et les éventuelles obligations légales de conservation.</p>
+      </section>
+
+      <section class="legal-section" id="responsabilite">
+        <h2>Exactitude et responsabilité</h2>
+        <p>Lorsqu’un accès aux actifs sera opérationnel, le service restituera des données fournies par Meta et des calculs documentés. Il ne garantira ni l’exhaustivité permanente des API, ni une décision commerciale, ni un résultat d’audience. Pendant le pilote interne, IT ART STUDIO restera responsable de l’interprétation des métriques et des décisions prises à partir des résultats.</p>
+        <p>Dans les limites permises par la loi et pour un usage professionnel, la responsabilité de l’opérateur couvre les dommages directs prévisibles résultant d’un manquement prouvé. Elle n’exclut jamais les responsabilités qui ne peuvent légalement être limitées, notamment en cas de faute lourde, de dommage corporel ou d’atteinte aux droits sur les données personnelles.</p>
+      </section>
+
+      <section class="legal-section" id="droit">
+        <h2>Modifications, droit applicable et contact</h2>
+        <p>Ces conditions peuvent évoluer avec le pilote, les API ou le cadre légal. Avant tout onboarding externe, la version applicable sera présentée pour acceptation explicite et cette acceptation sera enregistrée avec sa date. Une modification substantielle nécessitera une nouvelle information et, lorsque requis, une nouvelle acceptation explicite ; une simple autorisation OAuth ne la remplacera pas.</p>
+        <p>Le droit français s’applique, sous réserve des règles impératives éventuellement applicables. Les parties recherchent d’abord une solution amiable. Aucune clause ne prive un utilisateur des voies de recours impératives dont il bénéficie.</p>
+        <p>Questions : <a href="mailto:admin@itart.studio">admin@itart.studio</a>.</p>
+      </section>
+    </>
+  ) : (
+    <>
+      <section class="legal-section" id="operator">
+        <h2>Operator and acceptance</h2>
+        <p>Content Analytics is developed and operated by <strong>IT ART STUDIO</strong>, a French SARL with share capital of €1,000, registered with the Lyon Trade and Companies Register under number 915 019 129, with its registered office at 143 rue René Tachon, 69250 Curis-au-Mont-d’Or, France. Contact: <a href="mailto:admin@itart.studio">admin@itart.studio</a>.</p>
+        <p>In these terms, “the Application” means only the Content Analytics pilot’s Meta integration submitted to Meta with these URLs, not the project’s other internal monitoring or import connectors.</p>
+        <p>The service is currently an internal development pilot used by one operator. One OAuth authorisation and its token are stored, but the preflight discovered no Page or Instagram account and no Insights call was made. There is therefore no operational asset connection, external user account, client workspace or dashboard yet.</p>
+        <p>Authorising a Meta connection through OAuth or Facebook Login for Business does not, by itself, constitute acceptance of these terms. Before any external onboarding, IT ART STUDIO will require explicit acceptance and retain the acceptance date and terms version. An external user will then need legal capacity and authority to act for the owner of the connected assets.</p>
+      </section>
+
+      <section class="legal-section" id="service">
+        <h2>Service description</h2>
+        <p>Content Analytics is designed to collect, normalise and analyse professional social metrics in read-only mode. As of July 12, 2026, no Meta metric has been collected because no asset is accessible. The current technical scope and permissions that are granted, called or inactive are detailed in the <a href={privacyPath}>privacy policy</a>.</p>
+        <p>The service is <strong>read-only</strong>: it does not publish or modify content, send messages, manage advertising or incur spend. Any functional extension or opening to external users will require the scope and applicable documents to be updated first.</p>
+      </section>
+
+      <section class="legal-section" id="authority">
+        <h2>Authority over connected assets</h2>
+        <p>In the current internal pilot, the OAuth authorisation targets only professional assets IT ART STUDIO is authorised to administer. No asset is accessible to the pipeline yet, and no third party receives access to a client workspace or dashboard.</p>
+        <p>Before any external opening, each user will have to confirm that they hold an administrative role or valid mandate for the connected assets. They will have to remove access that is no longer needed, report role changes and comply with Meta terms and the rights of people affected by their own processing.</p>
+      </section>
+
+      <section class="legal-section" id="connection">
+        <h2>Meta connection and security</h2>
+        <p>The pilot’s single OAuth authorisation uses the official Facebook Login for Business flow. The Application never asks for the Meta password. IT ART STUDIO is responsible for securing the Meta account, token and internal environment used for this pilot. Asset access remains blocked and must be validated before any operational collection.</p>
+        <p>The authorisation may be revoked through Meta. Disconnection and deletion within Content Analytics are currently performed manually by the operator. Never send a password, App Secret or access token by email or in a support request.</p>
+      </section>
+
+      <section class="legal-section" id="acceptable-use">
+        <h2>Permitted and prohibited use</h2>
+        <p>The internal pilot is intended to analyse professional assets administered by IT ART STUDIO and inform its editorial or operational decisions once technical asset access is unlocked. If the service is opened to third parties, they may analyse only assets for which they hold valid authorisation.</p>
+        <p>You must not:</p>
+        <ul>
+          <li>connect or view assets without authorisation;</li>
+          <li>sell, rent, license or transfer Platform Data to an unauthorised third party;</li>
+          <li>use data to surveil people, discriminate, create sensitive profiles or make decisions producing legal effects about them;</li>
+          <li>attempt to re-identify people from aggregates or pseudonyms;</li>
+          <li>circumvent permissions, quotas, limits, security controls or Meta API restrictions;</li>
+          <li>bulk extract, probe, disrupt, reverse engineer or use the service contrary to law or Meta terms.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section" id="data">
+        <h2>Data, separation and technical licence</h2>
+        <p>In the current pilot, IT ART STUDIO retains the OAuth token, its authorisation state and a versioned local audit log naming the public operator and observed assets together with their professional relationships; no numeric asset identifier or metric has yet been ingested. If an external user later authorises accessible assets, they will retain their rights in them and grant the service a limited, non-exclusive, revocable licence strictly necessary to retrieve, cache, normalise, calculate, store and display data required for the service.</p>
+        <p>There is currently no cross-client mixing because the pilot has one operator, one OAuth authorisation and no accessible asset. Multi-tenant isolation, distinct client workspaces and associated access controls will have to be implemented and verified before any external opening. Data is not sold or used to train a general-purpose model without a separate legal basis and notice.</p>
+        <p>The service’s brand, interface and code remain protected by their owners’ intellectual property rights. No right is granted beyond use of the service during the authorised period.</p>
+      </section>
+
+      <section class="legal-section" id="meta">
+        <h2>Dependence on Meta services</h2>
+        <p>Content Analytics is independent from Meta and is not sponsored or endorsed by Meta. Access depends on Meta APIs, permissions, reviews, quotas, metric definitions and policies, which may change.</p>
+        <p>A metric may be delayed, empty, unavailable, removed or defined differently depending on account type, audience size and Graph API version. Missing data is not converted into zero and no unavailable metric is invented.</p>
+      </section>
+
+      <section class="legal-section" id="availability">
+        <h2>Availability and suspension</h2>
+        <p>The service is currently an internal development pilot with no availability commitment to external users. It may be interrupted for maintenance, security, API drift, token revocation or provider downtime.</p>
+        <p>The internal connection may be suspended immediately for a security risk, unauthorised use, a Meta request or a legal obligation. Appropriate service commitments and suspension terms will be defined before any external opening.</p>
+      </section>
+
+      <section class="legal-section" id="termination">
+        <h2>Termination, revocation and deletion</h2>
+        <p>The Meta authorisation may be revoked at any time. Revocation stops new collection but does not, by itself, guarantee erasure of data already stored by the Application.</p>
+        <p>Revocation and erasure are currently handled manually by IT ART STUDIO. To request them, follow the <a href={deletionPath}>data deletion instructions</a>. In the present state, the operator deletes the token and linkable technical evidence; if assets later become accessible, the procedure will also cover their pseudonyms and relevant Platform Data under the privacy policy and any applicable legal retention obligation.</p>
+      </section>
+
+      <section class="legal-section" id="liability">
+        <h2>Accuracy and liability</h2>
+        <p>Once asset access is operational, the service will present data supplied by Meta and documented calculations. It will not guarantee permanent API completeness, business decisions or audience outcomes. During the internal pilot, IT ART STUDIO will remain responsible for interpreting metrics and acting on the results.</p>
+        <p>To the extent permitted by law for professional use, the operator is liable for foreseeable direct loss caused by a proven breach. Nothing excludes liability that cannot lawfully be limited, including gross negligence, personal injury or infringement of data protection rights.</p>
+      </section>
+
+      <section class="legal-section" id="law">
+        <h2>Changes, governing law and contact</h2>
+        <p>These terms may evolve with the pilot, APIs or legal framework. Before any external onboarding, the applicable version will be presented for explicit acceptance and that acceptance will be recorded with its date. A material change will require fresh notice and, where required, fresh explicit acceptance; OAuth authorisation alone will not replace it.</p>
+        <p>French law applies, subject to any mandatory rules that may apply. The parties first seek an amicable solution. Nothing removes any mandatory remedy available to a user.</p>
+        <p>Questions: <a href="mailto:admin@itart.studio">admin@itart.studio</a>.</p>
+      </section>
+    </>
+  )}
+</LegalPageLayout>

@@ -1,7 +1,6 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Topbar from "./Topbar.astro";
-import type { Locale } from "../data/i18n";
+import LegalPageLayout, { type LegalTocItem } from "./LegalPageLayout.astro";
+import { assetPath, type Locale } from "../data/i18n";
 
 type Props = { locale: Locale };
 const { locale } = Astro.props;
@@ -9,90 +8,339 @@ const path = locale === "fr" ? "/confidentialite/" : "/en/privacy/";
 const alternatePath = locale === "fr" ? "/en/privacy/" : "/confidentialite/";
 const observabilityEnabled = import.meta.env.PUBLIC_BROWSER_OBSERVABILITY_ENABLED === "true";
 const productAnalyticsEnabled = import.meta.env.PUBLIC_PRODUCT_ANALYTICS_ENABLED === "true";
+const deletionPath = assetPath(locale === "fr" ? "/suppression-des-donnees/" : "/en/data-deletion/");
+
 const copy = locale === "fr"
   ? {
-      title: "Confidentialité et mesure de fiabilité",
-      description: "Le contrat de données du canary Browser RUM de The Unreliable Engineer.",
-      eyebrow: "privacy.contract",
-      intro: "La mesure navigateur est désactivée par défaut et ne démarre qu’après votre accord explicite.",
-      purposeTitle: "Finalité",
-      purpose: "Comprendre les Web Vitals, les chargements lents et des catégories d’erreurs techniques afin d’améliorer la performance et la fiabilité du site.",
-      collectedTitle: "Données collectées",
-      collected: ["Web Vitals, chargement du document et tâches longues.", "Le SDK peut inclure transitoirement une URL complète, le user-agent, la taille d’écran ou des événements techniques dans la requête envoyée à l’ingress first-party.", "Le collector supprime ces attributs avant stockage dans ClickStack. Seuls une route fermée, une catégorie d’erreur, un type de ressource, la version, l’environnement et l’identité technique du service peuvent être conservés."],
-      excludedTitle: "Données exclues",
-      excluded: "Aucune session n’est rejouée et aucun corps de requête n’est journalisé. Le contenu du terminal, le texte des pages, les champs, les emails, la console, les messages d’erreur et les piles d’appels ne sont pas conservés dans ClickStack. Les instrumentations d’interaction, fetch et XHR sont désactivées.",
-      sessionTitle: "Session et conservation",
-      session: "Le cookie first-party __rum_sid expire après 15 minutes d’inactivité. Une session dure au maximum 4 heures. Les données sont conservées côté serveur pendant 30 jours.",
-      consentTitle: "Accord et retrait",
-      consent: "Le choix est enregistré localement avec une version et une date. En cas d’indisponibilité du stockage local lors d’un refus ou d’un retrait, le cookie first-party __rum_optout enregistre le refus pendant un an et reste prioritaire sur tout accord local. Vous pouvez modifier le choix avec Gérer la mesure dans le pied de page. Le retrait supprime __rum_sid et ne recharge la page qu’après relecture du refus persisté.",
-      keyTitle: "Clé navigateur",
-      key: "browser-public est une valeur publique et non authentifiante. Ce n’est pas une clé serveur ClickStack.",
-      manage: "Gérer la mesure",
-      productTitle: "Analytics produit distincts",
-      product: "Avec un accord séparé, PostHog Cloud EU reçoit des pages vues et une liste fermée d’actions : clic vers la session de clarification, ouverture d’article, commande du terminal sans texte saisi, et profondeur de lecture à 50 ou 90 %. L’autocapture, le replay, les heatmaps, les profils nommés et les URL complètes sont désactivés. L’adresse IP est écartée par PostHog après ses transformations réseau. La politique cible est une conservation maximale d’un an, mais ce plafond n’est pas encore vérifié comme une règle techniquement appliquée par le projet PostHog.",
-      productLimits: "Ces actions décrivent une intention de navigation, pas un résultat commercial. Un clic sur un lien email n’est jamais compté comme un lead ou un rendez-vous. Les paramètres de campagne donnent un indice d’attribution ; ils ne prouvent pas qu’une campagne a causé une conversion.",
-      deletionTitle: "Suppression des données",
-      deletion: "Le retrait arrête les nouvelles mesures et efface les données du SDK dans ce navigateur. Pour demander la suppression d’événements déjà transmis, écrivez à admin@itart.studio en indiquant le site, une période approximative et, si vous le connaissez, l’identifiant technique aléatoire. Aucune identité nominative n’étant collectée, une demande sans identifiant ni période peut ne pas permettre d’isoler les événements concernés. Le traitement et la vérification de la suppression sont confirmés au demandeur lorsque les événements peuvent être isolés.",
-      productManage: "Gérer les analytics",
+      title: "Politique de confidentialité",
+      description: "Politique de confidentialité de l’intégration Meta du pilote Content Analytics et du site The Unreliable Engineer : Facebook Login for Business, Insights, conservation et droits.",
+      tag: "privacy",
+      intro: "Cette politique décrit l’autorisation Meta du pilote Content Analytics, les données qu’il pourra traiter lorsqu’un actif sera accessible, et les mesures facultatives de ce site.",
+      summaryItems: [
+        "Autorisation OAuth en lecture seule : aucune publication, publicité ou messagerie.",
+        "Aucun actif accessible par Graph API et aucun appel Insights effectué à ce jour.",
+        "Jeton révocable et procédure manuelle de suppression.",
+      ],
+      toc: [
+        { id: "responsable", label: "Responsable et contact" },
+        { id: "perimetre", label: "Périmètre" },
+        { id: "donnees-meta", label: "Données Meta traitées" },
+        { id: "permissions-meta", label: "Permissions demandées" },
+        { id: "finalites", label: "Finalités et bases légales" },
+        { id: "conservation", label: "Durées de conservation" },
+        { id: "destinataires", label: "Destinataires et transferts" },
+        { id: "mesure-site", label: "Mesure du site et cookies" },
+        { id: "droits", label: "Vos droits" },
+        { id: "securite", label: "Sécurité et modifications" },
+      ] satisfies LegalTocItem[],
+      manageRum: "Gérer la mesure de fiabilité",
+      manageAnalytics: "Gérer les analytics du site",
     }
   : {
-      title: "Privacy and reliability measurement",
-      description: "The data contract for The Unreliable Engineer Browser RUM canary.",
-      eyebrow: "privacy.contract",
-      intro: "Browser measurement is disabled by default and starts only after your explicit consent.",
-      purposeTitle: "Purpose",
-      purpose: "Understand Web Vitals, slow loads and categories of technical errors to improve site performance and reliability.",
-      collectedTitle: "Data collected",
-      collected: ["Web Vitals, document load and long tasks.", "The SDK may transiently include a complete URL, user-agent, screen size or technical events in the request sent to the first-party ingress.", "The collector removes these attributes before ClickStack storage. Only a closed route, error category, resource type, version, environment and technical service identity may be retained."],
-      excludedTitle: "Data excluded",
-      excluded: "Sessions are never replayed and request bodies are not logged. Terminal content, page text, fields, emails, console output, error messages and stack traces are not retained in ClickStack. Interaction, fetch and XHR instrumentations are disabled.",
-      sessionTitle: "Session and retention",
-      session: "The first-party __rum_sid cookie expires after 15 minutes of inactivity. A session lasts no more than 4 hours. Data is retained server-side for 30 days.",
-      consentTitle: "Consent and withdrawal",
-      consent: "Your choice is stored locally with a version and decision date. If local storage is unavailable during refusal or withdrawal, the first-party __rum_optout cookie stores the refusal for one year and takes priority over any local grant. You can change the choice through Manage measurement in the footer. Withdrawal removes __rum_sid and reloads only after the persisted refusal is read back.",
-      keyTitle: "Browser key",
-      key: "browser-public is a public, non-authenticating value. It is not a ClickStack server key.",
-      manage: "Manage measurement",
-      productTitle: "Separate product analytics",
-      product: "With separate consent, PostHog Cloud EU receives page views and a closed list of actions: clarification-session clicks, article opens, terminal commands without entered text, and reading depth at 50 or 90%. Autocapture, replay, heatmaps, named profiles and complete URLs are disabled. PostHog discards the IP address after network transformations. The policy target is a maximum one-year retention period, but this limit has not yet been verified as a technically enforced rule in the PostHog project.",
-      productLimits: "These actions describe navigation intent, not a commercial outcome. A click on an email link is never counted as a lead or a meeting. Campaign parameters provide attribution evidence; they do not prove that a campaign caused a conversion.",
-      deletionTitle: "Data deletion",
-      deletion: "Withdrawal stops new measurement and clears SDK data in this browser. To request deletion of events already sent, email admin@itart.studio with the site, an approximate time range and, if known, the random technical identifier. Because no named identity is collected, a request without an identifier or time range may not allow the relevant events to be isolated. Processing and verification of deletion are confirmed to the requester when the events can be isolated.",
-      productManage: "Manage analytics",
+      title: "Privacy policy",
+      description: "Privacy policy for the Content Analytics pilot’s Meta integration and The Unreliable Engineer website: Facebook Login for Business, Insights, retention and user rights.",
+      tag: "privacy",
+      intro: "This policy describes the Content Analytics pilot’s Meta authorisation, the data it may process once an asset becomes accessible, and optional measurement on this website.",
+      summaryItems: [
+        "Read-only OAuth authorisation: no publishing, advertising or messaging.",
+        "No asset accessible through Graph API and no Insights call made to date.",
+        "Revocable token and a manual deletion procedure.",
+      ],
+      toc: [
+        { id: "controller", label: "Controller and contact" },
+        { id: "scope", label: "Scope" },
+        { id: "meta-data", label: "Meta data processed" },
+        { id: "meta-permissions", label: "Permissions requested" },
+        { id: "purposes", label: "Purposes and legal bases" },
+        { id: "retention", label: "Retention periods" },
+        { id: "recipients", label: "Recipients and transfers" },
+        { id: "site-measurement", label: "Website measurement and cookies" },
+        { id: "rights", label: "Your rights" },
+        { id: "security", label: "Security and changes" },
+      ] satisfies LegalTocItem[],
+      manageRum: "Manage reliability measurement",
+      manageAnalytics: "Manage website analytics",
     };
 ---
 
-<BaseLayout
-  title={`${copy.title} | The Unreliable Engineer`}
-  description={copy.description}
+<LegalPageLayout
   locale={locale}
-  canonicalPath={path}
-  alternates={[{ locale: "fr", path: "/confidentialite/" }, { locale: "en", path: "/en/privacy/" }]}
+  kind="privacy"
+  path={path}
+  alternatePath={alternatePath}
+  title={copy.title}
+  description={copy.description}
+  tag={copy.tag}
+  intro={copy.intro}
+  summaryItems={copy.summaryItems}
+  toc={copy.toc}
 >
-  <Topbar locale={locale} currentPath={path} alternatePath={alternatePath} />
-  <main class="page privacy-page">
-    <section class="section-block" id="top">
-      <div class="shell privacy-shell">
-        <article class="panel privacy-panel">
-          <span class="section-tag">{copy.eyebrow}</span>
-          <h1>{copy.title}</h1>
-          <p class="hero-text">{copy.intro}</p>
+  {locale === "fr" ? (
+    <>
+      <section class="legal-section" id="responsable">
+        <h2>Responsable et contact</h2>
+        <p>Le responsable des traitements nécessaires au pilote Content Analytics et à ce site est <strong>IT ART STUDIO</strong>, société à responsabilité limitée au capital de 1 000 €, immatriculée au RCS de Lyon sous le numéro 915 019 129, représentée par son co-gérant Amine Amanzou.</p>
+        <address>
+          IT ART STUDIO — 143 rue René Tachon, 69250 Curis-au-Mont-d’Or, France<br />
+          Contact données et exercice des droits : <a href="mailto:admin@itart.studio">admin@itart.studio</a><br />
+          Contact général : <a href="mailto:contact@theunreliable.engineer">contact@theunreliable.engineer</a>
+        </address>
+        <p>Aucun délégué à la protection des données n’est désigné à ce jour. Le pilote actuel est interne et mono-opérateur. Une autorisation OAuth et son jeton sont enregistrés, mais aucune connexion d’actifs n’est encore opérationnelle. Le pilote ne comporte ni compte client ni espace multi-utilisateur. L’accès du service d’assistance IA au journal d’audit est décrit et mis en attente de qualification dans la section « Destinataires et transferts » ; aucun autre prestataire tiers ayant accès aux Données de plateforme Meta (« Platform Data ») n’a été identifié. Les rôles RGPD et, si nécessaire, les accords de sous-traitance seront formalisés avant toute ouverture à une organisation tierce.</p>
+      </section>
 
-          <div class="privacy-grid">
-            <section><h2>{copy.purposeTitle}</h2><p>{copy.purpose}</p></section>
-            <section><h2>{copy.collectedTitle}</h2><ul>{copy.collected.map((item) => <li>{item}</li>)}</ul></section>
-            <section><h2>{copy.excludedTitle}</h2><p>{copy.excluded}</p></section>
-            <section><h2>{copy.sessionTitle}</h2><p>{copy.session}</p></section>
-            <section><h2>{copy.consentTitle}</h2><p>{copy.consent}</p></section>
-            <section><h2>{copy.keyTitle}</h2><p>{copy.key}</p></section>
-            <section><h2>{copy.productTitle}</h2><p>{copy.product}</p><p>{copy.productLimits}</p></section>
-            <section><h2>{copy.deletionTitle}</h2><p>{copy.deletion}</p></section>
-          </div>
+      <section class="legal-section" id="perimetre">
+        <h2>Périmètre</h2>
+        <p>Cette politique couvre :</p>
+        <ul>
+          <li><strong>Content Analytics</strong>, un pipeline en développement conçu pour collecter et normaliser en lecture seule des statistiques de comptes Instagram professionnels lorsqu’ils deviennent accessibles via Facebook Login for Business ;</li>
+          <li><strong>theunreliable.engineer</strong>, le site public qui présente The Unreliable Engineer, ses offres et ses contenus.</li>
+        </ul>
+        <p>Dans cette politique, « l’Application » désigne uniquement l’intégration Meta du pilote Content Analytics soumise avec ces URLs à Meta. Les autres connecteurs internes de veille ou d’import du projet n’utilisent pas cette autorisation Facebook Login for Business et ne reçoivent pas de Données de plateforme Meta par son intermédiaire. Leur éventuelle ouverture à des utilisateurs externes nécessitera une information dédiée avant activation.</p>
+        <p>L’Application est indépendante de Meta. Elle n’est ni sponsorisée ni approuvée par Meta. Les traitements effectués directement par Facebook et Instagram relèvent de la <a href="https://www.facebook.com/privacy/policy/" rel="external">Politique de confidentialité de Meta</a>.</p>
+      </section>
 
-          {observabilityEnabled && <button class="button button-primary" type="button" data-open-rum-settings>{copy.manage}</button>}
-          {productAnalyticsEnabled && <button class="button button-primary" type="button" data-open-analytics-settings>{copy.productManage}</button>}
-        </article>
-      </div>
-    </section>
-  </main>
-</BaseLayout>
+      <section class="legal-section" id="donnees-meta">
+        <h2>Données Meta traitées</h2>
+        <p>État vérifié au 12 juillet 2026 : l’autorisation OAuth a accordé les cinq permissions configurées et un jeton est enregistré localement. Le préflight Graph a toutefois retourné 0 Page et 0 compte Instagram accessible ; aucun appel Insights n’a été tenté. Les données Meta persistées à ce stade sont le jeton, son état d’autorisation et un journal d’audit local versionné qui mentionne le nom public de l’opérateur, les noms publics du portefeuille et des actifs, ainsi que leurs relations professionnelles d’affectation et de liaison observées lors de l’audit manuel. Aucun identifiant numérique d’actif, payload Graph brut ou Insight n’y est consigné.</p>
+        <p>Si un accès aux actifs est débloqué dans ce même périmètre, le pipeline est conçu pour traiter uniquement les catégories nécessaires au contrat Instagram implémenté :</p>
+        <ul>
+          <li>informations de profil public transitoirement nécessaires au dialogue OAuth ; aucun profil utilisateur complet n’est persisté dans le schéma applicatif, mais le nom public de l’opérateur figure dans le journal d’audit versionné décrit ci-dessus ;</li>
+          <li>identifiants techniques de la Page de liaison et du compte Instagram professionnel attendu, transformés en alias HMAC avant stockage canonique ;</li>
+          <li>identifiants de médias Instagram, type de média et horodatage, afin de rattacher une métrique au bon contenu ;</li>
+          <li>Insights Instagram autorisés du compte et des médias, actuellement limités aux métriques contractuelles telles que portée, vues de profil, partages et décompte de commentaires ;</li>
+          <li>jeton d’accès, permissions accordées, date d’expiration ou de révocation, version Graph API et preuves techniques minimisées nécessaires au diagnostic.</li>
+        </ul>
+        <div class="legal-note">
+          <strong>Ce qui reste hors périmètre</strong>
+          <p>L’Application ne demande jamais votre mot de passe Meta. Le pipeline ne stocke pas les noms de Pages ou de profils dans sa base canonique ; seuls les noms publics explicitement décrits dans le journal d’audit local sont actuellement conservés. Elle ne lit ni légendes, ni messages privés, ni contacts, ni texte des commentaires, ni identité individuelle des abonnés, ni données publicitaires, de paiement ou de facturation. Elle n’utilise aucune permission de publication ou de mutation.</p>
+        </div>
+      </section>
+
+      <section class="legal-section" id="permissions-meta">
+        <h2>Permissions Meta demandées</h2>
+        <p>Le profil public de base sert au dialogue de connexion. Le bootstrap OAuth configure cinq permissions en lecture, mais le contrat de collecte actuel n’en exploite qu’un sous-ensemble :</p>
+        <div class="legal-table-wrap" tabindex="0" role="region" aria-label="Permissions Meta et finalités">
+          <table>
+            <thead><tr><th>Permission</th><th>Usage limité dans Content Analytics</th></tr></thead>
+            <tbody>
+              <tr><td><code>pages_show_list</code></td><td>Utilisée par le préflight pour découvrir une Page attendue ; l’appel a retourné 0 Page et aucune liste nominative n’a été conservée.</td></tr>
+              <tr><td><code>pages_read_engagement</code></td><td>Accordée mais non appelée à ce jour ; elle servirait uniquement à résoudre la liaison technique entre une Page accessible et son compte Instagram professionnel.</td></tr>
+              <tr><td><code>read_insights</code></td><td>Accordée mais inactive dans le contrat actuel : aucun appel ni stockage d’Insights de Page Facebook à ce jour.</td></tr>
+              <tr><td><code>instagram_basic</code></td><td>Accordée mais sans actif accessible à ce jour ; elle servirait à identifier le compte Instagram professionnel lié et ses médias possédés.</td></tr>
+              <tr><td><code>instagram_manage_insights</code></td><td>Accordée mais non appelée à ce jour ; elle servirait à lire les Insights Instagram autorisés sans les modifier.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Une permission n’autorise pas un usage général de toutes les données qu’elle pourrait exposer. Les appels Graph sont limités à une liste d’opérations <code>GET</code> et de champs nécessaires au contrat. Avant toute soumission App Review de cette configuration ou tout accès externe, <code>read_insights</code> devra être retirée ou reliée à une fonctionnalité effectivement implémentée, testée et documentée.</p>
+      </section>
+
+      <section class="legal-section" id="finalites">
+        <h2>Finalités et bases légales</h2>
+        <div class="legal-table-wrap" tabindex="0" role="region" aria-label="Finalités et bases légales">
+          <table>
+            <thead><tr><th>Finalité</th><th>Base légale</th></tr></thead>
+            <tbody>
+              <tr><td>Maintenir l’autorisation OAuth interne, exécuter un préflight minimisé et, si un actif devient accessible, collecter les Insights Instagram contractuels.</td><td>Intérêt légitime d’IT ART STUDIO à tester son propre outil de manière minimisée, article 6(1)(f) du RGPD.</td></tr>
+              <tr><td>Sécuriser l’autorisation, prévenir les accès abusifs, gérer l’expiration des jetons et diagnostiquer les erreurs.</td><td>Intérêt légitime à fournir un service fiable et sûr, article 6(1)(f).</td></tr>
+              <tr><td>Répondre à une demande de support technique concernant le pilote.</td><td>Intérêt légitime à diagnostiquer et sécuriser le pilote, article 6(1)(f).</td></tr>
+              <tr><td>Traiter une demande d’accès, d’opposition ou de suppression au titre de la protection des données.</td><td>Respect des obligations légales du responsable de traitement, article 6(1)(c).</td></tr>
+              <tr><td>Mesurer facultativement la fiabilité et l’usage du site public.</td><td>Votre consentement distinct, article 6(1)(a).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>L’autorisation OAuth donnée à Meta permet techniquement l’accès aux permissions sélectionnées ; elle ne vaut pas consentement général à d’autres usages.</p>
+      </section>
+
+      <section class="legal-section" id="conservation">
+        <h2>Durées de conservation</h2>
+        <ul>
+          <li><strong>Jeton global du pilote et état d’autorisation :</strong> pendant l’autorisation OAuth unique, jusqu’à ce que son expiration ou sa révocation soit vérifiée manuellement, jusqu’à la fin du pilote ou jusqu’à une demande de suppression. Le jeton est alors retiré manuellement du fichier de secrets local.</li>
+          <li><strong>Réponses brutes Meta :</strong> aucune réponse d’Insights n’est actuellement ingérée. Si la collecte devient opérationnelle, leur TTL prévu est de 90 jours au maximum pour contrôler la qualité, la dérive de schéma et les erreurs.</li>
+          <li><strong>Métriques normalisées et pseudonymes d’actifs :</strong> aucun n’est actuellement stocké, faute d’actif accessible. Si le pipeline en ingère, le modèle actuel les conserve durablement sans TTL automatique ; ils devront être supprimés manuellement lorsqu’ils ne sont plus nécessaires ou lorsqu’une demande vérifiée l’exige.</li>
+          <li><strong>Reçus et journal d’audit versionné :</strong> les preuves de l’autorisation, du préflight et de l’audit manuel, y compris les noms publics et relations professionnelles précités, sont conservées dans un dépôt Git local pendant le pilote, sans TTL automatique. Une demande vérifiée impose de traiter le fichier courant et, lorsque l’effacement l’exige, les objets encore accessibles dans l’historique Git local. Un mécanisme de purge documenté et un TTL seront requis avant une ouverture multi-utilisateur.</li>
+          <li><strong>Demandes adressées par email :</strong> le temps nécessaire à leur traitement puis, si nécessaire, selon les délais légaux de preuve applicables.</li>
+        </ul>
+        <p>Les agrégats ne peuvent être conservés au-delà de ces délais que s’ils sont rendus véritablement anonymes et ne permettent plus d’identifier un compte, un actif ou une personne.</p>
+      </section>
+
+      <section class="legal-section" id="destinataires">
+        <h2>Destinataires et transferts</h2>
+        <p>Le développement s’exécute sur une infrastructure locale contrôlée par IT ART STUDIO en France ; aucun hébergement de production ni mécanisme de sauvegarde des Données de plateforme Meta n’est encore activé.</p>
+        <div class="legal-note">
+          <strong>Revue assistée par IA à qualifier avant soumission</strong>
+          <p>Au cours de la préparation technique et juridique du 12 juillet 2026, Codex, un service fourni par OpenAI, a accédé au journal d’audit local contenant les noms publics et relations professionnelles décrits ci-dessus. Aucun jeton, identifiant numérique, payload Graph brut ou Insight n’a été fourni dans ce journal. IT ART STUDIO doit néanmoins auditer le rôle contractuel du fournisseur, la conservation, le lieu de traitement, les garanties de transfert et le canal d’effacement applicables. Le questionnaire Meta ne doit pas conserver la réponse « aucun service d’IA n’accède aux Données de plateforme » tant que cette qualification n’est pas résolue. Aucune nouvelle Donnée de plateforme Meta ne doit être transmise à un service d’IA avant cet audit et la mise à jour des déclarations applicables.</p>
+        </div>
+        <p>Meta fournit les Données de plateforme et traite de son côté la connexion selon ses propres conditions. L’Application ne vend pas ces données, ne les utilise pas pour la publicité et ne transmet pas les Insights Meta à PostHog ou ClickStack.</p>
+        <p>Tout futur prestataire ou transfert hors Espace économique européen sera audité et documenté ici avant son activation, avec le pays, le destinataire et la garantie juridique applicable. Une modification de la déclaration Meta et de cette politique précédera cet accès.</p>
+      </section>
+
+      <section class="legal-section" id="mesure-site">
+        <h2>Confidentialité et mesure de fiabilité du site</h2>
+        <h3>Mesure technique first-party</h3>
+        <p>La mesure navigateur est désactivée par défaut et ne démarre qu’après votre accord explicite. Elle sert à comprendre les Web Vitals, les chargements lents et des catégories d’erreurs techniques afin d’améliorer la performance et la fiabilité du site.</p>
+        <p>Le SDK peut inclure transitoirement une URL complète, le user-agent, la taille d’écran ou des événements techniques dans la requête envoyée à l’ingress first-party. Le collector supprime ces attributs avant stockage dans ClickStack. Seuls une route fermée, une catégorie d’erreur, un type de ressource, la version, l’environnement et l’identité technique du service peuvent être conservés.</p>
+        <p>Aucune session n’est rejouée et aucun corps de requête n’est journalisé. Le contenu du terminal, le texte des pages, les champs, les emails, la console, les messages d’erreur et les piles d’appels ne sont pas conservés dans ClickStack. Les instrumentations d’interaction, fetch et XHR sont désactivées.</p>
+        <p>Le cookie first-party <code>__rum_sid</code> expire après 15 minutes d’inactivité. Une session dure au maximum 4 heures. Les données sont conservées côté serveur pendant 30 jours. Le choix est enregistré localement avec une version et une date. En cas d’indisponibilité du stockage local lors d’un refus ou d’un retrait, le cookie first-party <code>__rum_optout</code> enregistre le refus pendant un an et reste prioritaire sur tout accord local.</p>
+        <p><code>browser-public</code> est une valeur publique et non authentifiante. Ce n’est pas une clé serveur ClickStack.</p>
+
+        <h3>Analytics produit distincts</h3>
+        <p>Avec un accord séparé, PostHog Cloud EU reçoit des pages vues et une liste fermée d’actions : clic vers la session de clarification, ouverture d’article, commande du terminal sans texte saisi, et profondeur de lecture à 50 ou 90 %. L’autocapture, le replay, les heatmaps, les profils nommés et les URL complètes sont désactivés. L’adresse IP est écartée par PostHog après ses transformations réseau. La politique cible est une conservation maximale d’un an, mais ce plafond n’est pas encore vérifié comme une règle techniquement appliquée par le projet PostHog.</p>
+        <p>Ces actions décrivent une intention de navigation, pas un résultat commercial. Un clic sur un lien email n’est jamais compté comme un lead ou un rendez-vous. Les paramètres de campagne donnent un indice d’attribution ; ils ne prouvent pas qu’une campagne a causé une conversion.</p>
+        <p>Le retrait arrête les nouvelles mesures et efface les données du SDK dans ce navigateur. Pour demander la suppression d’événements déjà transmis, écrivez à admin@itart.studio en indiquant le site, une période approximative et, si vous le connaissez, l’identifiant technique aléatoire. Aucune identité nominative n’étant collectée, une demande sans identifiant ni période peut ne pas permettre d’isoler les événements concernés. Le traitement et la vérification de la suppression sont confirmés au demandeur lorsque les événements peuvent être isolés.</p>
+
+        <h3>Stockages strictement nécessaires</h3>
+        <p>La préférence de langue, les choix de consentement et les cookies enregistrant un refus sont nécessaires pour respecter vos choix. Les liens sortants vers Facebook, Instagram ou d’autres plateformes ne chargent aucun SDK social sur ce site ; leurs propres traitements commencent lorsque vous choisissez de les ouvrir.</p>
+      </section>
+
+      <section class="legal-section" id="droits">
+        <h2>Vos droits et la suppression</h2>
+        <p>Selon le traitement et sa base légale, vous pouvez demander l’accès, la rectification, l’effacement, la limitation, la portabilité ou vous opposer au traitement. Vous pouvez retirer à tout moment un consentement optionnel sans remettre en cause les traitements antérieurs.</p>
+        <p>Écrivez à <a href="mailto:admin@itart.studio">admin@itart.studio</a>. Une vérification proportionnée peut être demandée si l’identité ou le contrôle des actifs n’est pas suffisamment établi. Une réponse est apportée dans les meilleurs délais et au plus tard sous un mois, sauf prolongation motivée permise par le RGPD.</p>
+        <p><a class="legal-cta-link" href={deletionPath}>Lire les instructions de suppression des données de Content Analytics</a></p>
+        <p>Vous pouvez également introduire une réclamation auprès de la <a href="https://www.cnil.fr/fr/plaintes" rel="external">Commission nationale de l’informatique et des libertés (CNIL)</a>.</p>
+      </section>
+
+      <section class="legal-section" id="securite">
+        <h2>Sécurité et modifications</h2>
+        <p>Les contrôles actuellement vérifiables comprennent HTTPS pour OAuth et Graph API, une valeur <code>state</code> OAuth contrôlée, le stockage atomique du jeton dans un fichier local ignoré de Git et limité en mode <code>0600</code>, des opérations Graph <code>GET</code> allowlistées, la pseudonymisation HMAC prévue pour les identifiants d’actifs et une journalisation qui refuse les jetons. Le contrat de collecte sait refuser une preuve d’autorisation expirée, mais le flux live ne persiste pas encore l’expiration et n’intègre pas encore un contrôle de révocation avant exécution. Cette vérification devra être reliée au collecteur avant toute collecte opérationnelle ; la purge reste manuelle pendant le pilote. Aucune mesure ne garantit un risque nul.</p>
+        <p>Cette politique peut évoluer lorsque le produit, les permissions ou les prestataires changent. Une modification substantielle sera signalée avant son entrée en vigueur lorsque cela est requis. La date et la version en tête de page permettent d’identifier le texte applicable.</p>
+      </section>
+    </>
+  ) : (
+    <>
+      <section class="legal-section" id="controller">
+        <h2>Controller and contact</h2>
+        <p>The controller for processing required to operate the Content Analytics pilot and this website is <strong>IT ART STUDIO</strong>, a French private limited company with share capital of €1,000, registered with the Lyon Trade and Companies Register under number 915 019 129 and represented by its co-manager Amine Amanzou.</p>
+        <address>
+          IT ART STUDIO — 143 rue René Tachon, 69250 Curis-au-Mont-d’Or, France<br />
+          Data and rights contact: <a href="mailto:admin@itart.studio">admin@itart.studio</a><br />
+          General contact: <a href="mailto:contact@theunreliable.engineer">contact@theunreliable.engineer</a>
+        </address>
+        <p>No data protection officer is currently appointed. The present pilot is internal and single-operator. One OAuth authorisation and its token are stored, but no asset connection is operational yet. The pilot provides no client account or multi-user workspace. Access by the AI-assistance service to the audit log is disclosed and pending qualification in “Recipients and transfers”; no other third-party provider with access to Meta Platform Data has been identified. GDPR roles and, where required, data processing agreements will be formalised before access is opened to a third-party organisation.</p>
+      </section>
+
+      <section class="legal-section" id="scope">
+        <h2>Scope</h2>
+        <p>This policy covers:</p>
+        <ul>
+          <li><strong>Content Analytics</strong>, an application pipeline under development designed to collect and normalise professional Instagram analytics in read-only mode once assets become accessible through Facebook Login for Business; and</li>
+          <li><strong>theunreliable.engineer</strong>, the public website presenting The Unreliable Engineer, its services and content.</li>
+        </ul>
+        <p>In this policy, “the Application” means only the Content Analytics pilot’s Meta integration submitted to Meta with these URLs. The project’s other internal monitoring or import connectors do not use this Facebook Login for Business authorisation and receive no Platform Data through it. Any future opening of those connectors to external users will require dedicated notice before activation.</p>
+        <p>The Application is independent from Meta and is not sponsored or endorsed by Meta. Processing carried out directly by Facebook and Instagram is governed by the <a href="https://www.facebook.com/privacy/policy/" rel="external">Meta Privacy Policy</a>.</p>
+      </section>
+
+      <section class="legal-section" id="meta-data">
+        <h2>Meta data processed</h2>
+        <p>Verified status on July 12, 2026: the OAuth authorisation granted all five configured permissions and a token is stored locally. The Graph preflight nevertheless returned 0 accessible Pages and 0 accessible Instagram accounts, so no Insights call was attempted. Meta data currently persisted is the token, its authorisation state and a versioned local audit log naming the public operator, portfolio and assets, together with professional assignment and linkage relationships observed during the manual audit. It records no numeric asset identifier, raw Graph payload or Insight.</p>
+        <p>If asset access is unlocked within the same scope, the pipeline is designed to process only the categories required by the implemented Instagram contract:</p>
+        <ul>
+          <li>public profile information transiently required for the OAuth exchange; no complete user profile is persisted in the application schema, but the operator’s public name appears in the versioned audit log described above;</li>
+          <li>technical identifiers for the expected linking Page and professional Instagram account, transformed into HMAC aliases before canonical storage;</li>
+          <li>Instagram media identifiers, media type and timestamp, to attach a metric to the correct content;</li>
+          <li>authorised Instagram account and media Insights, currently limited to contractual metrics such as reach, profile views, shares and comment count;</li>
+          <li>the access token, granted scopes, expiry or revocation date, Graph API version and minimised technical evidence required for diagnostics.</li>
+        </ul>
+        <div class="legal-note">
+          <strong>Outside the scope</strong>
+          <p>The Application never asks for your Meta password. The pipeline does not store Page or profile names in its canonical database; only the public names expressly described in the local audit log are currently retained. It does not read captions, private messages, contacts, comment text, individual follower identities, advertising, payment or billing data. It requests no publishing or mutation permission.</p>
+        </div>
+      </section>
+
+      <section class="legal-section" id="meta-permissions">
+        <h2>Meta permissions requested</h2>
+        <p>The basic public profile supports the connection exchange. The OAuth bootstrap configures five read permissions, but the current collection contract uses only a subset:</p>
+        <div class="legal-table-wrap" tabindex="0" role="region" aria-label="Meta permissions and purposes">
+          <table>
+            <thead><tr><th>Permission</th><th>Limited use in Content Analytics</th></tr></thead>
+            <tbody>
+              <tr><td><code>pages_show_list</code></td><td>Used by the preflight to discover an expected Page; the call returned 0 Pages and no named list was retained.</td></tr>
+              <tr><td><code>pages_read_engagement</code></td><td>Granted but not called to date; it would only resolve the technical link between an accessible Page and its professional Instagram account.</td></tr>
+              <tr><td><code>read_insights</code></td><td>Granted but inactive in the current contract: no Facebook Page Insights call or storage to date.</td></tr>
+              <tr><td><code>instagram_basic</code></td><td>Granted but with no accessible asset to date; it would identify the linked professional Instagram account and its owned media.</td></tr>
+              <tr><td><code>instagram_manage_insights</code></td><td>Granted but not called to date; it would read authorised Instagram Insights without modifying them.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A permission does not authorise general use of every field it could expose. Graph calls are restricted to an allowlist of <code>GET</code> operations and fields required by the contract. Before this configuration is submitted for App Review or any external access is opened, <code>read_insights</code> must either be removed or connected to an actually implemented, tested and documented feature.</p>
+      </section>
+
+      <section class="legal-section" id="purposes">
+        <h2>Purposes and legal bases</h2>
+        <div class="legal-table-wrap" tabindex="0" role="region" aria-label="Purposes and legal bases">
+          <table>
+            <thead><tr><th>Purpose</th><th>Legal basis</th></tr></thead>
+            <tbody>
+              <tr><td>Maintain the internal OAuth authorisation, run a minimised preflight and, if an asset becomes accessible, collect the contractual Instagram Insights.</td><td>IT ART STUDIO’s legitimate interest in testing its own minimised tool, GDPR Article 6(1)(f).</td></tr>
+              <tr><td>Secure the authorisation, prevent abuse, manage token expiry and diagnose failures.</td><td>Legitimate interest in providing a reliable and secure service, Article 6(1)(f).</td></tr>
+              <tr><td>Respond to technical support requests concerning the pilot.</td><td>Legitimate interest in diagnosing and securing the pilot, GDPR Article 6(1)(f).</td></tr>
+              <tr><td>Handle data-protection access, objection or deletion requests.</td><td>Compliance with the controller’s legal obligations, GDPR Article 6(1)(c).</td></tr>
+              <tr><td>Optionally measure the reliability and use of the public website.</td><td>Your separate consent, Article 6(1)(a).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The OAuth authorisation given to Meta technically grants the selected permissions; it is not blanket GDPR consent for unrelated uses.</p>
+      </section>
+
+      <section class="legal-section" id="retention">
+        <h2>Retention periods</h2>
+        <ul>
+          <li><strong>Global pilot token and authorisation state:</strong> for the single OAuth authorisation, until expiry or revocation is manually verified, the pilot ends, or a deletion request is received. The token is then removed manually from the local secrets file.</li>
+          <li><strong>Raw Meta responses:</strong> no Insights response is currently ingested. If collection becomes operational, the intended TTL is no more than 90 days for quality, schema drift and error control.</li>
+          <li><strong>Normalised metrics and asset pseudonyms:</strong> none is currently stored because no asset is accessible. If the pipeline ingests them, the current model retains them durably without an automatic TTL; they will require manual deletion when no longer necessary or when a verified request requires it.</li>
+          <li><strong>Receipts and versioned audit log:</strong> authorisation, preflight and manual-audit evidence, including the public names and professional relationships described above, is retained in a local Git repository during the pilot without an automatic TTL. A verified request requires handling the current file and, where erasure requires it, objects still reachable in local Git history. A documented purge mechanism and TTL will be required before multi-user access is opened.</li>
+          <li><strong>Email requests:</strong> for the time required to handle them and, where needed, under applicable legal limitation periods.</li>
+        </ul>
+        <p>Aggregates may be kept beyond those periods only when they are genuinely anonymous and can no longer identify an account, asset or person.</p>
+      </section>
+
+      <section class="legal-section" id="recipients">
+        <h2>Recipients and transfers</h2>
+        <p>Development runs on local infrastructure controlled by IT ART STUDIO in France; no production hosting or Meta Platform Data backup mechanism is active yet.</p>
+        <div class="legal-note">
+          <strong>AI-assisted review to qualify before submission</strong>
+          <p>During the technical and legal preparation on July 12, 2026, Codex, a service provided by OpenAI, accessed the local audit log containing the public names and professional relationships described above. The log contained no token, numeric identifier, raw Graph payload or Insight. IT ART STUDIO must nevertheless audit the provider’s contractual role, retention, processing location, transfer safeguards and applicable deletion channel. The Meta questionnaire must not retain a “no AI service accesses Platform Data” answer until that qualification is resolved. No further Meta Platform Data must be disclosed to an AI service before that audit and the applicable declarations are updated.</p>
+        </div>
+        <p>Meta supplies Platform Data and separately processes the login under its own terms. The Application does not sell this data, use it for advertising, or send Meta Insights to PostHog or ClickStack.</p>
+        <p>Any future provider or transfer outside the European Economic Area will be audited and documented here before activation, including the country, recipient and applicable safeguard. No adequacy or certification claim is made without checking the relevant entity.</p>
+      </section>
+
+      <section class="legal-section" id="site-measurement">
+        <h2>Privacy and reliability measurement</h2>
+        <h3>First-party technical measurement</h3>
+        <p>Browser measurement is disabled by default and starts only after your explicit consent. Its purpose is to understand Web Vitals, slow loads and technical error categories in order to improve site performance and reliability.</p>
+        <p>The SDK may transiently include a complete URL, user-agent, screen size or technical events in the request sent to the first-party ingress. The collector removes these attributes before ClickStack storage. Only a closed route, error category, resource type, version, environment and technical service identity may be retained.</p>
+        <p>Sessions are never replayed and request bodies are not logged. Terminal content, page text, fields, emails, console output, error messages and stack traces are not retained in ClickStack. Interaction, fetch and XHR instrumentations are disabled.</p>
+        <p>The first-party <code>__rum_sid</code> cookie expires after 15 minutes of inactivity. A session lasts no more than 4 hours. Data is retained server-side for 30 days. Your choice is stored locally with a version and date. If local storage is unavailable during refusal or withdrawal, the first-party <code>__rum_optout</code> cookie stores the refusal for one year and takes priority over any local grant.</p>
+        <p><code>browser-public</code> is a public, non-authenticating value. It is not a ClickStack server key.</p>
+
+        <h3>Separate product analytics</h3>
+        <p>With separate consent, PostHog Cloud EU receives page views and a closed list of actions: clarification-session clicks, article opens, terminal commands without entered text, and reading depth at 50 or 90%. Autocapture, replay, heatmaps, named profiles and complete URLs are disabled. PostHog discards the IP address after network transformations. The policy target is a maximum one-year retention period, but this limit has not yet been verified as a technically enforced rule in the PostHog project.</p>
+        <p>These actions describe navigation intent, not a commercial outcome. A click on an email link is never counted as a lead or a meeting. Campaign parameters provide attribution evidence; they do not prove that a campaign caused a conversion.</p>
+        <p>Withdrawal stops new measurement and clears SDK data in this browser. To request deletion of events already sent, email admin@itart.studio with the site, an approximate time range and, if known, the random technical identifier. Because no named identity is collected, a request without an identifier or time range may not allow the relevant events to be isolated. Processing and verification of deletion are confirmed to the requester when the events can be isolated.</p>
+
+        <h3>Strictly necessary storage</h3>
+        <p>The language preference, consent choices and refusal cookies are necessary to respect your choices. Outbound links to Facebook, Instagram or other platforms load no social SDK on this site; their own processing starts when you choose to open them.</p>
+      </section>
+
+      <section class="legal-section" id="rights">
+        <h2>Your rights and deletion</h2>
+        <p>Depending on the processing and its legal basis, you may request access, rectification, erasure, restriction, portability or object to processing. You may withdraw optional consent at any time without affecting earlier lawful processing.</p>
+        <p>Email <a href="mailto:admin@itart.studio">admin@itart.studio</a>. Proportionate verification may be requested where identity or control of the relevant assets is not sufficiently established. We respond promptly and no later than one month, unless a reasoned GDPR extension applies.</p>
+        <p><a class="legal-cta-link" href={deletionPath}>Read the Content Analytics data deletion instructions</a></p>
+        <p>You may also lodge a complaint with the <a href="https://www.cnil.fr/fr/plaintes" rel="external">French Data Protection Authority (CNIL)</a> or your local supervisory authority.</p>
+      </section>
+
+      <section class="legal-section" id="security">
+        <h2>Security and changes</h2>
+        <p>Controls that can currently be verified include HTTPS for OAuth and Graph API, a checked OAuth <code>state</code> value, atomic token storage in a Git-ignored local file restricted to mode <code>0600</code>, allowlisted Graph <code>GET</code> operations, planned HMAC pseudonymisation for asset identifiers and logging that rejects tokens. The collection contract can reject expired authorisation evidence, but the live flow does not yet persist expiry or integrate a revocation check before execution. That verification must be connected to the collector before any operational collection; deletion remains manual during the pilot. No measure guarantees zero risk.</p>
+        <p>This policy may change when the product, permissions or providers change. A material update will be announced before it takes effect where required. The date and version at the top identify the applicable text.</p>
+      </section>
+    </>
+  )}
+
+  <Fragment slot="actions">
+    {observabilityEnabled && <button class="button button-primary" type="button" data-open-rum-settings>{copy.manageRum}</button>}
+    {productAnalyticsEnabled && <button class="button button-secondary" type="button" data-open-analytics-settings>{copy.manageAnalytics}</button>}
+  </Fragment>
+</LegalPageLayout>

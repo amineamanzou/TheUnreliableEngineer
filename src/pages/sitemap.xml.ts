@@ -48,6 +48,11 @@ export async function GET({ site }: APIContext) {
   const blogEn = localizedPath("en", "/blog/");
   const privacyFr = "/confidentialite/";
   const privacyEn = "/en/privacy/";
+  const termsFr = "/conditions-utilisation/";
+  const termsEn = "/en/terms/";
+  const deletionFr = "/suppression-des-donnees/";
+  const deletionEn = "/en/data-deletion/";
+  const legalLastModified = "2026-07-12";
   const entries: SitemapEntry[] = [
     {
       path: homeFr,
@@ -83,6 +88,7 @@ export async function GET({ site }: APIContext) {
     },
     {
       path: privacyFr,
+      lastmod: legalLastModified,
       alternates: [
         { locale: "fr", href: absoluteUrl(privacyFr, site) },
         { locale: "en", href: absoluteUrl(privacyEn, site) },
@@ -91,10 +97,47 @@ export async function GET({ site }: APIContext) {
     },
     {
       path: privacyEn,
+      lastmod: legalLastModified,
       alternates: [
         { locale: "fr", href: absoluteUrl(privacyFr, site) },
         { locale: "en", href: absoluteUrl(privacyEn, site) },
         { locale: "x-default", href: absoluteUrl(privacyFr, site) },
+      ],
+    },
+    {
+      path: termsFr,
+      lastmod: legalLastModified,
+      alternates: [
+        { locale: "fr", href: absoluteUrl(termsFr, site) },
+        { locale: "en", href: absoluteUrl(termsEn, site) },
+        { locale: "x-default", href: absoluteUrl(termsFr, site) },
+      ],
+    },
+    {
+      path: termsEn,
+      lastmod: legalLastModified,
+      alternates: [
+        { locale: "fr", href: absoluteUrl(termsFr, site) },
+        { locale: "en", href: absoluteUrl(termsEn, site) },
+        { locale: "x-default", href: absoluteUrl(termsFr, site) },
+      ],
+    },
+    {
+      path: deletionFr,
+      lastmod: legalLastModified,
+      alternates: [
+        { locale: "fr", href: absoluteUrl(deletionFr, site) },
+        { locale: "en", href: absoluteUrl(deletionEn, site) },
+        { locale: "x-default", href: absoluteUrl(deletionFr, site) },
+      ],
+    },
+    {
+      path: deletionEn,
+      lastmod: legalLastModified,
+      alternates: [
+        { locale: "fr", href: absoluteUrl(deletionFr, site) },
+        { locale: "en", href: absoluteUrl(deletionEn, site) },
+        { locale: "x-default", href: absoluteUrl(deletionFr, site) },
       ],
     },
   ];

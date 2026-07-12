@@ -50,6 +50,16 @@ async function installEndpointRoute(page, records) {
   });
 }
 
+async function resolveRumPromptIfPresent(page) {
+  const root = page.locator("[data-rum-consent]");
+  if (await root.count() === 0) return;
+  const panel = page.locator("[data-rum-panel]");
+  await panel.waitFor({ state: "visible", timeout });
+  assert(await page.locator("[data-analytics-panel]").isHidden(), "Product analytics opened before the Browser RUM decision closed");
+  await page.locator("[data-rum-decline]").click();
+  await panel.waitFor({ state: "hidden", timeout });
+}
+
 try {
   const browserUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
   const context = await browser.newContext({ userAgent: browserUserAgent });
@@ -71,6 +81,7 @@ try {
   await installEndpointRoute(page, requests);
 
   await page.goto(`${pageUrl}?utm_source=linkedin&utm_campaign=p2-qa&email=secret@example.test#private`, { waitUntil: "networkidle", timeout });
+  await resolveRumPromptIfPresent(page);
   await page.locator("[data-analytics-panel]").waitFor({ state: "visible", timeout });
   assert(requests.length === 0, "PostHog endpoint contacted before consent");
   assert(!scriptRequests.some((url) => url.includes("module.no-external")), "PostHog SDK chunk loaded before consent");
@@ -146,6 +157,7 @@ try {
   const privacyRequests = [];
   await installEndpointRoute(privacyPage, privacyRequests);
   await privacyPage.goto(pageUrl, { waitUntil: "networkidle", timeout });
+  await resolveRumPromptIfPresent(privacyPage);
   await privacyPage.locator("[data-analytics-settings]").click();
   assert(await privacyPage.locator("[data-analytics-accept]").isDisabled(), "GPC did not disable analytics opt-in");
   assert(privacyRequests.length === 0, "PostHog endpoint contacted under GPC");

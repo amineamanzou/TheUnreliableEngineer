@@ -56,6 +56,10 @@ function safeRoute(): string {
   if (path === "/en/blog") return "/en/blog/";
   if (path === "/confidentialite") return "/confidentialite/";
   if (path === "/en/privacy") return "/en/privacy/";
+  if (path === "/conditions-utilisation") return "/conditions-utilisation/";
+  if (path === "/en/terms") return "/en/terms/";
+  if (path === "/suppression-des-donnees") return "/suppression-des-donnees/";
+  if (path === "/en/data-deletion") return "/en/data-deletion/";
   if (/^\/blog\/[^/]+$/.test(path)) return "/blog/:slug/";
   if (/^\/en\/blog\/[^/]+$/.test(path)) return "/en/blog/:slug/";
   return "/other/";
