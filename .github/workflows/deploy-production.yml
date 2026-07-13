@@ -97,7 +97,7 @@ jobs:
           npm run review:static
 
       - name: Verify exact enabled Browser RUM canary contract
-        if: inputs.browser_observability
+        if: github.event_name == 'push' || inputs.browser_observability
         env:
           SITE_URL: https://theunreliable.engineer
           BASE_PATH: /
@@ -150,7 +150,7 @@ jobs:
             SITE_URL=https://theunreliable.engineer
             BASE_PATH=/
             VCS_REF=${{ github.sha }}
-            PUBLIC_BROWSER_OBSERVABILITY_ENABLED=${{ inputs.browser_observability && 'true' || 'false' }}
+            PUBLIC_BROWSER_OBSERVABILITY_ENABLED=${{ (github.event_name == 'push' || inputs.browser_observability) && 'true' || 'false' }}
             PUBLIC_BROWSER_OBSERVABILITY_URL=${{ vars.PUBLIC_BROWSER_OBSERVABILITY_URL }}
             PUBLIC_BROWSER_OBSERVABILITY_API_KEY=browser-public
             PUBLIC_BROWSER_SERVICE_NAME=the-unreliable-engineer-frontend

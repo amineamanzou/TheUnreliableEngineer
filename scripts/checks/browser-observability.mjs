@@ -77,7 +77,8 @@ assert(dockerfile.includes("npm run review:static"), "Docker build must run the 
 assert(deployWorkflow.includes("browser_observability:"), "Production workflow must expose an explicit Browser RUM canary input");
 assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "Production workflow must verify the enabled Browser RUM canary contract");
 assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"'), "Production workflow must explicitly force Browser RUM off");
-assert(deployWorkflow.includes("inputs.browser_observability && 'true' || 'false'"), "Production image activation must be tied to the manual canary input");
+assert(deployWorkflow.includes("if: github.event_name == 'push' || inputs.browser_observability"), "Production pushes must verify the enabled Browser RUM contract during the canary");
+assert(deployWorkflow.includes("(github.event_name == 'push' || inputs.browser_observability) && 'true' || 'false'"), "Production pushes must preserve Browser RUM while the manual input remains the rollback switch");
 assert(deployWorkflow.includes("npm audit --omit=dev --audit-level=high"), "Production workflow must reject high dependency vulnerabilities");
 assert(deployWorkflow.includes("check:browser-observability -- --mode=off"), "Production workflow must verify the exact off contract");
 assert(ciWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "CI must retain a non-publishing enabled contract build");
