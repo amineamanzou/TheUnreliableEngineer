@@ -34,6 +34,7 @@ assert(source.indexOf("validateConfig(config)") < source.indexOf('await import("
 assert(source.includes("if (!(event.error instanceof Error)) return;"), "Runtime error actions must ignore non-Error payloads");
 assert(source.includes('"deployment.environment": config.environment'), "Browser resources must carry the deployment environment");
 assert(source.includes("tracePropagationTargets: []"), "Browser RUM must not propagate trace context to downstream requests");
+assert(source.includes('"page.route": safeRoute()'), "Browser RUM resources must carry the closed page route");
 
 for (const setting of ["disableReplay: true", "disableIntercom: true", "consoleCapture: false", "advancedNetworkCapture: false", "maskAllInputs: true", "maskAllText: true", "recordCanvas: false"]) {
   assert(source.includes(setting), `Missing privacy gate: ${setting}`);
@@ -47,7 +48,7 @@ for (const instrumentation of ["document", "longtask", "webvitals"]) {
 for (const action of ["browser.error", "browser.unhandledrejection", "browser.resource.error"]) {
   assert(source.includes(`addAction("${action}"`), `Missing privacy-safe action: ${action}`);
 }
-for (const route of ["/", "/en/", "/blog/", "/en/blog/", "/confidentialite/", "/en/privacy/", "/conditions-utilisation/", "/en/terms/", "/suppression-des-donnees/", "/en/data-deletion/", "/blog/:slug/", "/en/blog/:slug/", "/other/"]) {
+for (const route of ["/", "/en/", "/blog/", "/en/blog/", "/confidentialite/", "/en/privacy/", "/conditions-utilisation/", "/en/terms/", "/suppression-des-donnees/", "/en/data-deletion/", "/offres/bilan-positionnement-freelance/", "/en/offers/freelance-positioning-review/", "/offres/suivi-progression-tech/", "/en/offers/tech-progression-follow-up/", "/offres/etude-de-cas-tech/", "/en/offers/tech-case-study/", "/blog/:slug/", "/en/blog/:slug/", "/other/"]) {
   assert(source.includes(`"${route}"`), `Closed route vocabulary is missing: ${route}`);
 }
 for (const forbidden of ["event.message", "event.filename", "window.location.href", "window.location.search", "window.location.hash", "recordException(", "userEmail", "userName", "terminal-command", "blog-terminal-input"]) {

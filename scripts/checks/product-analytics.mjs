@@ -27,6 +27,7 @@ const js = rows.filter((row) => row.file.endsWith(".js"));
 const all = rows.map((row) => row.content).join("\n");
 const applicationJs = js.filter((row) => !row.file.includes("module.no-external")).map((row) => row.content).join("\n");
 const privacySource = await readFile(path.join(root, "src/components/PrivacyPage.astro"), "utf8");
+const deployWorkflow = await readFile(path.join(root, ".github/workflows/deploy-production.yml"), "utf8");
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -40,6 +41,20 @@ if (mode === "off") {
   assert(html.some((row) => row.content.includes("data-analytics-consent")), "Consent UI is missing from enabled build");
   assert(html.some((row) => row.content.includes("data-page-type=\"article\"")), "Article page type is missing");
   assert(html.some((row) => row.content.includes("data-page-type=\"home\"")), "Home page type is missing");
+  const offerPages = [
+    ["offres/bilan-positionnement-freelance/index.html", "positioning_review"],
+    ["en/offers/freelance-positioning-review/index.html", "positioning_review"],
+    ["offres/suivi-progression-tech/index.html", "tech_progression"],
+    ["en/offers/tech-progression-follow-up/index.html", "tech_progression"],
+    ["offres/etude-de-cas-tech/index.html", "tech_case_study"],
+    ["en/offers/tech-case-study/index.html", "tech_case_study"],
+  ];
+  for (const [file, offerId] of offerPages) {
+    const page = html.find((row) => row.file === file);
+    assert(page?.content.includes('data-page-type="offer"'), `Offer page type is missing from ${file}`);
+    assert(page?.content.includes(`data-analytics-offer-id="${offerId}"`), `Offer ID ${offerId} is missing from ${file}`);
+    assert(page?.content.includes('data-analytics-cta-id="contact_offer"'), `Offer contact CTA is missing from ${file}`);
+  }
   assert(html.every((row) => !row.content.includes("module.no-external")), "PostHog SDK chunk is statically referenced by HTML");
   assert(js.some((row) => row.file.includes("module.no-external")), "Dynamic PostHog SDK chunk was not emitted");
   for (const required of [
@@ -72,6 +87,8 @@ if (mode === "off") {
   ]) {
     assert(privacySource.includes(required), `Product analytics governance notice is missing: ${required}`);
   }
+  assert(deployWorkflow.includes("if: github.event_name == 'push' || inputs.product_analytics"), "Production pushes must verify the enabled product analytics contract");
+  assert(deployWorkflow.includes("(github.event_name == 'push' || inputs.product_analytics) && 'true' || 'false'"), "Production pushes must keep product analytics enabled while manual dispatch remains the rollback switch");
 }
 
 console.log(JSON.stringify({ ok: true, mode, files: textFiles.length }, null, 2));

@@ -1,4 +1,4 @@
-export const ANALYTICS_SCHEMA_VERSION = "1.0.0" as const;
+export const ANALYTICS_SCHEMA_VERSION = "1.1.0" as const;
 
 export const analyticsEventNames = [
   "$pageview",
@@ -19,6 +19,7 @@ export const analyticsPageTypes = [
   "contact",
   "blog_index",
   "article",
+  "offer",
   "privacy",
   "terms",
   "data_deletion",
@@ -40,6 +41,9 @@ export const analyticsPlacements = [
   "article_footer",
   "contact_panel",
   "dossier_page",
+  "offers",
+  "offer_hero",
+  "offer_closing",
   "terminal",
 ] as const;
 
@@ -51,11 +55,21 @@ export const analyticsCtaIds = [
   "view_full_dossier",
   "read_blog",
   "open_contact",
-  "clarification_call",
+  "view_offers",
+  "view_offer",
+  "contact_offer",
   "source_article",
 ] as const;
 
 export type AnalyticsCtaId = (typeof analyticsCtaIds)[number];
+
+export const analyticsOfferIds = [
+  "positioning_review",
+  "tech_progression",
+  "tech_case_study",
+] as const;
+
+export type AnalyticsOfferId = (typeof analyticsOfferIds)[number];
 
 export const analyticsAssetIds = ["dossier_fr_pdf", "dossier_en_pdf"] as const;
 export type AnalyticsAssetId = (typeof analyticsAssetIds)[number];
@@ -77,7 +91,7 @@ export type AnalyticsLengthBucket = "0" | "1-8" | "9-24" | "25-64" | "65+";
 
 export type AnalyticsEventPayloads = {
   "$pageview": Record<string, never>;
-  "site.cta_click": { cta_id: AnalyticsCtaId };
+  "site.cta_click": { cta_id: AnalyticsCtaId; offer_id?: AnalyticsOfferId };
   "site.asset_download": { asset_id: AnalyticsAssetId };
   "site.outbound_click": { destination: AnalyticsOutboundDestination };
   "site.locale_change": { target_locale: "fr" | "en" };
@@ -92,7 +106,7 @@ export type AnalyticsEventPayloads = {
 
 export const eventPropertyAllowlist: Record<AnalyticsEventName, readonly string[]> = {
   "$pageview": [],
-  "site.cta_click": ["cta_id"],
+  "site.cta_click": ["cta_id", "offer_id"],
   "site.asset_download": ["asset_id"],
   "site.outbound_click": ["destination"],
   "site.locale_change": ["target_locale"],
@@ -109,10 +123,29 @@ export function isAnalyticsPlacement(value: string): value is AnalyticsPlacement
   return (analyticsPlacements as readonly string[]).includes(value);
 }
 
+export function isAnalyticsOfferId(value: string): value is AnalyticsOfferId {
+  return (analyticsOfferIds as readonly string[]).includes(value);
+}
+
 export function normalizePagePath(value: string): string {
   const path = value.split(/[?#]/, 1)[0] || "/";
   const normalized = path.replace(/\/{2,}/g, "/").slice(0, 180);
   return normalized.startsWith("/") ? normalized : `/${normalized}`;
+}
+
+const offerIdsByPath: Readonly<Record<string, AnalyticsOfferId>> = {
+  "/offres/bilan-positionnement-freelance/": "positioning_review",
+  "/en/offers/freelance-positioning-review/": "positioning_review",
+  "/offres/suivi-progression-tech/": "tech_progression",
+  "/en/offers/tech-progression-follow-up/": "tech_progression",
+  "/offres/etude-de-cas-tech/": "tech_case_study",
+  "/en/offers/tech-case-study/": "tech_case_study",
+};
+
+export function offerIdForPath(value: string): AnalyticsOfferId | null {
+  const normalized = normalizePagePath(value);
+  const path = normalized.endsWith("/") ? normalized : `${normalized}/`;
+  return offerIdsByPath[path] ?? null;
 }
 
 export function normalizeArticleId(value: string): string | null {
