@@ -52,6 +52,11 @@ export async function GET({ site }: APIContext) {
   const termsEn = "/en/terms/";
   const deletionFr = "/suppression-des-donnees/";
   const deletionEn = "/en/data-deletion/";
+  const offerPairs = [
+    ["/offres/bilan-positionnement-freelance/", "/en/offers/freelance-positioning-review/"],
+    ["/offres/suivi-progression-tech/", "/en/offers/tech-progression-follow-up/"],
+    ["/offres/etude-de-cas-tech/", "/en/offers/tech-case-study/"],
+  ] as const;
   const legalLastModified = "2026-07-12";
   const entries: SitemapEntry[] = [
     {
@@ -141,6 +146,16 @@ export async function GET({ site }: APIContext) {
       ],
     },
   ];
+
+  for (const [pathFr, pathEn] of offerPairs) {
+    const alternates = [
+      { locale: "fr" as const, href: absoluteUrl(pathFr, site) },
+      { locale: "en" as const, href: absoluteUrl(pathEn, site) },
+      { locale: "x-default" as const, href: absoluteUrl(pathFr, site) },
+    ];
+
+    entries.push({ path: pathFr, alternates }, { path: pathEn, alternates });
+  }
 
   for (const article of articles.sort((a, b) => a.data.locale.localeCompare(b.data.locale))) {
     const translations = translatedArticles.get(article.data.translationKey);

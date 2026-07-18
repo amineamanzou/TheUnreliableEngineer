@@ -20,37 +20,37 @@ export const homepageEn = {
     meta: "",
     nav: [
       { label: "Proof", href: "#proof" },
-      { label: "Paths", href: "#work" },
+      { label: "Offers", href: "#work" },
       { label: "Testimonials", href: "#testimonials" },
       { label: "Start here", href: "#contact" },
     ] satisfies NavItem[],
     blog: { label: "Blog", href: "/en/blog/" } satisfies NavItem,
     cta: {
-      label: "Book 60 minutes",
-      href: "mailto:contact@theunreliable.engineer?subject=60-minute%20clarification%20session",
+      label: "See the offers",
+      href: "/en/#work",
     },
   },
   hero: {
     eyebrow: "Amine · The Unreliable Engineer",
-    title: "Clarify the real issue before starting the machine.",
+    title: "Understand what is really happening in tech.",
     audience:
-      "For tech teams, senior profiles, independents and decision-makers who need to make a confused situation readable and decidable.",
-    offerLine: "Entry point: 60 minutes to leave with a sharper decision.",
+      "For tech teams, senior profiles and independents who want to read a market, decision or system without the usual varnish.",
+    offerLine: "Three offers: clarify your positioning, track your progress, analyse a real case.",
     body:
-      "I help untangle situations where architecture, observability, AI, content and market perception get mixed too quickly.",
+      "I cover AI, incidents, leaks, the market and production. Then I help when these subjects become very concrete.",
     primaryCta: {
-      label: "Book 60 minutes",
-      href: "mailto:contact@theunreliable.engineer?subject=60-minute%20clarification%20session",
+      label: "See all three offers",
+      href: "#work",
     },
     secondaryCta: {
       label: "See proof",
       href: "#proof",
     },
     consultation: {
-      label: "Clarify the problem",
-      caption: "A blurry situation does not need a bigger plan first. It needs to become readable.",
+      label: "Read the real signal",
+      caption: "News brings the noise. Field experience shows what matters.",
       body:
-        "We start from reality: context, constraints, tensions, weak signals. Then we separate what needs framing, support, positioning, an opportunity, or a qualified introduction.",
+        "We start from a profile that attracts few missions, progress that is hard to show or a specific tech problem. Then we sort the facts, constraints and next actions.",
       points: [
         {
           label: "Symptom",
@@ -128,73 +128,60 @@ export const homepageEn = {
     ] satisfies ProofItem[],
   },
   work: {
-    tag: "Possible paths",
-    title: "One entry point, five possible paths.",
-    intro:
-      "This page does not sell a competing menu of services. It sells one capability: make the topic readable, then choose the right next step.",
-    featured: {
-      kicker: "Entry",
-      meta: "60 minutes / real case / clarification",
-      title: "60-minute clarification",
-      body:
-        "A short session to formulate the problem, constraints, blind spots and the next useful decision.",
-    },
+    tag: "Work together",
+    title: "Three formats.",
     cards: [
       {
-        kicker: "Framing",
-        title: "Technical framing",
+        kicker: "Before the mission",
+        title: "Freelance positioning review",
         body:
-          "A few days to turn a reliability, observability, architecture, debt or AI topic into a usable decision plan.",
+          "An interview and written review to improve how your profile is presented, indexed and sold.",
+        href: "/en/offers/freelance-positioning-review/",
+        linkLabel: "View the offer",
       },
       {
-        kicker: "Ongoing",
-        title: "Senior support",
+        kicker: "During the mission",
+        title: "Tech progression follow-up",
         body:
-          "A regular cadence to challenge trade-offs, technical narrative, priorities and weak signals.",
+          "Three months to track goals, document progress and prepare what comes next.",
+        href: "/en/offers/tech-progression-follow-up/",
+        linkLabel: "View the offer",
       },
       {
-        kicker: "Positioning",
-        title: "Positioning and opportunities",
+        kicker: "One specific case",
+        title: "Tech case study",
         body:
-          "Make an offer, story or senior trajectory more readable before opening an opportunity or producing content.",
-      },
-      {
-        kicker: "Qualified signal",
-        title: "Qualified introductions",
-        body:
-          "Open a conversation only when context, value and signal are clear enough for both sides.",
+          "A free consultation when the case becomes anonymised content, paid when it stays private.",
+        href: "/en/offers/tech-case-study/",
+        linkLabel: "View the offer",
       },
     ] satisfies WorkCard[],
   },
   boundaries: {
-    tag: "What it is not",
-    title: "Not a service menu. Not a magic promise.",
-    intro:
-      "Framing protects as much as action does: sometimes the right next step is to launch nothing, or to avoid opening a conversation too early.",
+    tag: "Scope",
+    title: "What stays out of scope.",
     items: [
       {
-        title: "Not a 40-page audit",
-        body: "The useful deliverable is a clearer decision, not a document that reassures without changing what happens next.",
+        title: "Guaranteed mission",
+        body: "The review improves positioning. It guarantees neither a mission nor a signing date.",
       },
       {
-        title: "Not a magic AI promise",
-        body: "If AI is not the right lever, we say it before building around a buzzword.",
+        title: "Decisions made for you",
+        body: "The follow-up documents progress. It does not replace your manager or team.",
       },
       {
-        title: "Not vague coaching",
-        body: "The discussion starts from a real case: constraints, signals, trade-offs, next actions.",
+        title: "Automatic introduction",
+        body: "An introduction depends on a real need and a separate agreement with the company.",
       },
       {
-        title: "Not automatic networking",
-        body: "An introduction has value only when the signal is clear for both sides.",
+        title: "Surprise publication",
+        body: "An editorial case study is recorded, anonymised and approved before publication.",
       },
     ] satisfies BoundaryItem[],
   },
   testimonials: {
     tag: "Testimonials",
-    title: "What people remember from the work.",
-    intro:
-      "The recommendations mostly point to one thing: the ability to raise the quality of reading, technically and strategically.",
+    title: "Their feedback.",
     cards: [
       {
         quote:
@@ -226,25 +213,23 @@ export const homepageEn = {
     ] satisfies TestimonialCard[],
   },
   contact: {
-    tag: "Start here",
-    title: "We start by naming the topic. Then we choose the format.",
+    tag: "Start",
+    title: "Choose your starting point.",
     bullets: [
-      "A technical or strategic problem to make arbitrable",
-      "An offer or senior trajectory to make more readable",
-      "An opportunity or introduction to qualify before opening the right conversations",
+      "Clarify your freelance profile",
+      "Track your progress for three months",
+      "Analyse a tech case over the phone",
     ],
     primaryCta: {
-      label: "Book 60 minutes",
-      href: "mailto:contact@theunreliable.engineer?subject=60-minute%20clarification%20session",
+      label: "See all three offers",
+      href: "#work",
     },
-    note:
-      "Current format: 60 minutes on video, around a real case, to understand better before acting.",
   },
   socialSignal: {
     tag: "Public signal",
     title: "I also create content.",
     intro:
-      "I publish to test angles, document systems and expose real frictions: observability, AI agents, production, freelancing and homemade tooling.",
+      "I publish about AI, incidents, leaks, the tech market, production and freelancing — with enough field experience to do more than comment on the timeline.",
     stats: [
       {
         value: "409+",

@@ -2,11 +2,11 @@
 
 ## Direction
 
-The homepage should move from a dense comic poster toward a sharper decision dossier for a technical brand: still red, yellow, black, frontal and anti-corporate, but more credible, more readable and more intentional.
+The homepage is a sharp field dossier for a mainstream technical creator brand: still red, yellow, black, frontal and anti-corporate, but broader than observability and easier to buy from.
 
 The desired impression is an engineer arriving with a marker, cutting through noise and writing the real problem on the board. Less sticker energy. More signal.
 
-The "wow" layer should feel like observability applied to a fuzzy decision: traces, signal paths, terminal labels, diagnostic nodes and pointer-aware interaction. It should not become a decorative dashboard for its own sake.
+The "wow" layer can use traces, signal paths, terminal labels and diagnostic nodes as part of Amine's field vocabulary. It must not imply that observability is the only editorial subject or commercial service.
 
 ## Benchmark Notes
 
@@ -75,9 +75,9 @@ The first screen must contain, without desktop scrolling at `1512x982`:
 
 - the person / posture first: Amine, The Unreliable Engineer, field-tested technical clarification;
 - a clear value proposition: rendre un problème technique, stratégique ou commercial assez net pour décider;
-- the 60-minute session as the first entry point, not as the whole product;
-- a primary audience statement: teams, senior technical profiles and decision-makers dealing with a badly framed problem;
-- a visible primary CTA: "Réserver 60 minutes";
+- the broad editorial territory: AI, incidents, leaks, market, production and freelancing;
+- a primary audience statement: technical teams, senior profiles and independents;
+- a visible primary CTA: "Voir les trois offres";
 - a quieter secondary CTA: "Voir les preuves".
 
 Client references must not appear in the hero. The proof section handles them with context.
@@ -107,12 +107,9 @@ Recommended composition:
 
 ### Offers
 
-- Explain the offer map without making the page feel like a menu of unrelated services.
-- Keep clarification 60 minutes as the point of entry.
-- Add technical framing for situations that need more than one hour but not a large mission.
-- Add senior accompaniment for teams, leaders or senior profiles that need regular challenge and continuity.
-- Add positioning / opportunities for profiles and teams that need clearer market perception.
-- Add qualified introductions only after the signal is clear for both sides.
+- Show exactly three linked offers: freelance positioning review, tech progression follow-up and tech case study.
+- Each card must link to a dedicated page rather than summarising an invisible service tree.
+- Preserve explicit boundaries: no guaranteed mission, no decisions made for the person and no surprise publication.
 - Avoid spammy section names, decorative card grids and repeated labels.
 
 ### Boundaries
