@@ -96,14 +96,49 @@ try {
   }
 
   await page.evaluate(() => {
-    document.querySelector("[data-analytics-cta-id='clarification_call']")?.addEventListener("click", (event) => event.preventDefault(), { once: true });
+    document.querySelector("[data-analytics-cta-id='view_offers']")?.addEventListener("click", (event) => event.preventDefault(), { once: true });
   });
   const requestsBeforeClick = requests.filter((request) => request.method === "POST").length;
-  await page.locator("[data-analytics-cta-id='clarification_call']").first().click();
+  await page.locator("[data-analytics-placement='hero'][data-analytics-cta-id='view_offers']").click();
   await waitFor(
     () => requests.filter((request) => request.method === "POST").length === requestsBeforeClick + 1,
     "One CTA click did not emit exactly one additional request",
   );
+
+  await page.evaluate(() => {
+    document.querySelector("[data-analytics-cta-id='view_offer'][data-analytics-offer-id='positioning_review']")
+      ?.addEventListener("click", (event) => event.preventDefault(), { once: true });
+  });
+  const requestsBeforeOfferSelection = requests.filter((request) => request.method === "POST").length;
+  await page.locator("[data-analytics-cta-id='view_offer'][data-analytics-offer-id='positioning_review']").click();
+  await waitFor(
+    () => requests.filter((request) => request.method === "POST").length === requestsBeforeOfferSelection + 1,
+    "One offer selection did not emit exactly one additional request",
+  );
+
+  const offerPages = [
+    ["offres/bilan-positionnement-freelance/", "positioning_review"],
+    ["offres/suivi-progression-tech/", "tech_progression"],
+    ["offres/etude-de-cas-tech/", "tech_case_study"],
+  ];
+  for (const [path, offerId] of offerPages) {
+    const requestsBeforeOfferPage = requests.filter((request) => request.method === "POST").length;
+    await page.goto(new URL(path, pageUrl).toString(), { waitUntil: "networkidle", timeout });
+    await waitFor(
+      () => requests.filter((request) => request.method === "POST").length > requestsBeforeOfferPage,
+      `Offer pageview was not emitted for ${offerId}`,
+    );
+    await page.evaluate((currentOfferId) => {
+      document.querySelector(`[data-analytics-placement='offer_hero'][data-analytics-offer-id='${currentOfferId}']`)
+        ?.addEventListener("click", (event) => event.preventDefault(), { once: true });
+    }, offerId);
+    const requestsBeforeOfferContact = requests.filter((request) => request.method === "POST").length;
+    await page.locator(`[data-analytics-placement='offer_hero'][data-analytics-cta-id='contact_offer'][data-analytics-offer-id='${offerId}']`).click();
+    await waitFor(
+      () => requests.filter((request) => request.method === "POST").length === requestsBeforeOfferContact + 1,
+      `Offer contact did not emit exactly one event for ${offerId}`,
+    );
+  }
 
   const requestsBeforeBlog = requests.filter((request) => request.method === "POST").length;
   await page.goto(new URL("blog/", pageUrl).toString(), { waitUntil: "networkidle", timeout });
@@ -126,11 +161,17 @@ try {
       return `${request.url}\n${request.body}`;
     }
   }).join("\n");
-  for (const forbidden of ["secret@example.test", "super-secret-terminal-query", "email=", "#private", "$current_url", "$referrer", "business.lead_created"]) {
+  for (const forbidden of ["secret@example.test", "super-secret-terminal-query", "contact@theunreliable.engineer", "subject=", "email=", "#private", "$current_url", "$referrer", "business.lead_created"]) {
     assert(!serialized.includes(forbidden), `Forbidden analytics data reached the endpoint: ${forbidden}`);
   }
   assert(serialized.includes("site.cta_click"), "CTA event name is missing from PostHog payload");
-  assert(serialized.includes("clarification_call"), "Closed CTA id is missing from PostHog payload");
+  assert(serialized.includes("view_offers"), "Offer section CTA id is missing from PostHog payload");
+  assert(serialized.includes("view_offer"), "Offer selection CTA id is missing from PostHog payload");
+  assert(serialized.includes("contact_offer"), "Offer contact CTA id is missing from PostHog payload");
+  for (const offerId of ["positioning_review", "tech_progression", "tech_case_study"]) {
+    assert(serialized.includes(offerId), `Offer ID is missing from PostHog payload: ${offerId}`);
+  }
+  assert(serialized.includes("1.1.0"), "Analytics schema version 1.1.0 is missing from PostHog payload");
   assert(serialized.includes("site.blog_search"), "Terminal analytics event is missing from PostHog payload");
   assert(serialized.includes("25-64"), "Terminal query length bucket is missing from PostHog payload");
   assert(serialized.includes("p2-qa"), "Normalized campaign attribution is missing");

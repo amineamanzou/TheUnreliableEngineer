@@ -284,6 +284,7 @@ try {
   assert(spans.every((span) => /^[0-9a-f]{16}$/.test(span.spanId ?? "") && !/^0+$/.test(span.spanId)), "An emitted span has an invalid span ID");
   assert(spans.every((span) => span.links.length === 0), "A browser span contains links and would be rejected by the collector");
   assert(spans.every((span) => span.resourceAttributes["service.version"] === runtimeConfig.version), "service.version is missing or inconsistent across OTLP batches");
+  assert(spans.every((span) => span.resourceAttributes["page.route"] === "/"), "Closed page.route is missing or inconsistent across OTLP batches");
   assert(spans.every((span) => span.resourceAttributes["rum.sessionId"] === session.id), "rum.sessionId does not match the first-party session cookie");
   assert(actionSpans.every((span) => span.events.length === 0), "Privacy-safe action spans must not carry exception events");
   assert(actionSpans.find((span) => span.name === "browser.error")?.attributes["error.type"] === "TypeError", "browser.error lost its safe error.type");

@@ -8,6 +8,7 @@ import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
 import { homeJsonLd, localizedHomeImage } from "../data/seo";
 import { defaultSocialImage } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { offerIdForPath } from "../lib/analytics/events";
 
 type Props = {
   locale: Locale;
@@ -60,7 +61,7 @@ const localePath = localizedPath(locale, "/");
                 href={page.hero.primaryCta.href}
                 data-analytics-event="site.cta_click"
                 data-analytics-placement="hero"
-                data-analytics-cta-id="clarification_call"
+                data-analytics-cta-id="view_offers"
               >
                 {page.hero.primaryCta.label}
               </a>
@@ -189,7 +190,8 @@ const localePath = localizedPath(locale, "/");
               data-link-label={card.linkLabel}
               data-analytics-event="site.cta_click"
               data-analytics-placement="offers"
-              data-analytics-cta-id={`offer_${index + 1}`}
+              data-analytics-cta-id="view_offer"
+              data-analytics-offer-id={offerIdForPath(card.href)}
             >
               <span class="kicker">{card.kicker}</span>
               <h3 class="card-title">{card.title}</h3>
@@ -281,7 +283,7 @@ const localePath = localizedPath(locale, "/");
                 href={page.contact.primaryCta.href}
                 data-analytics-event="site.cta_click"
                 data-analytics-placement="contact_panel"
-                data-analytics-cta-id="clarification_call"
+                data-analytics-cta-id="view_offers"
               >
                 {page.contact.primaryCta.label}
               </a>

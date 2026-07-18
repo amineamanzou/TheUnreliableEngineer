@@ -7,9 +7,11 @@ import {
   analyticsOutboundDestinations,
   eventPropertyAllowlist,
   isAnalyticsEventName,
+  isAnalyticsOfferId,
   isAnalyticsPlacement,
   normalizeArticleId,
   normalizePagePath,
+  offerIdForPath,
   type AnalyticsEventName,
   type AnalyticsEventPayloads,
   type AnalyticsPageType,
@@ -36,6 +38,7 @@ type CommonProperties = {
   page_type: AnalyticsPageType;
   page_path: string;
   placement: AnalyticsPlacement;
+  offer_id?: string;
   referrer_domain?: string;
 } & Record<string, string | number | boolean | undefined>;
 
@@ -50,6 +53,7 @@ const COMMON_PROPERTY_KEYS = [
   "page_type",
   "page_path",
   "placement",
+  "offer_id",
   "referrer_domain",
 ] as const;
 const POSTHOG_REQUIRED_KEYS = [
@@ -168,7 +172,14 @@ function captureFromElement(element: HTMLElement): void {
 
   if (name === "site.cta_click") {
     const value = element.dataset.analyticsCtaId ?? "";
-    if (isOneOf(value, analyticsCtaIds)) capture(name, { cta_id: value as AnalyticsEventPayloads[typeof name]["cta_id"] }, placement);
+    const offerId = element.dataset.analyticsOfferId ?? "";
+    const requiresOffer = value === "view_offer" || value === "contact_offer";
+    if (isOneOf(value, analyticsCtaIds) && (!requiresOffer || isAnalyticsOfferId(offerId))) {
+      capture(name, {
+        cta_id: value as AnalyticsEventPayloads[typeof name]["cta_id"],
+        ...(isAnalyticsOfferId(offerId) ? { offer_id: offerId } : {}),
+      }, placement);
+    }
   } else if (name === "site.asset_download") {
     const value = element.dataset.analyticsAssetId ?? "";
     if (isOneOf(value, analyticsAssetIds)) capture(name, { asset_id: value as AnalyticsEventPayloads[typeof name]["asset_id"] }, placement);
@@ -253,6 +264,7 @@ export async function initProductAnalytics(config: ProductAnalyticsConfig): Prom
     page_type: config.pageType,
     page_path: normalizePagePath(window.location.pathname),
     placement: "page",
+    offer_id: offerIdForPath(window.location.pathname) ?? undefined,
     referrer_domain: safeReferrerDomain(),
     ...readAttribution(config),
   };

@@ -10,7 +10,7 @@ import {
 } from "../data/seo";
 import { defaultSocialImage } from "../data/site";
 import SiteFooter from "../components/SiteFooter.astro";
-import type { AnalyticsPageType } from "../lib/analytics/events";
+import { offerIdForPath, type AnalyticsPageType } from "../lib/analytics/events";
 
 type Props = {
   title: string;
@@ -81,12 +81,15 @@ const BrowserObservability = browserObservabilityEnabled
   : undefined;
 const productAnalyticsEnabled = import.meta.env.PUBLIC_PRODUCT_ANALYTICS_ENABLED === "true" && !isPreviewBuild && !noindex;
 const analyticsPath = (canonicalPath ?? Astro.url.pathname).split(/[?#]/, 1)[0].replace(/^\/en(?=\/|$)/, "") || "/";
+const analyticsOfferId = offerIdForPath(canonicalPath ?? Astro.url.pathname);
 const analyticsPageType: AnalyticsPageType = analyticsPath === "/"
   ? "home"
   : analyticsPath === "/blog/"
     ? "blog_index"
     : analyticsPath.startsWith("/blog/")
       ? "article"
+      : analyticsOfferId
+        ? "offer"
       : analyticsPath === "/confidentialite/" || analyticsPath === "/privacy/"
         ? "privacy"
         : analyticsPath === "/conditions-utilisation/" || analyticsPath === "/terms/"

@@ -1,6 +1,7 @@
 ---
 import type { OfferCopy } from "../data/offers";
 import { homeJsonLd } from "../data/seo";
+import { offerIdForPath } from "../lib/analytics/events";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Topbar from "./Topbar.astro";
 
@@ -8,6 +9,8 @@ type Props = { offer: OfferCopy };
 
 const { offer } = Astro.props;
 const alternateLocale = offer.locale === "fr" ? "en" : "fr";
+const analyticsOfferId = offerIdForPath(offer.path);
+if (!analyticsOfferId) throw new Error(`Missing analytics offer ID for ${offer.path}`);
 ---
 
 <BaseLayout
@@ -44,7 +47,8 @@ const alternateLocale = offer.locale === "fr" ? "en" : "fr";
               href={offer.primaryCta.href}
               data-analytics-event="site.cta_click"
               data-analytics-placement="offer_hero"
-              data-analytics-cta-id={`offer_${offer.key}`}
+              data-analytics-cta-id="contact_offer"
+              data-analytics-offer-id={analyticsOfferId}
             >
               {offer.primaryCta.label}
             </a>
@@ -127,7 +131,8 @@ const alternateLocale = offer.locale === "fr" ? "en" : "fr";
               href={offer.primaryCta.href}
               data-analytics-event="site.cta_click"
               data-analytics-placement="offer_closing"
-              data-analytics-cta-id={`offer_${offer.key}`}
+              data-analytics-cta-id="contact_offer"
+              data-analytics-offer-id={analyticsOfferId}
             >
               {offer.primaryCta.label}
             </a>

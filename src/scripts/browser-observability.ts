@@ -60,6 +60,12 @@ function safeRoute(): string {
   if (path === "/en/terms") return "/en/terms/";
   if (path === "/suppression-des-donnees") return "/suppression-des-donnees/";
   if (path === "/en/data-deletion") return "/en/data-deletion/";
+  if (path === "/offres/bilan-positionnement-freelance") return "/offres/bilan-positionnement-freelance/";
+  if (path === "/en/offers/freelance-positioning-review") return "/en/offers/freelance-positioning-review/";
+  if (path === "/offres/suivi-progression-tech") return "/offres/suivi-progression-tech/";
+  if (path === "/en/offers/tech-progression-follow-up") return "/en/offers/tech-progression-follow-up/";
+  if (path === "/offres/etude-de-cas-tech") return "/offres/etude-de-cas-tech/";
+  if (path === "/en/offers/tech-case-study") return "/en/offers/tech-case-study/";
   if (/^\/blog\/[^/]+$/.test(path)) return "/blog/:slug/";
   if (/^\/en\/blog\/[^/]+$/.test(path)) return "/en/blog/:slug/";
   return "/other/";
@@ -119,6 +125,7 @@ export function initBrowserObservability(config: BrowserObservabilityConfig): Pr
         "service.namespace": "web-frontend",
         "service.version": config.version,
         "site.name": config.site,
+        "page.route": safeRoute(),
       },
     });
 
