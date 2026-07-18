@@ -6,7 +6,9 @@ const requiredFiles = [
   "index.html",
   "en/index.html",
   "blog/index.html",
+  "blog/opamp-fleet-management-control-plane/index.html",
   "en/blog/index.html",
+  "en/blog/opamp-fleet-management-control-plane/index.html",
   "confidentialite/index.html",
   "en/privacy/index.html",
   "conditions-utilisation/index.html",
@@ -33,9 +35,15 @@ const termsEn = readFileSync(join(dist, "en/terms/index.html"), "utf8");
 const deletion = readFileSync(join(dist, "suppression-des-donnees/index.html"), "utf8");
 const deletionEn = readFileSync(join(dist, "en/data-deletion/index.html"), "utf8");
 const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
+const controlPlaneArticle = readFileSync(join(dist, "blog/opamp-fleet-management-control-plane/index.html"), "utf8");
+const controlPlaneArticleEn = readFileSync(join(dist, "en/blog/opamp-fleet-management-control-plane/index.html"), "utf8");
 
 assert(home.includes("site-footer"), "French home is missing the global footer");
 assert(homeEn.includes("site-footer"), "English home is missing the global footer");
+assert(controlPlaneArticle.includes("Le control plane OpenTelemetry"), "French control-plane article is missing");
+assert(controlPlaneArticleEn.includes("The OpenTelemetry control plane"), "English control-plane article is missing");
+assert(controlPlaneArticle.includes("amine-amanzou-bnmee"), "French control-plane LinkedIn source is missing");
+assert(controlPlaneArticleEn.includes("amine-amanzou-axfce"), "English control-plane LinkedIn source is missing");
 assert(home.includes("/conditions-utilisation/"), "French footer is missing the terms link");
 assert(home.includes("/suppression-des-donnees/"), "French footer is missing the data deletion link");
 assert(homeEn.includes("/en/terms/"), "English footer is missing the terms link");
