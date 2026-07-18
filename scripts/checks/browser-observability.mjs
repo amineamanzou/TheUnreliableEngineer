@@ -21,7 +21,7 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-assert(packageJson.dependencies?.["@hyperdx/browser"] === "0.24.0", "@hyperdx/browser must be pinned exactly to 0.24.0");
+assert(packageJson.dependencies?.["@hyperdx/browser"] === "0.25.1", "@hyperdx/browser must be pinned exactly to 0.25.1");
 assert(packageJson.overrides?.protobufjs === "7.6.5", "protobufjs security override must be pinned exactly to 7.6.5");
 assert(packageJson.overrides?.["@opentelemetry/semantic-conventions"] === "1.42.0", "Semantic conventions must remain on a release older than the 48h gate");
 assert(lockfile.packages?.["node_modules/protobufjs"]?.version === "7.6.5", "Lockfile must resolve protobufjs to 7.6.5");
