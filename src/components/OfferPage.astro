@@ -1,0 +1,139 @@
+---
+import type { OfferCopy } from "../data/offers";
+import { homeJsonLd } from "../data/seo";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Topbar from "./Topbar.astro";
+
+type Props = { offer: OfferCopy };
+
+const { offer } = Astro.props;
+const alternateLocale = offer.locale === "fr" ? "en" : "fr";
+---
+
+<BaseLayout
+  title={offer.meta.title}
+  description={offer.meta.description}
+  locale={offer.locale}
+  canonicalPath={offer.path}
+  alternates={[
+    { locale: offer.locale, path: offer.path },
+    { locale: alternateLocale, path: offer.alternatePath },
+  ]}
+  jsonLd={homeJsonLd({
+    path: offer.path,
+    title: offer.meta.title,
+    description: offer.meta.description,
+    locale: offer.locale,
+    site: Astro.site,
+  })}
+  bodyClass="offer-surface"
+>
+  <Topbar locale={offer.locale} currentPath={offer.path} alternatePath={offer.alternatePath} />
+
+  <main class="page offer-page">
+    <section class="offer-hero">
+      <div class="shell shell-wide offer-hero-grid">
+        <article class="panel offer-hero-copy">
+          <div class="eyebrow">{offer.eyebrow}</div>
+          <h1>{offer.title}</h1>
+          <p class="offer-promise">{offer.promise}</p>
+          <p class="offer-audience">{offer.audience}</p>
+          <div class="hero-actions">
+            <a
+              class="button button-primary"
+              href={offer.primaryCta.href}
+              data-analytics-event="site.cta_click"
+              data-analytics-placement="offer_hero"
+              data-analytics-cta-id={`offer_${offer.key}`}
+            >
+              {offer.primaryCta.label}
+            </a>
+            <a class="button button-secondary" href={offer.secondaryCta.href}>
+              {offer.secondaryCta.label}
+            </a>
+          </div>
+        </article>
+
+        <aside class="panel offer-fit-panel">
+          <div class="terminal-bar" aria-hidden="true">
+            <span></span><span></span><span></span><strong>fit-check.log</strong>
+          </div>
+          <div class="offer-fit-body">
+            <p class="offer-format">{offer.format}</p>
+            <h2>{offer.situationTitle}</h2>
+            <ul class="offer-check-list">
+              {offer.situations.map((situation) => <li>{situation}</li>)}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="shell shell-wide offer-input-output">
+        <article class="panel offer-list-panel">
+          <h2>{offer.bringTitle}</h2>
+          <ul class="offer-check-list offer-check-list-dark">
+            {offer.bring.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+        <article class="panel offer-list-panel offer-list-panel-output">
+          <h2>{offer.leaveTitle}</h2>
+          <ul class="offer-check-list offer-check-list-dark">
+            {offer.leave.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="shell shell-wide">
+        <div class="offer-section-heading">
+          <h2 class="section-title">{offer.processTitle}</h2>
+        </div>
+        <ol class="offer-process">
+          {offer.process.map((step, index) => (
+            <li class="panel">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="shell shell-wide">
+        <article class="panel offer-boundaries">
+          <h2>{offer.boundaryTitle}</h2>
+          <ul class="offer-check-list">
+            {offer.boundaries.map((boundary) => <li>{boundary}</li>)}
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="shell shell-wide">
+        <article class="panel cta-panel offer-closing">
+          <div class="stack">
+            <h2 class="cta-title">{offer.closingTitle}</h2>
+            <p>{offer.closingBody}</p>
+          </div>
+          <div class="cta-actions">
+            <a
+              class="button button-primary"
+              href={offer.primaryCta.href}
+              data-analytics-event="site.cta_click"
+              data-analytics-placement="offer_closing"
+              data-analytics-cta-id={`offer_${offer.key}`}
+            >
+              {offer.primaryCta.label}
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

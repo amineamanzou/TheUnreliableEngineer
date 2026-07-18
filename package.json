@@ -19,6 +19,7 @@
     "check:dependencies-age": "node scripts/qa/dependency-age-check.mjs",
     "compliance:plumber": "bash scripts/qa/plumber-check.sh",
     "review:homepage": "node scripts/review-homepage.mjs",
+    "review:offers": "node scripts/review-offers.mjs",
     "review:blog": "node scripts/review-blog.mjs",
     "review:legal": "node scripts/review-legal.mjs",
     "review:observability": "node scripts/qa/browser-observability-smoke.mjs",

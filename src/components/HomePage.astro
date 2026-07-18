@@ -179,25 +179,22 @@ const localePath = localizedPath(locale, "/");
             <div class="section-tag">{page.work.tag}</div>
             <h2 class="section-title">{page.work.title}</h2>
           </div>
-          <p class="lede">{page.work.intro}</p>
         </div>
 
         <div class="work-grid">
-          <article class="panel work-feature">
-            <div class="section-meta">
-              <span class="kicker">{page.work.featured.kicker}</span>
-              <span class="meta">{page.work.featured.meta}</span>
-            </div>
-            <h3 class="card-title">{page.work.featured.title}</h3>
-            <p class="card-copy">{page.work.featured.body}</p>
-          </article>
-
           {page.work.cards.map((card, index) => (
-            <article class={`panel work-card work-card-${index + 1}`}>
+            <a
+              class={`panel work-card work-card-link work-card-${index + 1}`}
+              href={card.href}
+              data-link-label={card.linkLabel}
+              data-analytics-event="site.cta_click"
+              data-analytics-placement="offers"
+              data-analytics-cta-id={`offer_${index + 1}`}
+            >
               <span class="kicker">{card.kicker}</span>
               <h3 class="card-title">{card.title}</h3>
               <p class="card-copy">{card.body}</p>
-            </article>
+            </a>
           ))}
         </div>
       </div>
@@ -210,7 +207,6 @@ const localePath = localizedPath(locale, "/");
             <div class="section-tag">{page.boundaries.tag}</div>
             <h2 class="section-title">{page.boundaries.title}</h2>
           </div>
-          <p class="lede">{page.boundaries.intro}</p>
         </div>
 
         <div class="panel boundary-console">
@@ -239,7 +235,6 @@ const localePath = localizedPath(locale, "/");
             <div class="section-tag">{page.testimonials.tag}</div>
             <h2 class="section-title">{page.testimonials.title}</h2>
           </div>
-          <p class="lede">{page.testimonials.intro}</p>
         </div>
 
         <div class="testimonial-grid">
@@ -275,9 +270,6 @@ const localePath = localizedPath(locale, "/");
           <div class="stack">
             <div class="section-tag section-tag-light">{page.contact.tag}</div>
             <h2 class="cta-title">{page.contact.title}</h2>
-            <div class="cta-bubble">
-              <p>{page.contact.note}</p>
-            </div>
           </div>
           <div class="cta-side">
             <ul class="list">

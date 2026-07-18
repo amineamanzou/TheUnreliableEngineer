@@ -41,6 +41,9 @@ export const personJsonLd = (site?: URL) => ({
     "@id": serviceId(site),
   },
   knowsAbout: [
+    "Artificial intelligence",
+    "Technology market",
+    "Security incidents",
     "Observability",
     "SRE",
     "DevOps",
@@ -61,10 +64,9 @@ export const professionalServiceJsonLd = (site?: URL) => ({
   sameAs: publicSameAs,
   areaServed: "France",
   serviceType: [
-    "Technical clarification",
-    "Observability advisory",
-    "SRE and DevOps advisory",
-    "Technical positioning",
+    "Freelance positioning review",
+    "Technology career progression follow-up",
+    "Technology case study consultation",
   ],
 });
 

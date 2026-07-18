@@ -28,6 +28,9 @@ const requiredHoverSelectors = [
 const forbiddenSourceFragments = [
   "trois suites possibles",
   "Positionnement et mise en relation",
+  "Mission qualifiée",
+  "Sparring senior",
+  "Cas réel enregistré",
   "diagnostic, contenu",
   "réserver une étude de cas",
   "reserver une etude de cas",
@@ -91,7 +94,7 @@ for (const target of viewports) {
       (element.textContent ?? "").replace(/\s+/g, " ").trim().toLowerCase(),
     );
     const primaryBookingLink = Array.from(document.querySelectorAll("a")).find((link) =>
-      /réserver|reserver/.test(link.textContent?.toLowerCase() ?? ""),
+      /voir les (trois )?offres/.test(link.textContent?.toLowerCase() ?? ""),
     );
     const primaryBookingRect = primaryBookingLink?.getBoundingClientRect();
     const primaryBookingAboveFold =
@@ -172,6 +175,20 @@ for (const target of viewports) {
       visible: isAboveFold(element),
     }));
     const visibleTopbarLinks = topbarLinks.filter((link) => link.visible);
+    const overflowElements = Array.from(document.querySelectorAll("body *"))
+      .map((element) => ({ element, rect: element.getBoundingClientRect() }))
+      .filter(({ rect }) => rect.right > window.innerWidth + 0.5 || rect.left < -0.5)
+      .slice(0, 12)
+      .map(({ element, rect }) => ({
+        selector: `${element.tagName.toLowerCase()}${
+          element instanceof HTMLElement && element.className
+            ? `.${String(element.className).trim().replace(/\s+/g, ".")}`
+            : ""
+        }`,
+        left: Math.round(rect.left * 10) / 10,
+        right: Math.round(rect.right * 10) / 10,
+        text: (element.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 80),
+      }));
     const isSameOriginPath = (href, pathname) => {
       const parsedUrl = parseUrl(href);
 
@@ -196,32 +213,32 @@ for (const target of viewports) {
       title: document.title,
       innerWidth: window.innerWidth,
       scrollWidth: document.documentElement.scrollWidth,
+      overflowElements,
       sectionCount: document.querySelectorAll("main section").length,
       heroWidth: hero?.getBoundingClientRect().width ?? 0,
       hasPersona: Boolean(document.querySelector(".character-asset")),
-      hasOfferAboveFold: offerText.includes("60 minutes"),
+      hasOfferAboveFold:
+        offerText.includes("trois offres") ||
+        (offerText.includes("trouver une mission") && offerText.includes("cas réel")),
       hasAudienceAboveFold:
         audienceText.includes("équipes tech") &&
         audienceText.includes("profils seniors") &&
-        audienceText.includes("indépendants") &&
-        audienceText.includes("décideurs"),
+        audienceText.includes("indépendants"),
       hasPostureAboveFold:
         postureText.includes("amine") ||
         postureText.includes("unreliable engineer") ||
         postureText.includes("problèmes flous"),
       hasCentralCapability:
-        workSectionText.includes("elle vend une capacité") &&
-        workSectionText.includes("rendre le sujet lisible") &&
-        workSectionText.includes("choisir la bonne suite"),
+        workSectionText.includes("trois formats") &&
+        workSectionText.includes("bilan de positionnement freelance") &&
+        workSectionText.includes("étude de cas tech"),
       hasExpectedSuiteCount:
-        workSectionText.includes("cinq suites possibles") &&
-        workCardTitles.length === 4 &&
-        workCardTitles.includes("cadrage technique") &&
-        workCardTitles.includes("accompagnement senior") &&
-        workCardTitles.includes("positionnement et opportunités") &&
-        workCardTitles.includes("mise en relation qualifiée"),
+        workCardTitles.length === 3 &&
+        workCardTitles.includes("bilan de positionnement freelance") &&
+        workCardTitles.includes("suivi de progression tech") &&
+        workCardTitles.includes("étude de cas tech"),
       avoidsServiceMenuFraming:
-        workSectionText.includes("ne vend pas une liste de services concurrents") &&
+        !workSectionText.includes("catalogue de conseil") &&
         !workSectionText.includes("trois suites possibles") &&
         !workSectionText.includes("menu de prestations"),
       workCardTitles,
@@ -232,7 +249,7 @@ for (const target of viewports) {
         topbarStyle?.position === "sticky" &&
         topbarStyle?.top === "0px" &&
         visibleTopbarLinks.some((link) => link.text === "blog" && isSameOriginPath(link.href, "/blog/")) &&
-        visibleTopbarLinks.some((link) => /réserver|reserver/.test(link.text)),
+        visibleTopbarLinks.some((link) => /voir les offres/.test(link.text)),
       hasHomepageAnchors:
         topbarLinks.some((link) => isSameOriginHash(link.href, "#work")) &&
         topbarLinks.some((link) => isSameOriginHash(link.href, "#proof")) &&
@@ -282,7 +299,9 @@ for (const target of viewports) {
 
   if (metrics.scrollWidth > metrics.innerWidth) {
     throw new Error(
-      `${target.name}: horizontal overflow detected (${metrics.scrollWidth}px > ${metrics.innerWidth}px)`,
+      `${target.name}: horizontal overflow detected (${metrics.scrollWidth}px > ${metrics.innerWidth}px) ${JSON.stringify(
+        metrics.overflowElements,
+      )}`,
     );
   }
 

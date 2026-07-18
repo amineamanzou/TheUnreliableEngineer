@@ -8,63 +8,46 @@ brand
 
 Primary users:
 
-- Tech leads, CTOs, engineering managers, infrastructure leads, SRE leads and observability leaders facing an unclear production, reliability, observability, architecture or decision problem.
-- Technical decision-makers who need a sharper reading before adding a tool, launching an audit, changing a roadmap or committing to implementation work.
+- Senior engineers, tech leads and freelancers who need a clearer reading of a mission, a difficult decision or a career transition.
+- Technical teams and decision-makers who follow AI, incidents, leaks, the tech market and production topics, then need help when one of those subjects becomes concrete in their work.
 
-Secondary users:
-
-- Senior engineers, freelancers and independent technical operators who need to clarify positioning, strategic perception or the way their expertise is understood by the market.
-
-The first viewport speaks primarily to the primary group. Secondary audiences can appear after the credibility proof, once the central offer is already clear.
+The first viewport must make the broad editorial territory visible without turning the site into a generic tech-news publication.
 
 ## Product Purpose
 
-The Unreliable Engineer sells focused strategic and technical clarification for teams and senior technical operators who need to make a fuzzy subject decidable.
-
-The 60-minute session is the main entry point, not the whole product. It gives a fast, concrete way to test the working relationship, expose the real problem and decide whether the next useful move is a short framing engagement, a business introduction, a longer advisory relationship or no further work at all.
+The Unreliable Engineer explains what is really happening in tech, then sells three focused ways to work on situations where the market, technical decisions and career become concrete.
 
 The homepage must make five things immediately obvious:
 
-1. The entry point: reserve 60 minutes of clarification.
-2. The audience: technical teams, senior technical profiles, freelancers or decision-makers dealing with a badly framed problem.
-3. The possible next steps: technical framing, senior accompaniment, positioning / opportunities and qualified introductions.
-4. The credibility basis: SRE, observability, production, large-account contexts and the ability to turn ambiguity into sharper decisions.
-5. The next action: book the session.
+1. The editorial territory: AI, incidents, leaks, the tech market, production and freelancing.
+2. The audience: technical teams, senior profiles and independents.
+3. The three offers: freelance positioning review, tech progression follow-up and tech case study.
+4. The credibility basis: SRE, observability, production, large-account contexts and field-tested judgment.
+5. The next action: choose the offer that matches the current problem.
 
 Success is not the number of sections or visual effects. Success is whether the first screen makes the person, posture, value proposition and booking action understandable without inference.
 
 ## Commercial Contract
 
-The first commercial object is one 60-minute clarification session around one real, poorly formulated technical or strategic problem.
+The commercial map contains exactly three public offers:
 
 The visitor should understand:
 
-- what they bring: a real problem, tension, decision, system or positioning issue that currently feels fuzzy or stuck;
-- what happens during the hour: structured questioning, separation of symptoms from causes, naming of constraints, tradeoffs and blind spots;
-- what they leave with: a clearer problem statement, sharper decision questions and next options to explore;
-- what is not promised: this is not a generic coaching call, not a full audit, not implementation delivery, not a miracle method and not a substitute for deeper mission work when the situation needs it.
+- **Freelance positioning review:** one paid interview and a written strategy to improve how a tech profile is presented and found. Introductions happen only when a real request matches; the referral agreement is separate.
+- **Tech progression follow-up:** three monthly sessions to track an SRE, freelance or employee progression goal and retain useful proof. No architecture audit or decision-making on the person's behalf.
+- **Tech case study:** a 60-minute consultation around a lived technical or career pain. The editorial version is free when selected, recorded, anonymised and published; the private version is paid.
 
-The page should not imply that one hour solves a whole system. It should imply that one hour can make the real problem visible enough to stop wasting motion.
-
-The page should also protect against wrong-fit expectations: no 40-page audit promise, no generic coaching, no automatic introduction and no magical AI answer.
-
-The broader offer map is:
-
-- **Clarification 60 minutes:** point d'entrée pour formuler le vrai problème, les contraintes et les décisions à isoler.
-- **Cadrage technique:** quelques jours pour cadrer un sujet de fiabilité, d'observabilité, d'architecture, de dette opérationnelle ou d'IA avant d'engager une trajectoire.
-- **Accompagnement senior:** présence régulière auprès d'une équipe, d'un leader technique ou d'un profil senior pour garder le cap, challenger les décisions et transformer la clarté en mouvement.
-- **Positionnement et opportunités:** aider des profils, indépendants ou équipes à rendre leur valeur lisible avant d'ouvrir une opportunité ou de produire du contenu.
-- **Mise en relation qualifiée:** ouvrir une conversation seulement quand le contexte, la valeur et le signal sont clairs pour les deux côtés.
+Each offer owns one page that states fit, inputs, outputs, process and boundaries. Pricing, business-introduction commission and recording consent must be validated before being added publicly.
 
 ## First Screen Contract
 
 Above the fold, the page must state:
 
 - who is speaking and from which posture;
-- the 60-minute clarification entry point;
+- the three-offer entry point;
 - the primary audience;
-- a clear value proposition;
-- one booking action.
+- a clear editorial and commercial value proposition;
+- one action that leads to the offers.
 
 Client references should not appear in the hero. Proof belongs in the proof section immediately after the hero, where it can be contextualized properly.
 

@@ -22,6 +22,8 @@ export type WorkCard = {
   kicker: string;
   title: string;
   body: string;
+  href: string;
+  linkLabel: string;
 };
 
 export type BoundaryItem = {
@@ -62,37 +64,37 @@ export const homepageFr = {
     meta: "",
     nav: [
       { label: "Preuves", href: "#proof" },
-      { label: "Suites", href: "#work" },
+      { label: "Offres", href: "#work" },
       { label: "Témoignages", href: "#testimonials" },
       { label: "Commencer ici", href: "#contact" },
     ] satisfies NavItem[],
     blog: { label: "Blog", href: "/blog/" } satisfies NavItem,
     cta: {
-      label: "Réserver 60 minutes",
-      href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
+      label: "Voir les offres",
+      href: "/#work",
     },
   },
   hero: {
     eyebrow: "Amine · The Unreliable Engineer",
-    title: "Clarifier le vrai sujet avant de lancer la machine.",
+    title: "Comprendre ce qui se passe vraiment dans la tech.",
     audience:
-      "Pour les équipes tech, profils seniors, indépendants et décideurs qui doivent rendre une situation confuse lisible et décidable.",
-    offerLine: "Point d'entrée: 60 minutes pour sortir avec une décision plus nette.",
+      "Pour les équipes tech, profils seniors et indépendants qui veulent lire un marché, une décision ou un système sans le vernis habituel.",
+    offerLine: "Trois offres: clarifier votre positionnement, suivre votre progression, analyser un cas réel.",
     body:
-      "J'aide à démêler les sujets où architecture, observabilité, IA, contenu et perception marché se mélangent trop vite.",
+      "Je parle d'IA, d'incidents, de leaks, de marché et de production. Puis j'aide sur les situations où ces sujets deviennent très concrets.",
     primaryCta: {
-      label: "Réserver 60 minutes",
-      href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
+      label: "Voir les trois offres",
+      href: "#work",
     },
     secondaryCta: {
       label: "Voir les preuves",
       href: "#proof",
     },
     consultation: {
-      label: "Clarifier le problème",
-      caption: "Une situation floue n'a pas besoin d'un gros plan. Elle a d'abord besoin d'être lisible.",
+      label: "Lire le vrai signal",
+      caption: "L'actualité donne le bruit. Le terrain permet de comprendre ce qui compte.",
       body:
-        "On part du réel: contexte, contraintes, tensions, signaux faibles. Puis on distingue ce qui relève d'un cadrage, d'un accompagnement, d'un positionnement, d'une opportunité ou d'une mise en relation qualifiée.",
+        "On part d'un profil qui décroche peu de missions, d'une progression difficile à montrer ou d'un problème tech précis. Ensuite on trie les faits, les contraintes et les prochaines actions.",
       points: [
         {
           label: "Symptôme",
@@ -170,73 +172,60 @@ export const homepageFr = {
     ] satisfies ProofItem[],
   },
   work: {
-    tag: "Suites possibles",
-    title: "Un point d'entrée, cinq suites possibles.",
-    intro:
-      "La page ne vend pas une liste de services concurrents. Elle vend une capacité: rendre le sujet lisible, puis choisir la bonne suite.",
-    featured: {
-      kicker: "Entrée",
-      meta: "60 minutes / cas réel / clarification",
-      title: "Clarification 60 minutes",
-      body:
-        "Une session courte pour formuler le problème, les contraintes, les angles morts et la prochaine décision utile.",
-    },
+    tag: "Travailler ensemble",
+    title: "Trois formats.",
     cards: [
       {
-        kicker: "Cadrage",
-        title: "Cadrage technique",
+        kicker: "Avant la mission",
+        title: "Bilan de positionnement freelance",
         body:
-          "Quelques jours pour transformer un sujet de fiabilité, observabilité, architecture, dette ou IA en plan de décision exploitable.",
+          "Un entretien et une restitution pour mieux présenter, référencer et vendre votre profil.",
+        href: "/offres/bilan-positionnement-freelance/",
+        linkLabel: "Voir l'offre",
       },
       {
-        kicker: "Long cours",
-        title: "Accompagnement senior",
+        kicker: "Pendant la mission",
+        title: "Suivi de progression tech",
         body:
-          "Une cadence régulière pour challenger les arbitrages, la narration technique, les priorités et les signaux faibles.",
+          "Trois mois pour suivre vos objectifs, documenter les progrès et préparer la suite.",
+        href: "/offres/suivi-progression-tech/",
+        linkLabel: "Voir l'offre",
       },
       {
-        kicker: "Positionnement",
-        title: "Positionnement et opportunités",
+        kicker: "Sur un cas précis",
+        title: "Étude de cas tech",
         body:
-          "Rendre une offre, un récit ou une trajectoire senior plus lisible avant d'ouvrir une opportunité ou de produire du contenu.",
-      },
-      {
-        kicker: "Signal qualifié",
-        title: "Mise en relation qualifiée",
-        body:
-          "Ouvrir une conversation seulement quand le contexte, la valeur et le signal sont assez clairs pour les deux côtés.",
+          "Une consultation gratuite si le cas devient un contenu anonymisé, payante s'il reste privé.",
+        href: "/offres/etude-de-cas-tech/",
+        linkLabel: "Voir l'offre",
       },
     ] satisfies WorkCard[],
   },
   boundaries: {
-    tag: "Ce que ce n'est pas",
-    title: "Pas un menu de prestations. Pas une promesse magique.",
-    intro:
-      "Le cadrage protège autant que l'action: parfois la bonne suite est de ne rien lancer, ou de ne pas ouvrir une conversation trop tôt.",
+    tag: "Périmètre",
+    title: "Ce qui reste hors périmètre.",
     items: [
       {
-        title: "Pas un audit de 40 pages",
-        body: "Le livrable utile est une décision plus claire, pas un document qui rassure sans changer la suite.",
+        title: "Mission garantie",
+        body: "Le bilan améliore le positionnement. Il ne garantit ni mission ni délai de signature.",
       },
       {
-        title: "Pas une promesse IA magique",
-        body: "Si l'IA n'est pas le bon levier, on le dit avant de construire autour d'un buzzword.",
+        title: "Décision à votre place",
+        body: "Le suivi aide à documenter la progression. Il ne remplace pas votre manager ou votre équipe.",
       },
       {
-        title: "Pas du coaching flou",
-        body: "La discussion part d'un cas réel: contraintes, signaux, arbitrages, prochaines actions.",
+        title: "Introduction automatique",
+        body: "Une mise en relation dépend d'un besoin réel et d'un accord séparé avec l'entreprise.",
       },
       {
-        title: "Pas une mise en relation automatique",
-        body: "Une introduction n'a de valeur que si le signal est clair pour les deux côtés.",
+        title: "Publication surprise",
+        body: "Une étude de cas éditoriale est enregistrée, anonymisée et validée avant diffusion.",
       },
     ] satisfies BoundaryItem[],
   },
   testimonials: {
     tag: "Témoignages",
-    title: "Ce que les autres retiennent du travail.",
-    intro:
-      "Les recommandations parlent surtout d'une chose: la capacité à élever le niveau de lecture, techniquement et stratégiquement.",
+    title: "Leurs retours.",
     cards: [
       {
         quote:
@@ -268,25 +257,23 @@ export const homepageFr = {
     ] satisfies TestimonialCard[],
   },
   contact: {
-    tag: "Commencer ici",
-    title: "On commence par nommer le sujet. Ensuite on choisit le format.",
+    tag: "Commencer",
+    title: "Choisissez votre point de départ.",
     bullets: [
-      "Un problème technique ou stratégique à rendre arbitrable",
-      "Une offre ou une trajectoire senior à rendre plus lisible",
-      "Une opportunité ou une introduction à qualifier avant d'ouvrir les bonnes conversations",
+      "Clarifier votre profil freelance",
+      "Suivre votre progression pendant trois mois",
+      "Analyser un cas tech au téléphone",
     ],
     primaryCta: {
-      label: "Réserver 60 minutes",
-      href: "mailto:contact@theunreliable.engineer?subject=Session%2060%20minutes%20de%20clarification",
+      label: "Voir les trois offres",
+      href: "#work",
     },
-    note:
-      "Format actuel: 60 minutes en visio, autour d'un cas réel, pour mieux comprendre avant d'agir.",
   },
   socialSignal: {
     tag: "Signal public",
     title: "Je fais aussi de la création de contenu.",
     intro:
-      "Je publie pour tester les angles, documenter les systèmes et exposer les frictions réelles: observabilité, agents IA, production, freelance et outillage maison.",
+      "Je publie sur l'IA, les incidents, les leaks, le marché tech, la production et le freelancing — avec assez de terrain pour ne pas seulement commenter la timeline.",
     stats: [
       {
         value: "409+",
