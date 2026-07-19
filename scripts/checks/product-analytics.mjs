@@ -33,6 +33,11 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function countOccurrences(content, value) {
+  if (value === "") return 0;
+  return content.split(value).length - 1;
+}
+
 if (mode === "off") {
   for (const marker of ["data-analytics-consent", "eu.i.posthog.com", "phc_"]) {
     assert(!all.includes(marker), `Product analytics marker present in off build: ${marker}`);
@@ -57,8 +62,8 @@ if (mode === "off") {
     assert(page?.content.includes('data-analytics-placement="offer_hero"'), `Offer hero placement is missing from ${file}`);
     assert(page?.content.includes('data-analytics-placement="offer_closing"'), `Offer closing placement is missing from ${file}`);
     assert(!page?.content.includes('data-analytics-cta-id="contact_offer"'), `Historical contact_offer CTA must not be emitted by ${file}`);
-    assert((page?.content.match(new RegExp(bookingUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g")) ?? []).length === 2, `Exact Calendar URL is required on both CTAs in ${file}`);
-    assert((page?.content.match(new RegExp(bookingLabel, "g")) ?? []).length >= 2, `Exact booking label is required on both CTAs in ${file}`);
+    assert(countOccurrences(page?.content ?? "", bookingUrl) === 2, `Exact Calendar URL is required on both CTAs in ${file}`);
+    assert(countOccurrences(page?.content ?? "", bookingLabel) >= 2, `Exact booking label is required on both CTAs in ${file}`);
   }
   assert(applicationJs.includes("1.2.0"), "Analytics schema version 1.2.0 is missing from the application bundle");
   assert(html.every((row) => !row.content.includes("module.no-external")), "PostHog SDK chunk is statically referenced by HTML");
