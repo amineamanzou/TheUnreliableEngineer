@@ -3,10 +3,11 @@ import {
   ANALYTICS_SCHEMA_VERSION,
   analyticsAssetIds,
   analyticsBlogCommands,
-  analyticsCtaIds,
   analyticsOutboundDestinations,
   eventPropertyAllowlist,
+  isAnalyticsCtaId,
   isAnalyticsEventName,
+  isAnalyticsOfferCtaId,
   isAnalyticsOfferId,
   isAnalyticsPlacement,
   normalizeArticleId,
@@ -173,13 +174,17 @@ function captureFromElement(element: HTMLElement): void {
   if (name === "site.cta_click") {
     const value = element.dataset.analyticsCtaId ?? "";
     const offerId = element.dataset.analyticsOfferId ?? "";
-    const requiresOffer = value === "view_offer" || value === "contact_offer";
-    if (isOneOf(value, analyticsCtaIds) && (!requiresOffer || isAnalyticsOfferId(offerId))) {
-      capture(name, {
-        cta_id: value as AnalyticsEventPayloads[typeof name]["cta_id"],
-        ...(isAnalyticsOfferId(offerId) ? { offer_id: offerId } : {}),
-      }, placement);
+    if (!isAnalyticsCtaId(value) || value === "contact_offer") return;
+    if (isAnalyticsOfferCtaId(value)) {
+      if (!isAnalyticsOfferId(offerId)) return;
+      if (value === "book_offer" && placement !== "offer_hero" && placement !== "offer_closing") return;
+      capture(name, { cta_id: value, offer_id: offerId }, placement);
+      return;
     }
+    capture(name, {
+      cta_id: value,
+      ...(isAnalyticsOfferId(offerId) ? { offer_id: offerId } : {}),
+    }, placement);
   } else if (name === "site.asset_download") {
     const value = element.dataset.analyticsAssetId ?? "";
     if (isOneOf(value, analyticsAssetIds)) capture(name, { asset_id: value as AnalyticsEventPayloads[typeof name]["asset_id"] }, placement);

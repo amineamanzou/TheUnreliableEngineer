@@ -11,44 +11,62 @@ const routes = [
   {
     slug: "positioning-fr",
     path: "/offres/bilan-positionnement-freelance/",
+    offerId: "positioning_review",
+    bookingUrl: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1Rytny_Yre1wqvKXrSGN_RYY0tREhg1hLmzpKEX8m10n6R3KuWu8bC04wH68DVLp9ZnTJD2Sub",
+    bookingLabel: "Réserver un appel de cadrage",
     lang: "fr",
     title: "Rendre votre profil assez clair pour être trouvé par les bonnes missions.",
-    required: ["restitution écrite", "mise en relation éventuelle", "commission d'apport d'affaires"],
+    required: ["restitution écrite", "appel de 30 minutes", "ne réserve pas encore l'entretien de 60 minutes"],
   },
   {
     slug: "progress-fr",
     path: "/offres/suivi-progression-tech/",
+    offerId: "tech_progression",
+    bookingUrl: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0NZJrE96yGmfPFONgZzpAQv0CUuGIqDK2qzuy8g25PULTwAMHJTLu-ZT1Ke_mkXsIt5EjSWYAG",
+    bookingLabel: "Planifier le premier échange",
     lang: "fr",
     title: "Rendre votre progression visible, mission après mission.",
-    required: ["3 mois", "journal de progression", "ne remplace pas un audit technique"],
+    required: ["3 mois", "premier échange de 30 minutes", "vérifier si le suivi de trois mois correspond"],
   },
   {
     slug: "case-study-fr",
     path: "/offres/etude-de-cas-tech/",
+    offerId: "tech_case_study",
+    bookingUrl: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3B5zabC1lnStSQv7F1_0yShTT7d3Pkduw76XFOksfUSpF_f9QRNcfLdHIYMaZbCso9B4uNq-f5",
+    bookingLabel: "Proposer mon étude de cas",
     lang: "fr",
     title: "Un problème réel, analysé au téléphone.",
-    required: ["version éditoriale gratuite", "version privée payante", "validé avant diffusion"],
+    required: ["appel de proposition de 30 minutes", "consultation privée à venir", "n'est pas encore réservable"],
   },
   {
     slug: "positioning-en",
     path: "/en/offers/freelance-positioning-review/",
+    offerId: "positioning_review",
+    bookingUrl: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1Rytny_Yre1wqvKXrSGN_RYY0tREhg1hLmzpKEX8m10n6R3KuWu8bC04wH68DVLp9ZnTJD2Sub",
+    bookingLabel: "Book an intro call",
     lang: "en",
     title: "Make your profile clear enough to be found for the right missions.",
-    required: ["written review", "optional introduction", "referral fees"],
+    required: ["written review", "30-minute call", "does not book the 60-minute interview yet"],
   },
   {
     slug: "progress-en",
     path: "/en/offers/tech-progression-follow-up/",
+    offerId: "tech_progression",
+    bookingUrl: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0NZJrE96yGmfPFONgZzpAQv0CUuGIqDK2qzuy8g25PULTwAMHJTLu-ZT1Ke_mkXsIt5EjSWYAG",
+    bookingLabel: "Schedule the first conversation",
     lang: "en",
     title: "Make your progress visible, mission after mission.",
-    required: ["3 months", "progress log", "does not replace a technical audit"],
+    required: ["3 months", "first 30-minute conversation", "checks whether the three-month follow-up fits"],
   },
   {
     slug: "case-study-en",
     path: "/en/offers/tech-case-study/",
+    offerId: "tech_case_study",
+    bookingUrl: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3B5zabC1lnStSQv7F1_0yShTT7d3Pkduw76XFOksfUSpF_f9QRNcfLdHIYMaZbCso9B4uNq-f5",
+    bookingLabel: "Propose a case study",
     lang: "en",
     title: "A real problem, analysed over the phone.",
-    required: ["free editorial version", "paid private version", "approved before publication"],
+    required: ["30-minute proposal call", "private consultation to come", "cannot be booked yet"],
   },
 ];
 
@@ -89,6 +107,14 @@ for (const route of routes) {
       const bodyText = (document.querySelector(".offer-page")?.textContent ?? "")
         .replace(/\s+/g, " ")
         .trim();
+      const analyticsCtas = Array.from(document.querySelectorAll(".offer-page [data-analytics-cta-id]"))
+        .map((element) => ({
+          ctaId: element.getAttribute("data-analytics-cta-id") ?? "",
+          placement: element.getAttribute("data-analytics-placement") ?? "",
+          offerId: element.getAttribute("data-analytics-offer-id") ?? "",
+          href: element.getAttribute("href") ?? "",
+          label: element.textContent?.replace(/\s+/g, " ").trim() ?? "",
+        }));
       const overflow = Array.from(document.querySelectorAll(".offer-page *"))
         .map((element) => ({ element, rect: element.getBoundingClientRect() }))
         .filter(({ rect }) => rect.right > window.innerWidth + 0.5 || rect.left < -0.5)
@@ -111,6 +137,7 @@ for (const route of routes) {
         h1Visible: Boolean(h1Rect && h1Rect.width > 0 && h1Rect.height > 0),
         primaryCtaVisible: Boolean(ctaRect && ctaRect.width > 0 && ctaRect.height > 0),
         primaryCtaHref: primaryCta?.getAttribute("href") ?? "",
+        analyticsCtas,
       };
     });
 
@@ -124,7 +151,16 @@ for (const route of routes) {
       ),
       noOverflow: metrics.scrollWidth === metrics.innerWidth && metrics.overflow.length === 0,
       h1Visible: metrics.h1Visible,
-      primaryCta: metrics.primaryCtaVisible && metrics.primaryCtaHref.startsWith("mailto:"),
+      primaryCta:
+        metrics.primaryCtaVisible
+        && metrics.primaryCtaHref === route.bookingUrl
+        && metrics.analyticsCtas.every((cta) => cta.href === route.bookingUrl && cta.label === route.bookingLabel),
+      bookingAnalytics:
+        metrics.analyticsCtas.length === 2
+        && metrics.analyticsCtas.every((cta) => cta.ctaId === "book_offer" && cta.offerId === route.offerId)
+        && new Set(metrics.analyticsCtas.map((cta) => cta.placement)).size === 2
+        && metrics.analyticsCtas.some((cta) => cta.placement === "offer_hero")
+        && metrics.analyticsCtas.some((cta) => cta.placement === "offer_closing"),
     };
 
     const failedChecks = Object.entries(checks)

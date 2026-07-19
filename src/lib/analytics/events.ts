@@ -1,4 +1,4 @@
-export const ANALYTICS_SCHEMA_VERSION = "1.1.0" as const;
+export const ANALYTICS_SCHEMA_VERSION = "1.2.0" as const;
 
 export const analyticsEventNames = [
   "$pageview",
@@ -57,11 +57,16 @@ export const analyticsCtaIds = [
   "open_contact",
   "view_offers",
   "view_offer",
+  "book_offer",
+  // Historical only. New offer CTAs emit book_offer.
   "contact_offer",
   "source_article",
 ] as const;
 
 export type AnalyticsCtaId = (typeof analyticsCtaIds)[number];
+
+export const analyticsOfferCtaIds = ["view_offer", "book_offer"] as const;
+export type AnalyticsOfferCtaId = (typeof analyticsOfferCtaIds)[number];
 
 export const analyticsOfferIds = [
   "positioning_review",
@@ -89,9 +94,16 @@ export type AnalyticsBlogCommand = (typeof analyticsBlogCommands)[number];
 
 export type AnalyticsLengthBucket = "0" | "1-8" | "9-24" | "25-64" | "65+";
 
+export type AnalyticsCtaClickPayload =
+  | { cta_id: AnalyticsOfferCtaId; offer_id: AnalyticsOfferId }
+  | {
+      cta_id: Exclude<AnalyticsCtaId, AnalyticsOfferCtaId>;
+      offer_id?: AnalyticsOfferId;
+    };
+
 export type AnalyticsEventPayloads = {
   "$pageview": Record<string, never>;
-  "site.cta_click": { cta_id: AnalyticsCtaId; offer_id?: AnalyticsOfferId };
+  "site.cta_click": AnalyticsCtaClickPayload;
   "site.asset_download": { asset_id: AnalyticsAssetId };
   "site.outbound_click": { destination: AnalyticsOutboundDestination };
   "site.locale_change": { target_locale: "fr" | "en" };
@@ -117,6 +129,14 @@ export const eventPropertyAllowlist: Record<AnalyticsEventName, readonly string[
 
 export function isAnalyticsEventName(value: string): value is AnalyticsEventName {
   return (analyticsEventNames as readonly string[]).includes(value);
+}
+
+export function isAnalyticsCtaId(value: string): value is AnalyticsCtaId {
+  return (analyticsCtaIds as readonly string[]).includes(value);
+}
+
+export function isAnalyticsOfferCtaId(value: AnalyticsCtaId): value is AnalyticsOfferCtaId {
+  return (analyticsOfferCtaIds as readonly string[]).includes(value);
 }
 
 export function isAnalyticsPlacement(value: string): value is AnalyticsPlacement {

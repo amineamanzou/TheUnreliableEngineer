@@ -117,26 +117,86 @@ try {
   );
 
   const offerPages = [
-    ["offres/bilan-positionnement-freelance/", "positioning_review"],
-    ["offres/suivi-progression-tech/", "tech_progression"],
-    ["offres/etude-de-cas-tech/", "tech_case_study"],
+    ["offres/bilan-positionnement-freelance/", "positioning_review", "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1Rytny_Yre1wqvKXrSGN_RYY0tREhg1hLmzpKEX8m10n6R3KuWu8bC04wH68DVLp9ZnTJD2Sub", "Réserver un appel de cadrage"],
+    ["offres/suivi-progression-tech/", "tech_progression", "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0NZJrE96yGmfPFONgZzpAQv0CUuGIqDK2qzuy8g25PULTwAMHJTLu-ZT1Ke_mkXsIt5EjSWYAG", "Planifier le premier échange"],
+    ["offres/etude-de-cas-tech/", "tech_case_study", "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3B5zabC1lnStSQv7F1_0yShTT7d3Pkduw76XFOksfUSpF_f9QRNcfLdHIYMaZbCso9B4uNq-f5", "Proposer mon étude de cas"],
   ];
-  for (const [path, offerId] of offerPages) {
+  for (const [path, offerId, bookingUrl, bookingLabel] of offerPages) {
     const requestsBeforeOfferPage = requests.filter((request) => request.method === "POST").length;
     await page.goto(new URL(path, pageUrl).toString(), { waitUntil: "networkidle", timeout });
     await waitFor(
       () => requests.filter((request) => request.method === "POST").length > requestsBeforeOfferPage,
       `Offer pageview was not emitted for ${offerId}`,
     );
+    for (const placement of ["offer_hero", "offer_closing"]) {
+      const bookingCta = page.locator(
+        `[data-analytics-placement='${placement}'][data-analytics-cta-id='book_offer'][data-analytics-offer-id='${offerId}']`,
+      );
+      assert(await bookingCta.getAttribute("href") === bookingUrl, `Unexpected Calendar URL for ${offerId} at ${placement}`);
+      assert((await bookingCta.textContent())?.trim() === bookingLabel, `Unexpected booking label for ${offerId} at ${placement}`);
+      await page.evaluate(({ currentOfferId, currentPlacement }) => {
+        const cta = document.querySelector(
+          `[data-analytics-placement='${currentPlacement}'][data-analytics-cta-id='book_offer'][data-analytics-offer-id='${currentOfferId}']`,
+        );
+        cta?.setAttribute("href", "https://calendar.google.com/calendar/appointments/schedules/private-test-url");
+        cta?.addEventListener("click", (event) => event.preventDefault(), { once: true });
+      }, { currentOfferId: offerId, currentPlacement: placement });
+      const requestsBeforeOfferBooking = requests.filter((request) => request.method === "POST").length;
+      await page.locator(
+        `[data-analytics-placement='${placement}'][data-analytics-cta-id='book_offer'][data-analytics-offer-id='${offerId}']`,
+      ).click();
+      await waitFor(
+        () => requests.filter((request) => request.method === "POST").length === requestsBeforeOfferBooking + 1,
+        `Offer booking did not emit exactly one event for ${offerId} at ${placement}`,
+      );
+    }
+
+    const requestsBeforeInvalidBooking = requests.filter((request) => request.method === "POST").length;
+    await page.evaluate(() => {
+      const invalidCta = document.createElement("button");
+      invalidCta.dataset.analyticsEvent = "site.cta_click";
+      invalidCta.dataset.analyticsPlacement = "offer_hero";
+      invalidCta.dataset.analyticsCtaId = "book_offer";
+      document.body.append(invalidCta);
+      invalidCta.click();
+      invalidCta.remove();
+    });
+    await page.waitForTimeout(250);
+    assert(
+      requests.filter((request) => request.method === "POST").length === requestsBeforeInvalidBooking,
+      `book_offer without offer_id emitted an event for ${offerId}`,
+    );
+
     await page.evaluate((currentOfferId) => {
-      document.querySelector(`[data-analytics-placement='offer_hero'][data-analytics-offer-id='${currentOfferId}']`)
-        ?.addEventListener("click", (event) => event.preventDefault(), { once: true });
+      const invalidPlacementCta = document.createElement("button");
+      invalidPlacementCta.dataset.analyticsEvent = "site.cta_click";
+      invalidPlacementCta.dataset.analyticsPlacement = "footer";
+      invalidPlacementCta.dataset.analyticsCtaId = "book_offer";
+      invalidPlacementCta.dataset.analyticsOfferId = currentOfferId;
+      document.body.append(invalidPlacementCta);
+      invalidPlacementCta.click();
+      invalidPlacementCta.remove();
     }, offerId);
-    const requestsBeforeOfferContact = requests.filter((request) => request.method === "POST").length;
-    await page.locator(`[data-analytics-placement='offer_hero'][data-analytics-cta-id='contact_offer'][data-analytics-offer-id='${offerId}']`).click();
-    await waitFor(
-      () => requests.filter((request) => request.method === "POST").length === requestsBeforeOfferContact + 1,
-      `Offer contact did not emit exactly one event for ${offerId}`,
+    await page.waitForTimeout(250);
+    assert(
+      requests.filter((request) => request.method === "POST").length === requestsBeforeInvalidBooking,
+      `book_offer with an invalid placement emitted an event for ${offerId}`,
+    );
+
+    await page.evaluate((currentOfferId) => {
+      const historicalCta = document.createElement("button");
+      historicalCta.dataset.analyticsEvent = "site.cta_click";
+      historicalCta.dataset.analyticsPlacement = "offer_hero";
+      historicalCta.dataset.analyticsCtaId = "contact_offer";
+      historicalCta.dataset.analyticsOfferId = currentOfferId;
+      document.body.append(historicalCta);
+      historicalCta.click();
+      historicalCta.remove();
+    }, offerId);
+    await page.waitForTimeout(250);
+    assert(
+      requests.filter((request) => request.method === "POST").length === requestsBeforeInvalidBooking,
+      `Historical contact_offer emitted an event for ${offerId}`,
     );
   }
 
@@ -161,17 +221,17 @@ try {
       return `${request.url}\n${request.body}`;
     }
   }).join("\n");
-  for (const forbidden of ["secret@example.test", "super-secret-terminal-query", "contact@theunreliable.engineer", "subject=", "email=", "#private", "$current_url", "$referrer", "business.lead_created"]) {
+  for (const forbidden of ["secret@example.test", "super-secret-terminal-query", "contact@theunreliable.engineer", "subject=", "email=", "#private", "$current_url", "$referrer", "calendar.google.com", "private-test-url", "business.lead_created", "contact_offer"]) {
     assert(!serialized.includes(forbidden), `Forbidden analytics data reached the endpoint: ${forbidden}`);
   }
   assert(serialized.includes("site.cta_click"), "CTA event name is missing from PostHog payload");
   assert(serialized.includes("view_offers"), "Offer section CTA id is missing from PostHog payload");
   assert(serialized.includes("view_offer"), "Offer selection CTA id is missing from PostHog payload");
-  assert(serialized.includes("contact_offer"), "Offer contact CTA id is missing from PostHog payload");
+  assert(serialized.includes("book_offer"), "Offer booking CTA id is missing from PostHog payload");
   for (const offerId of ["positioning_review", "tech_progression", "tech_case_study"]) {
     assert(serialized.includes(offerId), `Offer ID is missing from PostHog payload: ${offerId}`);
   }
-  assert(serialized.includes("1.1.0"), "Analytics schema version 1.1.0 is missing from PostHog payload");
+  assert(serialized.includes("1.2.0"), "Analytics schema version 1.2.0 is missing from PostHog payload");
   assert(serialized.includes("site.blog_search"), "Terminal analytics event is missing from PostHog payload");
   assert(serialized.includes("25-64"), "Terminal query length bucket is missing from PostHog payload");
   assert(serialized.includes("p2-qa"), "Normalized campaign attribution is missing");

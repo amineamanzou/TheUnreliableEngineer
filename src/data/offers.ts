@@ -1,6 +1,17 @@
 import type { Locale } from "./i18n";
 
 export type OfferKey = "positioning" | "progress" | "case-study";
+export type OfferBookingId = "positioning_review" | "tech_progression" | "tech_case_study";
+type OfferBookingUrl = `https://calendar.google.com/calendar/u/0/appointments/schedules/${string}`;
+
+export const offerBookingUrls = {
+  positioning_review:
+    "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1Rytny_Yre1wqvKXrSGN_RYY0tREhg1hLmzpKEX8m10n6R3KuWu8bC04wH68DVLp9ZnTJD2Sub",
+  tech_progression:
+    "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0NZJrE96yGmfPFONgZzpAQv0CUuGIqDK2qzuy8g25PULTwAMHJTLu-ZT1Ke_mkXsIt5EjSWYAG",
+  tech_case_study:
+    "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3B5zabC1lnStSQv7F1_0yShTT7d3Pkduw76XFOksfUSpF_f9QRNcfLdHIYMaZbCso9B4uNq-f5",
+} as const satisfies Record<OfferBookingId, OfferBookingUrl>;
 
 export type OfferCopy = {
   key: OfferKey;
@@ -32,9 +43,6 @@ export type OfferCopy = {
   closingBody: string;
 };
 
-const email = (subject: string) =>
-  `mailto:contact@theunreliable.engineer?subject=${encodeURIComponent(subject)}`;
-
 export const offersFr: Record<OfferKey, OfferCopy> = {
   positioning: {
     key: "positioning",
@@ -54,8 +62,8 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
       "Pour les freelances tech dont le CV ou le profil LinkedIn décrit les compétences sans rendre leur valeur évidente pour un client.",
     format: "Questionnaire · entretien de 60 minutes · restitution écrite · mise en relation éventuelle",
     primaryCta: {
-      label: "Réserver un bilan",
-      href: email("Bilan de positionnement freelance — réservation"),
+      label: "Réserver un appel de cadrage",
+      href: offerBookingUrls.positioning_review,
     },
     secondaryCta: { label: "Voir les trois offres", href: "/#work" },
     situationTitle: "Ce bilan est utile si",
@@ -104,8 +112,8 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
       "une introduction dépend toujours d'un besoin réel côté client",
       "la mise en relation et la commission d'apport d'affaires sont contractualisées séparément avec l'entreprise",
     ],
-    closingTitle: "Réserver le bilan",
-    closingBody: "Envoyez votre profil actuel, votre disponibilité et le type de mission recherché.",
+    closingTitle: "Avant le bilan",
+    closingBody: "Cet appel de 30 minutes sert à vérifier votre situation et à cadrer le bilan. Il ne réserve pas encore l'entretien de 60 minutes.",
   },
   progress: {
     key: "progress",
@@ -125,8 +133,8 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
       "Pour les SRE, freelances et salariés tech qui commencent une mission, changent de rôle ou veulent rendre leur progression plus visible.",
     format: "3 mois · 1 point mensuel · journal de progression · plan d'action",
     primaryCta: {
-      label: "Demander le suivi",
-      href: email("Suivi de progression tech — demande"),
+      label: "Planifier le premier échange",
+      href: offerBookingUrls.tech_progression,
     },
     secondaryCta: { label: "Voir les trois offres", href: "/#work" },
     situationTitle: "Ce suivi est utile si",
@@ -171,8 +179,8 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
       "aucune promotion, augmentation de TJM ou nouvelle mission n'est garantie",
       "les échanges restent limités aux rendez-vous et documents convenus",
     ],
-    closingTitle: "Démarrer le suivi",
-    closingBody: "Décrivez la mission ou le poste, ce que vous voulez apprendre et ce qui doit avoir changé dans trois mois.",
+    closingTitle: "Avant le suivi",
+    closingBody: "Ce premier échange de 30 minutes sert à cadrer votre objectif et à vérifier si le suivi de trois mois correspond à la situation.",
   },
   "case-study": {
     key: "case-study",
@@ -182,18 +190,18 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
     meta: {
       title: "Étude de cas tech au téléphone | The Unreliable Engineer",
       description:
-        "Une consultation de 60 minutes sur une situation tech ou carrière réelle, gratuite si elle devient un contenu anonymisé, payante si elle reste privée.",
+        "Un appel de proposition pour une situation tech ou carrière réelle, avant une étude éditoriale gratuite ou une future consultation privée.",
     },
     eyebrow: "Étude de cas tech",
     title: "Un problème réel, analysé au téléphone.",
     promise:
-      "La consultation est gratuite lorsque le cas est sélectionné, enregistré, anonymisé et publié. Elle est payante lorsqu'elle reste privée.",
+      "L'appel de proposition permet de vérifier si le cas relève de la version éditoriale gratuite ou d'une future consultation privée. La consultation privée de 60 minutes n'est pas encore réservable.",
     audience:
       "Pour une infrastructure fragile, un projet qui dérive, un travail mal valorisé ou un passage du salariat au freelance.",
-    format: "60 minutes · version éditoriale gratuite · version privée payante",
+    format: "Appel de proposition de 30 minutes · version éditoriale gratuite · consultation privée à venir",
     primaryCta: {
-      label: "Proposer un cas",
-      href: email("Étude de cas tech — proposition"),
+      label: "Proposer mon étude de cas",
+      href: offerBookingUrls.tech_case_study,
     },
     secondaryCta: { label: "Voir les trois offres", href: "/#work" },
     situationTitle: "Cas recherchés",
@@ -209,7 +217,7 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
       "les faits, documents et tentatives déjà réalisés",
       "les informations publiables et celles qui doivent rester privées",
     ],
-    leaveTitle: "À la fin de l'appel",
+    leaveTitle: "À la fin de la consultation",
     leave: [
       "une formulation plus claire du problème",
       "les angles morts repérés pendant la conversation",
@@ -220,11 +228,11 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
     process: [
       {
         title: "Proposer le cas",
-        body: "Vous décrivez les faits, la question à traiter et les éléments qui doivent rester confidentiels.",
+        body: "Pendant un appel de 30 minutes, vous décrivez les faits, la question à traiter et les éléments qui doivent rester confidentiels.",
       },
       {
         title: "Choisir le format",
-        body: "Un cas retenu pour publication est gratuit. Une consultation sans publication est payante.",
+        body: "Un cas retenu pour publication est gratuit. La consultation privée sera payante lorsqu'elle pourra être réservée après paiement.",
       },
       {
         title: "Enregistrer l'appel",
@@ -239,11 +247,12 @@ export const offersFr: Record<OfferKey, OfferCopy> = {
     boundaries: [
       "aucun enregistrement ou extrait n'est publié par surprise",
       "la sélection éditoriale a lieu avant la réservation de la version gratuite",
+      "la consultation privée payante de 60 minutes n'est pas encore réservable",
       "une heure ne suffit pas à résoudre une organisation entière",
       "le format exclut les conseils juridiques, médicaux ou financiers",
     ],
     closingTitle: "Proposer une étude de cas",
-    closingBody: "Décrivez ce qui se passe, ce que vous avez déjà essayé et ce qui ne peut pas être publié.",
+    closingBody: "L'appel de 30 minutes sert à qualifier le cas et à choisir la suite. Il ne réserve pas la consultation privée de 60 minutes.",
   },
 };
 
@@ -266,8 +275,8 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
       "For tech freelancers whose CV or LinkedIn profile lists skills without making their value obvious to a client.",
     format: "Questionnaire · 60-minute interview · written review · optional introduction",
     primaryCta: {
-      label: "Book a review",
-      href: email("Freelance positioning review — booking"),
+      label: "Book an intro call",
+      href: offerBookingUrls.positioning_review,
     },
     secondaryCta: { label: "See all three offers", href: "/en/#work" },
     situationTitle: "This review is useful if",
@@ -316,8 +325,8 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
       "an introduction always depends on a real client request",
       "introductions and referral fees are contracted separately with the company",
     ],
-    closingTitle: "Book the review",
-    closingBody: "Send your current profile, availability and the type of mission you want.",
+    closingTitle: "Before the review",
+    closingBody: "This 30-minute call checks your situation and scopes the review. It does not book the 60-minute interview yet.",
   },
   progress: {
     ...offersFr.progress,
@@ -337,8 +346,8 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
       "For SREs, freelancers and tech employees starting a mission, changing roles or trying to make their progress visible.",
     format: "3 months · 1 monthly session · progress log · action plan",
     primaryCta: {
-      label: "Request the follow-up",
-      href: email("Tech progression follow-up — request"),
+      label: "Schedule the first conversation",
+      href: offerBookingUrls.tech_progression,
     },
     secondaryCta: { label: "See all three offers", href: "/en/#work" },
     situationTitle: "This follow-up is useful if",
@@ -383,8 +392,8 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
       "no promotion, rate increase or new mission is guaranteed",
       "exchanges are limited to the agreed sessions and documents",
     ],
-    closingTitle: "Start the follow-up",
-    closingBody: "Describe the mission or role, what you want to learn and what should change within three months.",
+    closingTitle: "Before the follow-up",
+    closingBody: "This first 30-minute conversation scopes your goal and checks whether the three-month follow-up fits the situation.",
   },
   "case-study": {
     ...offersFr["case-study"],
@@ -394,18 +403,18 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
     meta: {
       title: "Phone-based tech case study | The Unreliable Engineer",
       description:
-        "A 60-minute consultation about a real tech or career situation, free when it becomes anonymised content and paid when it stays private.",
+        "A proposal call about a real tech or career situation, before a free editorial case study or a future private consultation.",
     },
     eyebrow: "Tech case study",
     title: "A real problem, analysed over the phone.",
     promise:
-      "The consultation is free when the case is selected, recorded, anonymised and published. It is paid when it remains private.",
+      "The proposal call checks whether the case fits the free editorial format or a future private consultation. The private 60-minute consultation cannot be booked yet.",
     audience:
       "For fragile infrastructure, a drifting project, poorly recognised work or a move from employment to freelancing.",
-    format: "60 minutes · free editorial version · paid private version",
+    format: "30-minute proposal call · free editorial version · private consultation to come",
     primaryCta: {
-      label: "Propose a case",
-      href: email("Tech case study — proposal"),
+      label: "Propose a case study",
+      href: offerBookingUrls.tech_case_study,
     },
     secondaryCta: { label: "See all three offers", href: "/en/#work" },
     situationTitle: "Cases wanted",
@@ -421,7 +430,7 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
       "the facts, documents and attempts already made",
       "what may be published and what must remain private",
     ],
-    leaveTitle: "At the end of the call",
+    leaveTitle: "At the end of the consultation",
     leave: [
       "a clearer statement of the problem",
       "blind spots found during the conversation",
@@ -432,11 +441,11 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
     process: [
       {
         title: "Propose the case",
-        body: "Describe the facts, the question to address and the details that must remain confidential.",
+        body: "During a 30-minute call, describe the facts, the question to address and the details that must remain confidential.",
       },
       {
         title: "Choose the format",
-        body: "A case selected for publication is free. A consultation without publication is paid.",
+        body: "A case selected for publication is free. The private consultation will be paid once it can be booked after payment.",
       },
       {
         title: "Record the call",
@@ -451,11 +460,12 @@ export const offersEn: Record<OfferKey, OfferCopy> = {
     boundaries: [
       "no recording or extract is published by surprise",
       "editorial selection happens before the free version is booked",
+      "the paid private 60-minute consultation cannot be booked yet",
       "one hour cannot solve an entire organisation",
       "the format excludes legal, medical and financial advice",
     ],
     closingTitle: "Propose a case study",
-    closingBody: "Describe what is happening, what you already tried and what cannot be published.",
+    closingBody: "The 30-minute call qualifies the case and decides the next step. It does not book the private 60-minute consultation.",
   },
 };
 
