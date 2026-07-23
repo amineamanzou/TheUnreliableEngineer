@@ -178,7 +178,7 @@ export const articleJsonLd = ({
   "@type": "BlogPosting",
   "@id": `${absoluteUrl(path, site)}#blogposting`,
   headline: article.data.title,
-  description: article.data.excerpt,
+  description: article.data.seoDescription ?? article.data.excerpt,
   datePublished: article.data.publishedAt,
   dateModified: article.data.modifiedAt ?? article.data.publishedAt,
   author: personJsonLd(site),

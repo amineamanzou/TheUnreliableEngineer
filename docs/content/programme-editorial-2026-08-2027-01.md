@@ -27,6 +27,8 @@ La semaine garde un créneau réactif. Si une actualité forte arrive, elle remp
 
 ## Calendrier sur 26 semaines
 
+Le premier lot destiné au site — quatre articles, leurs traductions anglaises, leurs illustrations et leurs dates de publication — est prêt pour feedback. Son état détaillé est conservé dans [`site-articles-2026-08-batch-01.json`](../../content/site-articles-2026-08-batch-01.json).
+
 | Semaine | Date | Asset maître | Angle | Preuve ou artefact | Offre reliée |
 |---|---:|---|---|---|---|
 | 1 | 2026-08-03 | Vidéo | Ce qu'un agent IA peut réellement lire sur une machine de développeur | permissions, trafic réseau, dépôt de test | Étude de cas tech |

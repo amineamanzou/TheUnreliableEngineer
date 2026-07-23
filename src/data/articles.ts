@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import type { Locale } from "./i18n";
 import { assetPath, localizedPath, uiByLocale } from "./i18n";
+import { getPublishedArticles } from "./publication";
 
 export type ArticleCard = {
   slug: string;
@@ -24,7 +25,7 @@ export const getArticleHref = (article: CollectionEntry<"articles">) =>
   assetPath(localizedPath(article.data.locale, `/blog/${article.data.articleSlug}/`));
 
 export const getArticleCards = (articles: CollectionEntry<"articles">[], locale: Locale): ArticleCard[] =>
-  articles
+  getPublishedArticles(articles)
     .filter((article) => article.data.locale === locale)
     .sort((a, b) => b.data.publishedAt.localeCompare(a.data.publishedAt))
     .map((article) => ({

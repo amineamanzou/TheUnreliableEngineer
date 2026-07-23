@@ -1,9 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import ArticlePage from "../../components/ArticlePage.astro";
+import { getPublishedArticles } from "../../data/publication";
 
 export async function getStaticPaths() {
-  const articles = (await getCollection("articles")).filter((article) => article.data.locale === "fr");
+  const articles = getPublishedArticles(await getCollection("articles")).filter(
+    (article) => article.data.locale === "fr",
+  );
 
   return articles.map((article) => ({
     params: { slug: article.data.articleSlug },
