@@ -14,6 +14,8 @@ const articles = defineCollection({
     label: z.string(),
     readTime: z.string(),
     excerpt: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     sourceUrl: z.url().optional(),
     heroImage: z.string().optional(),
     heroImageAlt: z.string(),

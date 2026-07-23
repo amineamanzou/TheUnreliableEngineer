@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import Topbar from "./Topbar.astro";
 import { formatArticleDate } from "../data/articles";
 import { assetPath, localizedPath, uiByLocale } from "../data/i18n";
+import { getPublishedArticles } from "../data/publication";
 import { articleJsonLd } from "../data/seo";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -18,7 +19,7 @@ const { Content } = await render(article);
 const articleDate = formatArticleDate(article.data.publishedAt, locale);
 const heroImage = article.data.heroImage ? assetPath(article.data.heroImage) : undefined;
 const hasSource = Boolean(article.data.sourceUrl);
-const allArticles = await getCollection("articles");
+const allArticles = getPublishedArticles(await getCollection("articles"));
 const alternates = allArticles
   .filter((candidate) => candidate.data.translationKey === article.data.translationKey)
   .map((candidate) => ({
@@ -34,8 +35,8 @@ const redirectPaths = {
 ---
 
 <BaseLayout
-  title={`${article.data.title} | The Unreliable Engineer`}
-  description={article.data.excerpt}
+  title={article.data.seoTitle ?? `${article.data.title} | The Unreliable Engineer`}
+  description={article.data.seoDescription ?? article.data.excerpt}
   locale={locale}
   canonicalPath={currentPath}
   alternates={alternates}

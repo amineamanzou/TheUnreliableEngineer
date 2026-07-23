@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0",
+  "series": "Programme éditorial — août 2026 à janvier 2027",
+  "batch": 1,
+  "status": "ready_for_feedback",
+  "publicationTimezone": "Europe/Paris",
+  "publicationWorkflow": ".github/workflows/deploy-production.yml",
+  "articles": [
+    {
+      "week": 1,
+      "publishOn": "2026-08-03",
+      "slug": "ai-agent-machine-access",
+      "titleFr": "Ce qu’un agent IA peut réellement lire sur une machine de développeur",
+      "titleEn": "What an AI coding agent can actually read on a developer machine",
+      "sourceFr": "src/content/articles/ai-agent-machine-access.md",
+      "sourceEn": "src/content/articles/ai-agent-machine-access-en.md",
+      "heroImage": "public/blog/ai-agent-machine-access/hero.jpg",
+      "evidence": "Reproduction publique du trafic de Grok Build 0.2.93, dépôt officiel xAI et documentation de sécurité des outils cités"
+    },
+    {
+      "week": 2,
+      "publishOn": "2026-08-10",
+      "slug": "data-leak-chain-decisions",
+      "titleFr": "Un leak de données est une chaîne de décisions",
+      "titleEn": "A data leak is a chain of decisions",
+      "sourceFr": "src/content/articles/data-leak-chain-decisions.md",
+      "sourceEn": "src/content/articles/data-leak-chain-decisions-en.md",
+      "heroImage": "public/blog/data-leak-chain-decisions/hero.jpg",
+      "evidence": "Bulletin de sécurité Vercel d’avril 2026 et documentation officielle Google Workspace et Vercel"
+    },
+    {
+      "week": 3,
+      "publishOn": "2026-08-17",
+      "slug": "legacy-infrastructure-migration",
+      "titleFr": "Cette infrastructure fonctionne encore, mais personne n’ose la toucher",
+      "titleEn": "This infrastructure still works, but nobody dares touch it",
+      "sourceFr": "src/content/articles/legacy-infrastructure-migration.md",
+      "sourceEn": "src/content/articles/legacy-infrastructure-migration-en.md",
+      "heroImage": "public/blog/legacy-infrastructure-migration/hero.jpg",
+      "evidence": "Retour d’expérience personnel : inventaire et migration d’un ancien serveur vers Hetzner, IaC et Ansible"
+    },
+    {
+      "week": 4,
+      "publishOn": "2026-08-24",
+      "slug": "senior-profile-positioning",
+      "titleFr": "Les quatre phrases qui rendent un profil senior impossible à placer",
+      "titleEn": "Four phrases that make a senior profile impossible to place",
+      "sourceFr": "src/content/articles/senior-profile-positioning.md",
+      "sourceEn": "src/content/articles/senior-profile-positioning-en.md",
+      "heroImage": "public/blog/senior-profile-positioning/hero.jpg",
+      "evidence": "Exemples composites explicitement signalés, fondés sur des formulations récurrentes de profils seniors"
+    }
+  ],
+  "validation": {
+    "voiceProfileVersion": "2026-07-11.1",
+    "voiceStatus": "pass",
+    "voiceWarnings": 0,
+    "voiceFingerprint": "sha256:9e552683784f4865099d23fbd8b717e96e20a41269ffc95a9b6e8cb6d52180e2",
+    "astroDiagnostics": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "seoOutput": "pass",
+    "i18n": "pass",
+    "browserReview": "pass"
+  }
+}

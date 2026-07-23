@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { APIContext } from "astro";
 import { localizedPath, type Locale } from "../data/i18n";
+import { getPublishedArticles } from "../data/publication";
 import { absoluteUrl } from "../data/seo";
 
 export const prerender = true;
@@ -40,7 +41,7 @@ const getTranslatedArticlePairs = (articles: CollectionEntry<"articles">[]) => {
 };
 
 export async function GET({ site }: APIContext) {
-  const articles = await getCollection("articles");
+  const articles = getPublishedArticles(await getCollection("articles"));
   const translatedArticles = getTranslatedArticlePairs(articles);
   const homeFr = localizedPath("fr", "/");
   const homeEn = localizedPath("en", "/");
