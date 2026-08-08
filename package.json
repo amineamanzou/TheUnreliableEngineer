@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
+    "check": "npm run check:otel-core && astro check",
+    "check:otel-core": "node scripts/checks/opentelemetry-core-version.mjs",
     "check:i18n": "node scripts/checks/i18n-content.mjs",
     "check:seo": "node scripts/checks/seo-output.mjs",
     "check:seo:production": "node scripts/checks/production-seo.mjs",
@@ -39,6 +40,7 @@
   "overrides": {
     "@posthog/core": "1.40.0",
     "@opentelemetry/semantic-conventions": "1.42.0",
+    "@opentelemetry/core": "2.9.0",
     "protobufjs": "7.6.5"
   }
 }
