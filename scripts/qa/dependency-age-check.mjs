@@ -31,8 +31,9 @@ for (const [path, metadata] of Object.entries(packages)) {
   const name = path.split("node_modules/").at(-1);
   if (!name || name.includes("node_modules/")) continue;
 
+  const registryName = typeof metadata.name === "string" && metadata.name.trim() ? metadata.name : name;
   const id = `${name}@${metadata.version}`;
-  dependencyVersions.set(id, { name, version: metadata.version });
+  dependencyVersions.set(id, { name: registryName, version: metadata.version });
 }
 
 const ids = [...dependencyVersions.keys()].sort((left, right) => left.localeCompare(right));
