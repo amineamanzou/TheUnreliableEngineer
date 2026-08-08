@@ -40,6 +40,7 @@
   "overrides": {
     "@posthog/core": "1.40.0",
     "@opentelemetry/semantic-conventions": "1.42.0",
+    "@opentelemetry/core": "2.9.0",
     "protobufjs": "7.6.5"
   }
 }
