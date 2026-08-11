@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@hyperdx/browser": "0.25.1",
-    "posthog-js": "1.413.3"
+    "posthog-js": "1.414.0"
   },
   "overrides": {
     "@posthog/core": "1.40.0",
