@@ -35,11 +35,11 @@ Le premier lot destiné au site — quatre articles, leurs traductions anglaises
 | 2 | 2026-08-10 | Analyse | Un leak n'est pas une histoire de fichier : c'est une chaîne de décisions | chronologie et frontière de données | Étude de cas tech |
 | 3 | 2026-08-17 | Appel | Une infra tient encore, mais personne n'ose la toucher | schéma anonymisé avant/après | Étude de cas tech |
 | 4 | 2026-08-24 | Vidéo | Les quatre phrases qui rendent un profil senior impossible à placer | extraits de CV anonymisés | Bilan de positionnement freelance |
-| 5 | 2026-08-31 | Décryptage | Qui paie vraiment pour l'IA générative en entreprise ? | facture, coût par usage, hypothèses séparées | Étude de cas tech |
-| 6 | 2026-09-07 | Postmortem | Comment une petite dépendance devient un incident visible par tout le monde | arbre de dépendances | Étude de cas tech |
-| 7 | 2026-09-14 | Vidéo | « L'IA va remplacer les développeurs » est une question trop paresseuse | tâches comparées, limites observées | Suivi de progression tech |
-| 8 | 2026-09-21 | Appel | Un projet dérive alors que tous les voyants sont verts | roadmap et décisions anonymisées | Étude de cas tech |
-| 9 | 2026-09-28 | Analyse marché | Pourquoi un bon freelance peut rester six mois sans mission | demande, intermédiaires, signal du profil | Bilan de positionnement freelance |
+| 5 | 2026-08-31 | Décryptage | Après les hacks des services publics, qui doit expliquer ce qui n'a pas été corrigé ? | chronologie France, chaîne de responsabilité et comparaison États-Unis | Étude de cas tech |
+| 6 | 2026-09-07 | Décryptage | Qui paie vraiment pour l'IA générative en entreprise ? | facture, coût par usage, hypothèses séparées | Étude de cas tech |
+| 7 | 2026-09-14 | Postmortem | Comment une petite dépendance devient un incident visible par tout le monde | arbre de dépendances | Étude de cas tech |
+| 8 | 2026-09-21 | Vidéo | « L'IA va remplacer les développeurs » est une question trop paresseuse | tâches comparées, limites observées | Suivi de progression tech |
+| 9 | 2026-09-28 | Appel | Un projet dérive alors que tous les voyants sont verts | roadmap et décisions anonymisées | Étude de cas tech |
 | 10 | 2026-10-05 | Décryptage | Le jour où une fonctionnalité « pratique » devient de la collecte | flux de données et consentement | Étude de cas tech |
 | 11 | 2026-10-12 | Coulisses | Comment je vérifie une actualité tech avant d'en parler | dossier de sources, niveaux de preuve | Étude de cas tech |
 | 12 | 2026-10-19 | Appel | Un lead fait le travail, mais le management ne voit que les tickets fermés | note de décision et preuves de valeur | Suivi de progression tech |
