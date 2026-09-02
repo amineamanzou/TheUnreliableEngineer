@@ -13,19 +13,13 @@ heroImage: "/blog/cyberattaques-services-publics-france-etats-unis/hero-accounta
 heroImageAlt: "French and US public-sector cyber incident files laid out for review"
 ---
 
-The first job after a wave of cyberattacks against public services is sometimes to remove incidents from the wave.
+By late August 2026, three French public bodies had documented unlawful access: the DGFiP tax authority, the education ministry and the Urssaf social-contribution agency.
 
-By late August 2026, four names were regularly appearing together in France: the tax authority, the education ministry, the Urssaf social-contribution agency and the national health-insurance system. The resulting story was neat. French public services were all being breached at once, data was leaving by the tens of millions, and agencies were learning what happened from the attackers’ announcements.
+The DGFiP has confirmed data theft. The education ministry has confirmed an intrusion and possible exfiltration of staff data, while it continues to establish the scope. Urssaf has documented fraudulent access to an API through a compromised account belonging to an authorized partner.
 
-The public record forces a less comfortable classification.
+Putting them next to one another does not turn them into one attack. Their technical paths, affected data and levels of certainty differ. They do raise the same operational question: once access has been cut off and affected people have been notified, what mechanism forces the organization to explain what it knew, which fixes were still open, and who had decided the remaining risk was acceptable?
 
-France’s tax authority, the DGFiP, has confirmed unlawful access and data theft. The education ministry has confirmed an intrusion and possible exfiltration of staff data, while it continues to establish the scope. Urssaf has documented fraudulent access to an API through a compromised account belonging to an authorized partner. But as of August 30, I could find no primary confirmation of the claim involving 34.2 million health-insurance or shared medical records.
-
-That last case must remain a claim. A number does not become an incident just because it fits into a headline.
-
-Keeping those evidence levels separate does not make the three confirmed incidents less serious. It makes room for a more useful question. Once access has been cut off and affected people have been notified, what mechanism forces the organization to explain what it knew, which fixes were still open, and who had decided the remaining risk was acceptable?
-
-## Four agencies do not make four confirmed incidents
+## Three incidents, three scopes
 
 In its [incident statement](https://www.espacedatapresse.com/fil_datapresse/consultation_cp.jsp?idcp=2906623), Urssaf says an authorized partner account was used to access data from the system that processes pre-employment declarations. The account credentials had been stolen in an earlier attack against that partner.
 

@@ -13,19 +13,13 @@ heroImage: "/blog/cyberattaques-services-publics-france-etats-unis/hero-accounta
 heroImageAlt: "Dossiers d’incidents cyber français et américains examinés sur une table de revue"
 ---
 
-Le premier travail après une série de cyberattaques contre des services publics consiste parfois à retirer des événements de la série.
+Fin août 2026, trois administrations françaises avaient documenté des accès illégitimes : la DGFiP, l’Éducation nationale et l’Urssaf.
 
-Fin août 2026, plusieurs noms circulent ensemble : DGFiP, Éducation nationale, Urssaf, Assurance Maladie. L’impression générale est simple. Tout le service public se ferait ouvrir en même temps, les données partiraient par dizaines de millions et les administrations découvriraient les dégâts dans les communiqués des attaquants.
+La DGFiP confirme un vol de données. L’Éducation nationale confirme une intrusion et une possible exfiltration de données de personnels, mais continue d’en établir le périmètre. L’Urssaf décrit un accès frauduleux à une API via le compte compromis d’un partenaire habilité.
 
-La documentation publique impose un tri moins confortable.
+Les rapprocher ne suffit pas à en faire une seule attaque. Les chemins techniques, les données concernées et les degrés de certitude diffèrent. Ils posent toutefois la même question opérationnelle : une fois l’accès coupé et les personnes averties, quel mécanisme oblige l’organisation à expliquer ce qu’elle savait, quelles corrections restaient ouvertes et qui avait décidé que le risque était acceptable ?
 
-La DGFiP confirme des accès illégitimes et un vol de données. L’Éducation nationale confirme une intrusion et une possible exfiltration de données de personnels, mais continue d’en établir le périmètre. L’Urssaf décrit un accès frauduleux à une API via le compte compromis d’un partenaire habilité. En revanche, je n’ai trouvé, au 30 août, aucune confirmation primaire de la revendication concernant 34,2 millions de dossiers de l’Assurance Maladie ou du Dossier médical partagé.
-
-Ce dernier cas doit donc rester une revendication, pas devenir un incident avéré parce que le chiffre tient bien dans un titre.
-
-Ce tri ne minimise pas les trois autres. Il permet de poser une question plus utile : une fois l’accès coupé et les personnes averties, quel mécanisme oblige l’organisation à expliquer ce qu’elle savait, quelles corrections restaient ouvertes et qui avait décidé que le risque était acceptable ?
-
-## Quatre administrations ne donnent pas quatre incidents établis
+## Trois incidents, trois périmètres
 
 L’[Urssaf explique dans son communiqué](https://www.espacedatapresse.com/fil_datapresse/consultation_cp.jsp?idcp=2906623) qu’un compte partenaire habilité à consulter certaines données de déclaration préalable à l’embauche a été utilisé frauduleusement. Les identifiants de ce compte avaient été volés lors d’une attaque antérieure visant le partenaire.
 
