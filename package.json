@@ -26,7 +26,8 @@
     "review:legal": "node scripts/review-legal.mjs",
     "review:observability": "node scripts/qa/browser-observability-smoke.mjs",
     "review:product-analytics": "node scripts/qa/product-analytics-smoke.mjs",
-    "review:static": "node scripts/qa/review-static-site.mjs"
+    "review:static": "node scripts/qa/review-static-site.mjs",
+    "review:audio": "node scripts/article-to-audio.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
