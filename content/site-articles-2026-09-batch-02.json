@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0",
+  "series": "Programme éditorial — août 2026 à janvier 2027",
+  "batch": 2,
+  "status": "in_production",
+  "publicationTimezone": "Europe/Paris",
+  "publicationWorkflow": ".github/workflows/deploy-production.yml",
+  "articles": [
+    {
+      "week": 5,
+      "publishOn": "2026-08-31",
+      "slug": "cyberattaques-services-publics-france-etats-unis",
+      "titleFr": "Après les hacks des services publics, qui doit expliquer ce qui n’a pas été corrigé ?",
+      "titleEn": "After public-service hacks, who must explain what was left unfixed?",
+      "evidence": "Sources primaires françaises et américaines, incidents séparés, mécanismes de responsabilité comparés"
+    },
+    {
+      "week": 6,
+      "publishOn": "2026-09-07",
+      "slug": "cout-ia-generative-entreprise",
+      "titleFr": "Qui paie vraiment pour l’IA générative en entreprise ?",
+      "titleEn": "Who really pays for generative AI in the enterprise?",
+      "evidence": "Tarifs publics, rapports financiers et hypothèses de coût explicitement séparées"
+    },
+    {
+      "week": 7,
+      "publishOn": "2026-09-14",
+      "slug": "petite-dependance-grand-incident",
+      "titleFr": "Comment une petite dépendance devient un incident visible par tout le monde",
+      "titleEn": "How a small dependency becomes an incident everyone can see",
+      "evidence": "Postmortems publics et arbre de dépendances"
+    },
+    {
+      "week": 8,
+      "publishOn": "2026-09-21",
+      "slug": "ia-remplacer-developpeurs-taches",
+      "titleFr": "« L’IA va remplacer les développeurs » est une question trop paresseuse",
+      "titleEn": "“Will AI replace developers?” is too lazy a question",
+      "evidence": "Études centrées sur les tâches, limites méthodologiques et observations de workflow"
+    },
+    {
+      "week": 9,
+      "publishOn": "2026-09-28",
+      "slug": "projet-derive-voyants-verts",
+      "titleFr": "Un projet dérive alors que tous les voyants sont verts",
+      "titleEn": "A project drifts while every status light stays green",
+      "evidence": "Cas composite signalé comme tel, roadmap de décisions et indicateurs de sortie"
+    }
+  ]
+}
