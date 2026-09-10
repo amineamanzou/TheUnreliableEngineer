@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.19.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -30,18 +30,21 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "astro": "^7.2.2",
+    "astro": "^7.3.2",
     "playwright-core": "^1.62.1",
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@hyperdx/browser": "0.25.1",
+    "@hyperdx/browser": "0.26.0",
     "posthog-js": "1.417.1"
   },
   "overrides": {
-    "@posthog/core": "1.40.0",
-    "@opentelemetry/semantic-conventions": "1.42.0",
-    "@opentelemetry/core": "2.9.0",
-    "protobufjs": "7.6.5"
+    "@hyperdx/otel-web-session-recorder": {
+      "fflate": "0.7.5"
+    },
+    "@napi-rs/wasm-runtime": "1.2.3",
+    "@posthog/core": "1.51.0",
+    "@posthog/types": "1.409.1",
+    "zod": "4.5.4"
   }
 }
