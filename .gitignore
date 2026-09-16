@@ -6,6 +6,9 @@ node_modules/
 dist/
 .astro/
 artifacts/
+review-audio/
+scripts/article-to-audio.mjs
+scripts/article-to-audio.test.mjs
 .superpowers/
 .worktrees/
 
