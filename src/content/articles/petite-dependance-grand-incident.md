@@ -3,7 +3,7 @@ title: "Comment une petite dépendance devient un incident visible par tout le m
 locale: "fr"
 articleSlug: "petite-dependance-grand-incident"
 translationKey: "small-dependency-large-incident"
-publishedAt: "2026-09-14"
+publishedAt: "2026-10-05"
 label: "Incident / Dépendances"
 readTime: "10 min"
 excerpt: "Une dépendance reste petite dans l’inventaire jusqu’au jour où son indisponibilité traverse les produits, les équipes et les parcours utilisateurs."

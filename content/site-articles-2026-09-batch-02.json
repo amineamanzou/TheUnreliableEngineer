@@ -1,14 +1,14 @@
 {
   "schemaVersion": "1.0",
-  "series": "Programme éditorial — août 2026 à janvier 2027",
+  "series": "Programme éditorial — août 2026 à février 2027",
   "batch": 2,
-  "status": "in_production",
+  "status": "scheduled",
   "publicationTimezone": "Europe/Paris",
   "publicationWorkflow": ".github/workflows/deploy-production.yml",
   "articles": [
     {
       "week": 5,
-      "publishOn": "2026-08-31",
+      "publishOn": "2026-09-21",
       "slug": "cyberattaques-services-publics-france-etats-unis",
       "titleFr": "Après les hacks des services publics, qui doit expliquer ce qui n’a pas été corrigé ?",
       "titleEn": "After public-service hacks, who must explain what was left unfixed?",
@@ -16,7 +16,7 @@
     },
     {
       "week": 6,
-      "publishOn": "2026-09-07",
+      "publishOn": "2026-09-28",
       "slug": "cout-ia-generative-entreprise",
       "titleFr": "Qui paie vraiment pour l’IA générative en entreprise ?",
       "titleEn": "Who really pays for generative AI in the enterprise?",
@@ -24,7 +24,7 @@
     },
     {
       "week": 7,
-      "publishOn": "2026-09-14",
+      "publishOn": "2026-10-05",
       "slug": "petite-dependance-grand-incident",
       "titleFr": "Comment une petite dépendance devient un incident visible par tout le monde",
       "titleEn": "How a small dependency becomes an incident everyone can see",
@@ -32,7 +32,7 @@
     },
     {
       "week": 8,
-      "publishOn": "2026-09-21",
+      "publishOn": "2026-10-12",
       "slug": "ia-remplacer-developpeurs-taches",
       "titleFr": "« L’IA va remplacer les développeurs » est une question trop paresseuse",
       "titleEn": "“Will AI replace developers?” is too lazy a question",
@@ -40,7 +40,7 @@
     },
     {
       "week": 9,
-      "publishOn": "2026-09-28",
+      "publishOn": "2026-10-19",
       "slug": "projet-derive-voyants-verts",
       "titleFr": "Un projet dérive alors que tous les voyants sont verts",
       "titleEn": "A project drifts while every status light stays green",

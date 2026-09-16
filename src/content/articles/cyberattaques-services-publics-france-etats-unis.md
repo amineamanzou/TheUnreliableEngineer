@@ -3,7 +3,7 @@ title: "Après les hacks des services publics, qui doit expliquer ce qui n’a p
 locale: "fr"
 articleSlug: "cyberattaques-services-publics-france-etats-unis"
 translationKey: "cyberattaques-services-publics-france-etats-unis"
-publishedAt: "2026-08-31"
+publishedAt: "2026-09-21"
 label: "Cybersécurité / Services publics"
 readTime: "11 min"
 excerpt: "DGFiP, Éducation nationale, Urssaf : les incidents récents posent une question qui dépasse la réponse technique. Qui documente le risque, les alertes ignorées et les corrections restées ouvertes ?"

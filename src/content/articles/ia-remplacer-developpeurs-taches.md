@@ -3,7 +3,7 @@ title: "« L’IA va remplacer les développeurs » est une question trop paress
 locale: "fr"
 articleSlug: "ia-remplacer-developpeurs-taches"
 translationKey: "ai-replace-developers-tasks"
-publishedAt: "2026-09-21"
+publishedAt: "2026-10-12"
 label: "IA / Travail"
 readTime: "10 min"
 excerpt: "Les études mesurent des tâches, des pull requests et des temps de cycle. Un poste reste un ensemble de responsabilités, de contexte et de décisions."
