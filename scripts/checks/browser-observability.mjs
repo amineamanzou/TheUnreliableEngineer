@@ -15,20 +15,13 @@ const dockerfile = readFileSync(join(root, "Dockerfile"), "utf8");
 const deployWorkflow = readFileSync(join(root, ".github/workflows/deploy-production.yml"), "utf8");
 const ciWorkflow = readFileSync(join(root, ".github/workflows/ci.yml"), "utf8");
 const packageJson = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-const lockfile = JSON.parse(readFileSync(join(root, "package-lock.json"), "utf8"));
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-assert(packageJson.dependencies?.["@hyperdx/browser"] === "0.25.1", "@hyperdx/browser must be pinned exactly to 0.25.1");
-assert(packageJson.overrides?.protobufjs === "7.6.5", "protobufjs security override must be pinned exactly to 7.6.5");
-assert(packageJson.overrides?.["@opentelemetry/semantic-conventions"] === "1.42.0", "Semantic conventions must remain on a release older than the 48h gate");
-assert(lockfile.packages?.["node_modules/protobufjs"]?.version === "7.6.5", "Lockfile must resolve protobufjs to 7.6.5");
-const semanticConventionVersions = Object.entries(lockfile.packages)
-  .filter(([path]) => path.endsWith("node_modules/@opentelemetry/semantic-conventions"))
-  .map(([, metadata]) => metadata.version);
-assert(semanticConventionVersions.length > 0 && semanticConventionVersions.every((version) => version === "1.42.0"), "Every semantic-conventions lockfile instance must resolve to 1.42.0");
+assert(packageJson.dependencies?.["@hyperdx/browser"] === "0.26.0", "@hyperdx/browser must be pinned exactly to 0.26.0");
+assert(packageJson.overrides?.["@hyperdx/otel-web-session-recorder"]?.fflate === "0.7.5", "Patched HyperDX recorder fflate override must stay pinned to 0.7.5");
 assert(source.includes('await import("@hyperdx/browser")'), "HyperDX must stay behind a dynamic import");
 assert(source.indexOf("validateConfig(config)") < source.indexOf('await import("@hyperdx/browser")'), "Runtime config must be validated before loading the SDK chunk");
 assert(source.includes("if (!(event.error instanceof Error)) return;"), "Runtime error actions must ignore non-Error payloads");

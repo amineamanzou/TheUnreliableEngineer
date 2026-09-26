@@ -26,6 +26,9 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Verify CI/CD event contract
+        run: node --test tests/*.test.mjs
+
       - name: Dependency release age gate
         run: npm run check:dependencies-age
 

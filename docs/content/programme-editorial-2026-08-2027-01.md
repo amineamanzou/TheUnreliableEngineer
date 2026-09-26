@@ -1,4 +1,4 @@
-# Programme éditorial — août 2026 à janvier 2027
+# Programme éditorial — août 2026 à février 2027
 
 ## Ligne éditoriale
 
@@ -35,28 +35,28 @@ Le premier lot destiné au site — quatre articles, leurs traductions anglaises
 | 2 | 2026-08-10 | Analyse | Un leak n'est pas une histoire de fichier : c'est une chaîne de décisions | chronologie et frontière de données | Étude de cas tech |
 | 3 | 2026-08-17 | Appel | Une infra tient encore, mais personne n'ose la toucher | schéma anonymisé avant/après | Étude de cas tech |
 | 4 | 2026-08-24 | Vidéo | Les quatre phrases qui rendent un profil senior impossible à placer | extraits de CV anonymisés | Bilan de positionnement freelance |
-| 5 | 2026-08-31 | Décryptage | Qui paie vraiment pour l'IA générative en entreprise ? | facture, coût par usage, hypothèses séparées | Étude de cas tech |
-| 6 | 2026-09-07 | Postmortem | Comment une petite dépendance devient un incident visible par tout le monde | arbre de dépendances | Étude de cas tech |
-| 7 | 2026-09-14 | Vidéo | « L'IA va remplacer les développeurs » est une question trop paresseuse | tâches comparées, limites observées | Suivi de progression tech |
-| 8 | 2026-09-21 | Appel | Un projet dérive alors que tous les voyants sont verts | roadmap et décisions anonymisées | Étude de cas tech |
-| 9 | 2026-09-28 | Analyse marché | Pourquoi un bon freelance peut rester six mois sans mission | demande, intermédiaires, signal du profil | Bilan de positionnement freelance |
-| 10 | 2026-10-05 | Décryptage | Le jour où une fonctionnalité « pratique » devient de la collecte | flux de données et consentement | Étude de cas tech |
-| 11 | 2026-10-12 | Coulisses | Comment je vérifie une actualité tech avant d'en parler | dossier de sources, niveaux de preuve | Étude de cas tech |
-| 12 | 2026-10-19 | Appel | Un lead fait le travail, mais le management ne voit que les tickets fermés | note de décision et preuves de valeur | Suivi de progression tech |
-| 13 | 2026-10-26 | Vidéo | Pourquoi les outils de productivité créent parfois plus de coordination | journal de travail et changements de contexte | Suivi de progression tech |
-| 14 | 2026-11-02 | Incident | Ce qu'un postmortem honnête dit que la communication de crise évite | chronologie, inconnues, décisions | Étude de cas tech |
-| 15 | 2026-11-09 | Marché | Le TJM ne raconte presque rien sur la valeur d'un senior | trois profils, trois contextes d'achat | Bilan de positionnement freelance |
-| 16 | 2026-11-16 | Appel | Passer freelance sans transformer LinkedIn en cirque | profil, contraintes, scénario de transition | Bilan de positionnement freelance |
-| 17 | 2026-11-23 | Analyse | Open source après le scandale : transparence réelle ou rattrapage ? | dépôt, licence, historique des changements | Étude de cas tech |
-| 18 | 2026-11-30 | Vidéo | Les dashboards qui rassurent et les signaux qui permettent de décider | captures et incidents associés | Étude de cas tech |
-| 19 | 2026-12-07 | Marché | Les métiers tech qui changent de nom sans changer de problème | offres d'emploi comparées | Suivi de progression tech |
-| 20 | 2026-12-14 | Appel | Une décision d'architecture devenue un conflit d'équipe | options et compromis anonymisés | Étude de cas tech |
-| 21 | 2026-12-21 | Bilan | Les cinq histoires tech de 2026 qui ont vraiment changé le travail | sources primaires et conséquences observables | Étude de cas tech |
-| 22 | 2026-12-28 | Coulisses | Ce que six mois de production de contenu ont coûté en temps et en outils | journal de production et coûts | Suivi de progression tech |
-| 23 | 2027-01-04 | Vidéo | Ce que je refuse de prédire sur l'IA en 2027 | faits, tendances, inconnues | Suivi de progression tech |
-| 24 | 2027-01-11 | Marché | Refaire son profil senior après une année de bruit IA | avant/après de positionnement | Bilan de positionnement freelance |
-| 25 | 2027-01-18 | Appel | Un système critique dépend d'une personne qui veut partir | carte de dépendance humaine et technique | Étude de cas tech |
-| 26 | 2027-01-25 | Analyse | Les décisions tech qui méritent un pair, pas un nouveau framework | trois mini-cas et leurs arbitrages | Suivi de progression tech |
+| 5 | 2026-09-21 | Décryptage | Après les hacks des services publics, qui doit expliquer ce qui n'a pas été corrigé ? | chronologie France, chaîne de responsabilité et comparaison États-Unis | Étude de cas tech |
+| 6 | 2026-09-28 | Décryptage | Qui paie vraiment pour l'IA générative en entreprise ? | facture, coût par usage, hypothèses séparées | Étude de cas tech |
+| 7 | 2026-10-05 | Postmortem | Comment une petite dépendance devient un incident visible par tout le monde | arbre de dépendances | Étude de cas tech |
+| 8 | 2026-10-12 | Vidéo | « L'IA va remplacer les développeurs » est une question trop paresseuse | tâches comparées, limites observées | Suivi de progression tech |
+| 9 | 2026-10-19 | Appel | Un projet dérive alors que tous les voyants sont verts | roadmap et décisions anonymisées | Étude de cas tech |
+| 10 | 2026-10-26 | Décryptage | Le jour où une fonctionnalité « pratique » devient de la collecte | flux de données et consentement | Étude de cas tech |
+| 11 | 2026-11-02 | Coulisses | Comment je vérifie une actualité tech avant d'en parler | dossier de sources, niveaux de preuve | Étude de cas tech |
+| 12 | 2026-11-09 | Appel | Un lead fait le travail, mais le management ne voit que les tickets fermés | note de décision et preuves de valeur | Suivi de progression tech |
+| 13 | 2026-11-16 | Vidéo | Pourquoi les outils de productivité créent parfois plus de coordination | journal de travail et changements de contexte | Suivi de progression tech |
+| 14 | 2026-11-23 | Incident | Ce qu'un postmortem honnête dit que la communication de crise évite | chronologie, inconnues, décisions | Étude de cas tech |
+| 15 | 2026-11-30 | Marché | Le TJM ne raconte presque rien sur la valeur d'un senior | trois profils, trois contextes d'achat | Bilan de positionnement freelance |
+| 16 | 2026-12-07 | Appel | Passer freelance sans transformer LinkedIn en cirque | profil, contraintes, scénario de transition | Bilan de positionnement freelance |
+| 17 | 2026-12-14 | Analyse | Open source après le scandale : transparence réelle ou rattrapage ? | dépôt, licence, historique des changements | Étude de cas tech |
+| 18 | 2026-12-21 | Vidéo | Les dashboards qui rassurent et les signaux qui permettent de décider | captures et incidents associés | Étude de cas tech |
+| 19 | 2026-12-28 | Marché | Les métiers tech qui changent de nom sans changer de problème | offres d'emploi comparées | Suivi de progression tech |
+| 20 | 2027-01-04 | Appel | Une décision d'architecture devenue un conflit d'équipe | options et compromis anonymisés | Étude de cas tech |
+| 21 | 2027-01-11 | Bilan | Les cinq histoires tech de 2026 qui ont vraiment changé le travail | sources primaires et conséquences observables | Étude de cas tech |
+| 22 | 2027-01-18 | Coulisses | Ce que six mois de production de contenu ont coûté en temps et en outils | journal de production et coûts | Suivi de progression tech |
+| 23 | 2027-01-25 | Vidéo | Ce que je refuse de prédire sur l'IA en 2027 | faits, tendances, inconnues | Suivi de progression tech |
+| 24 | 2027-02-01 | Marché | Refaire son profil senior après une année de bruit IA | avant/après de positionnement | Bilan de positionnement freelance |
+| 25 | 2027-02-08 | Appel | Un système critique dépend d'une personne qui veut partir | carte de dépendance humaine et technique | Étude de cas tech |
+| 26 | 2027-02-15 | Analyse | Les décisions tech qui méritent un pair, pas un nouveau framework | trois mini-cas et leurs arbitrages | Suivi de progression tech |
 
 ## Séries récurrentes
 
