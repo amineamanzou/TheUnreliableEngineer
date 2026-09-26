@@ -23,6 +23,7 @@ COPY Dockerfile ./Dockerfile
 COPY .github/workflows ./.github/workflows
 COPY public ./public
 COPY scripts ./scripts
+COPY tests/publication-policy.test.mjs ./tests/publication-policy.test.mjs
 COPY src ./src
 
 RUN SITE_URL="${SITE_URL}" \
