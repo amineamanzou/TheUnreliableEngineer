@@ -1,3 +1,4 @@
+import { publicationPairErrors } from "./publication-policy.mjs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -44,11 +45,13 @@ for (const file of files) {
   }
 
   const entries = byKey.get(translationKey) ?? [];
-  entries.push({ file, locale, articleSlug });
+  entries.push({ file, locale, articleSlug, publishedAt: frontmatter.publishedAt });
   byKey.set(translationKey, entries);
 }
 
 for (const [key, entries] of byKey) {
+  const dateErrors = publicationPairErrors(entries);
+  if (dateErrors.length) throw new Error(`${key}: ${dateErrors.join("; ")}`);
   const locales = new Set(entries.map((entry) => entry.locale));
   for (const locale of expectedLocales) {
     if (!locales.has(locale)) {
