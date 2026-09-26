@@ -7,3 +7,11 @@ node_modules
 dist
 docs
 prototypes
+
+# Private planning and agent working material.
+/content/
+/.superpowers/
+/.agents/
+/.codex/
+/.claude/
+/src/data/editorial-calendar.json
