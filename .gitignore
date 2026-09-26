@@ -15,3 +15,10 @@ scripts/article-to-audio.test.mjs
 # Internal design and specification work stays local for this project.
 docs/
 prototypes/
+
+# Private planning and agent working material.
+/content/
+/.agents/
+/.codex/
+/.claude/
+/src/data/editorial-calendar.json

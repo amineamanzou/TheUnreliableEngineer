@@ -26,6 +26,9 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Verify public repository boundary
+        run: node scripts/checks/public-repository.mjs
+
       - name: Verify CI/CD event contract
         run: node --test tests/*.test.mjs
 
