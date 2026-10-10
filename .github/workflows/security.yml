@@ -65,8 +65,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Audit critical vulnerabilities
-        run: npm audit --audit-level=critical
+      - name: Enforce dependency audit policy
+        run: npm run audit:dependencies
 
   dependency_review:
     name: Dependency review
