@@ -16,7 +16,10 @@ ARG PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
 ARG PUBLIC_ANALYTICS_SITE_NAME=theunreliable.engineer
 
 COPY package.json package-lock.json* ./
-RUN npm ci && npm audit --omit=dev --audit-level=high
+COPY scripts/checks/dependency-audit* ./scripts/checks/
+COPY astro.config.mjs Dockerfile ./
+COPY ops/Caddyfile ./ops/Caddyfile
+RUN npm ci && npm run audit:dependencies
 
 COPY astro.config.mjs tsconfig.json ./
 COPY Dockerfile ./Dockerfile

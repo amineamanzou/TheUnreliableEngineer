@@ -61,7 +61,7 @@ for (const disclosure of ["aucun corps de requête n’est journalisé", "transi
 }
 assert(privacySource.includes("__rum_optout"), "Full privacy notice must document the opt-out fallback");
 
-assert(dockerfile.includes("npm ci && npm audit --omit=dev --audit-level=high"), "Docker build must reject high production dependency vulnerabilities");
+assert(dockerfile.includes("npm ci && npm run audit:dependencies"), "Docker build must enforce the full dependency audit policy");
 assert(dockerfile.includes("COPY scripts ./scripts"), "Docker build must include contract and review scripts");
 assert(dockerfile.includes("ARG PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false"), "Docker production builds must default Browser RUM to off");
 assert(dockerfile.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED="${PUBLIC_BROWSER_OBSERVABILITY_ENABLED}"'), "Docker must pass the explicit canary flag to the build");
@@ -73,7 +73,7 @@ assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), 
 assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"'), "Production workflow must explicitly force Browser RUM off");
 assert(deployWorkflow.includes("if: github.event_name == 'push' || inputs.browser_observability"), "Production pushes must verify the enabled Browser RUM contract during the canary");
 assert(deployWorkflow.includes("(github.event_name == 'push' || inputs.browser_observability) && 'true' || 'false'"), "Production pushes must preserve Browser RUM while the manual input remains the rollback switch");
-assert(deployWorkflow.includes("npm audit --omit=dev --audit-level=high"), "Production workflow must reject high dependency vulnerabilities");
+assert(deployWorkflow.includes("npm run audit:dependencies"), "Production workflow must enforce the full dependency audit policy");
 assert(deployWorkflow.includes("check:browser-observability -- --mode=off"), "Production workflow must verify the exact off contract");
 assert(ciWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "CI must retain a non-publishing enabled contract build");
 assert(!ciWorkflow.includes("docker/build-push-action"), "Enabled CI contract must not publish an image");
