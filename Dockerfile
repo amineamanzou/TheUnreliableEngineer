@@ -1,4 +1,4 @@
-FROM node:26-alpine@sha256:0b36e8c136b94cd4fcf02188228e76c31ad5872eef3fec8cbd2eee500cfd9e80 AS build
+FROM node:26-alpine@sha256:143494b1da2945f061539253adc65e4f1569ddf07da2d384c022c791a9d90a4a AS build
 WORKDIR /app
 
 ARG SITE_URL
@@ -58,7 +58,7 @@ RUN SITE_URL="${SITE_URL}" \
   && npm run check:seo \
   && npm run review:static
 
-FROM golang:1.27.1-alpine@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414 AS caddy-build
+FROM golang:1.27.2-alpine@sha256:f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d AS caddy-build
 WORKDIR /src
 
 RUN apk add --no-cache ca-certificates git
