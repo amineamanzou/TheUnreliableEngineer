@@ -2,6 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { parse } from "parse5";
 
 const distDir = path.resolve(process.cwd(), "dist");
 const siteUrl = "https://theunreliable.engineer";
@@ -362,11 +363,13 @@ function getTagAttributes(html, tagName) {
 
 function getInitialAnchorAttributes(html) {
   const anchors = [];
-  // Consume raw script blocks and comments before reading actual HTML anchors.
-  const tokens = /<script\b[^>]*>[\s\S]*?<\/script\s*>|<!--[\s\S]*?-->|<a\b([^>]*)>/gi;
-  for (const match of (html ?? "").matchAll(tokens)) {
-    if (match[1] !== undefined) anchors.push(parseAttributes(match[1]));
-  }
+  const visit = (node) => {
+    if (node.tagName === "a") {
+      anchors.push(Object.fromEntries(node.attrs.map(({ name, value }) => [name, value])));
+    }
+    for (const child of node.childNodes ?? []) visit(child);
+  };
+  visit(parse(html ?? ""));
   return anchors;
 }
 
