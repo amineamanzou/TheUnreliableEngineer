@@ -360,6 +360,16 @@ function getTagAttributes(html, tagName) {
   return tags;
 }
 
+function getInitialAnchorAttributes(html) {
+  const anchors = [];
+  // Consume raw script blocks and comments before reading actual HTML anchors.
+  const tokens = /<script\b[^>]*>[\s\S]*?<\/script\s*>|<!--[\s\S]*?-->|<a\b([^>]*)>/gi;
+  for (const match of (html ?? "").matchAll(tokens)) {
+    if (match[1] !== undefined) anchors.push(parseAttributes(match[1]));
+  }
+  return anchors;
+}
+
 function getAlternateLinks(html) {
   return getTagAttributes(html, "link")
     .filter((attributes) => attributes.rel?.toLowerCase() === "alternate")
@@ -803,8 +813,7 @@ assertIncludes(
 for (const prefix of ["", "en/"]) {
   const indexPath = `${prefix}blog/index.html`;
   const indexHtml = await readDistFile(indexPath);
-  const initialHtml = (indexHtml ?? "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
-  const links = new Set(getTagAttributes(initialHtml, "a").map(({ href }) =>
+  const links = new Set(getInitialAnchorAttributes(indexHtml).map(({ href }) =>
     href ? new URL(href, siteUrl).href : null,
   ));
   for (const relativePath of await listHtmlFiles()) {
@@ -828,7 +837,7 @@ for (const [relativePath, originalUrl] of originalArticleUrls) {
   if (getJsonLdProperty(html, relativePath, "BlogPosting", "isBasedOn") !== originalUrl) {
     fail(`${relativePath} BlogPosting.isBasedOn must identify the original article`);
   }
-  const sourceLinks = getTagAttributes((html ?? "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ""), "a");
+  const sourceLinks = getInitialAnchorAttributes(html);
   if (!sourceLinks.some(({ href }) => href === originalUrl)) {
     fail(`${relativePath} must visibly link to the original article`);
   }
