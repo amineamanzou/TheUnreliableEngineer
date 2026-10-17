@@ -190,8 +190,9 @@ export const articleJsonLd = ({
   image: image ? [absoluteUrl(image, site)] : [absoluteUrl(defaultSocialImage, site)],
   inLanguage: article.data.locale,
   mainEntityOfPage: {
-    "@id": pageId(path, site),
+    "@id": pageId(article.data.canonicalUrl ?? path, site),
   },
+  ...(article.data.canonicalUrl ? { isBasedOn: article.data.canonicalUrl } : {}),
   discussionUrl: article.data.sourceUrl,
 });
 

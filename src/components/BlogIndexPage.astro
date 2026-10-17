@@ -18,10 +18,7 @@ type Props = {
 const { locale, enableLocaleRedirect = false } = Astro.props;
 const ui = uiByLocale[locale];
 const articleCards = getArticleCards(await getCollection("articles"), locale);
-const initialArticles = articleCards.slice(0, 5);
-const articlesJson = JSON.stringify(articleCards);
 const internetDeletedHref = assetPath(ui.blog.deletedHref);
-const readMoreLabel = ui.blog.readMore;
 const blogPath = localizedPath(locale, "/blog/");
 ---
 
@@ -78,8 +75,8 @@ const blogPath = localizedPath(locale, "/blog/");
           <div class="section-tag">{ui.blog.articlesTag}</div>
         </div>
 
-        <div class="blog-card-grid" data-blog-list data-read-more={readMoreLabel}>
-          {initialArticles.map((article) => (
+        <div class="blog-card-grid" data-blog-list>
+          {articleCards.map((article) => (
             <a
               class="panel blog-card"
               href={article.href}
@@ -98,69 +95,8 @@ const blogPath = localizedPath(locale, "/blog/");
             </a>
           ))}
         </div>
-        <div class="blog-load-sentinel" data-blog-sentinel aria-hidden="true"></div>
       </div>
     </section>
   </main>
 
-  <script is:inline type="application/json" id="blog-articles-data" set:html={articlesJson} />
-  <script is:inline>
-    const articlesPayload = document.getElementById("blog-articles-data")?.textContent ?? "[]";
-    const articles = JSON.parse(articlesPayload);
-    const blogList = document.querySelector("[data-blog-list]");
-    const sentinel = document.querySelector("[data-blog-sentinel]");
-    const readMoreLabel = blogList?.getAttribute("data-read-more") ?? "Read more";
-    let renderedCount = Math.min(5, articles.length);
-
-    const escapeHtml = (value) =>
-      String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
-
-    const renderBlogCard = (article) => {
-      const link = document.createElement("a");
-      link.className = "panel blog-card";
-      link.href = article.href;
-      link.dataset.analyticsEvent = "site.article_open";
-      link.dataset.analyticsPlacement = "blog_index";
-      link.dataset.analyticsArticleId = article.slug;
-      link.innerHTML = `
-        <span class="kicker">${escapeHtml(article.label)}</span>
-        <div class="article-meta">
-          <span>${escapeHtml(article.date)}</span>
-          <span>${escapeHtml(article.readTime)}</span>
-        </div>
-        <h3 class="card-title">${escapeHtml(article.title)}</h3>
-        <p class="card-copy">${escapeHtml(article.excerpt)}</p>
-        <span class="quote-link-label">${escapeHtml(readMoreLabel)}</span>
-      `;
-      return link;
-    };
-
-    const loadMoreArticles = () => {
-      if (!blogList || renderedCount >= articles.length) {
-        sentinel?.remove();
-        return;
-      }
-
-      const nextArticles = articles.slice(renderedCount, renderedCount + 5);
-      nextArticles.forEach((article) => blogList.append(renderBlogCard(article)));
-      renderedCount += nextArticles.length;
-
-      if (renderedCount >= articles.length) {
-        sentinel?.remove();
-      }
-    };
-
-    if (sentinel && "IntersectionObserver" in window) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          loadMoreArticles();
-        }
-      });
-      observer.observe(sentinel);
-    }
-  </script>
 </BaseLayout>

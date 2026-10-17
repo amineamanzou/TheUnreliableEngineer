@@ -1,9 +1,17 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "playwright-core";
 
 const url = process.argv[2] ?? "http://127.0.0.1:4321/blog/";
 const outputDir = path.resolve("artifacts/review");
+const expectedOriginalUrl = `https://amineamanzou.fr${new URL(url).pathname}opamp-fleet-management-agents/`;
+const blogOutputDir = path.join("dist", new URL(url).pathname);
+const publishedArticleSlugs = [];
+for (const entry of await readdir(blogOutputDir, { withFileTypes: true })) {
+  if (!entry.isDirectory()) continue;
+  const html = await readFile(path.join(blogOutputDir, entry.name, "index.html"), "utf8");
+  if (!html.includes('content="noindex,follow"')) publishedArticleSlugs.push(entry.name);
+}
 const executablePath =
   process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
@@ -44,8 +52,8 @@ if (pageMetrics.hasMetaLede || pageMetrics.hasArticleTitle || !pageMetrics.hasAr
   throw new Error("blog index still contains meta copy or redundant section title");
 }
 
-if (pageMetrics.visibleArticleCards > 5) {
-  throw new Error(`blog should render at most 5 cards initially, saw ${pageMetrics.visibleArticleCards}`);
+if (pageMetrics.visibleArticleCards !== publishedArticleSlugs.length) {
+  throw new Error(`blog should render all ${publishedArticleSlugs.length} published articles initially, saw ${pageMetrics.visibleArticleCards}`);
 }
 
 const terminalInput = page.locator("#blog-terminal-command");
@@ -102,14 +110,15 @@ for (const command of ["open", "read", "cat"]) {
   }
 }
 
-const articleMetrics = await page.evaluate(() => ({
+const articleMetrics = await page.evaluate((originalUrl) => ({
   paragraphs: document.querySelectorAll(".article-body p").length,
   images: document.querySelectorAll(".article-body img, .article-hero-image").length,
-  hasReactionLink: Array.from(document.querySelectorAll("a")).some((link) =>
-    /réagir sur linkedin|react on linkedin/i.test(link.textContent ?? ""),
+  hasOriginalLink: Array.from(document.querySelectorAll(".article-source a")).some((link) =>
+    link.href === originalUrl &&
+    /lire l.article de référence|read the original article/i.test(link.textContent ?? ""),
   ),
   hasImportedWording: document.body.textContent?.includes("Version importée") ?? false,
-}));
+}), expectedOriginalUrl);
 
 if (articleMetrics.paragraphs < 12 || articleMetrics.images < 1) {
   throw new Error(
@@ -117,8 +126,8 @@ if (articleMetrics.paragraphs < 12 || articleMetrics.images < 1) {
   );
 }
 
-if (!articleMetrics.hasReactionLink || articleMetrics.hasImportedWording) {
-  throw new Error("article page should use LinkedIn only as a reaction/source link");
+if (!articleMetrics.hasOriginalLink || articleMetrics.hasImportedWording) {
+  throw new Error("republished OpAMP article must link to its original on amineamanzou.fr");
 }
 
 await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });

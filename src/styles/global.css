@@ -622,10 +622,6 @@ h1,
   margin-top: auto;
 }
 
-.blog-load-sentinel {
-  height: 32px;
-}
-
 .blog-index-heading {
   grid-template-columns: 1fr;
   align-items: start;

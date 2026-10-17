@@ -2,6 +2,7 @@
 title: "Voir un agent dans une UI, ce n'est pas le piloter"
 locale: "fr"
 articleSlug: "opamp-fleet-management-visibility-operation"
+canonicalUrl: "https://amineamanzou.fr/blog/opamp-fleet-management-visibility-operation/"
 translationKey: "opamp-fleet-management-visibility-operation"
 publishedAt: "2026-07-11"
 label: "OpAMP / Pilotage de flotte"

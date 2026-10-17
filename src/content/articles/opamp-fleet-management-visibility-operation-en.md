@@ -2,6 +2,7 @@
 title: "Seeing an agent in a UI does not mean you operate it"
 locale: "en"
 articleSlug: "opamp-fleet-management-visibility-operation"
+canonicalUrl: "https://amineamanzou.fr/en/blog/opamp-fleet-management-visibility-operation/"
 translationKey: "opamp-fleet-management-visibility-operation"
 publishedAt: "2026-07-11"
 label: "OpAMP / Fleet operations"

@@ -2,6 +2,7 @@
 title: "Quand un client dit \"fleet management\", il parle surtout de gouvernance"
 locale: "fr"
 articleSlug: "opamp-fleet-management-governance"
+canonicalUrl: "https://amineamanzou.fr/blog/opamp-fleet-management-governance/"
 translationKey: "opamp-fleet-management-governance"
 publishedAt: "2026-07-02"
 label: "OpAMP / Gouvernance de flotte"
