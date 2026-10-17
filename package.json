@@ -32,6 +32,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "astro": "^7.3.7",
+    "parse5": "8.0.1",
     "playwright-core": "^1.64.0",
     "typescript": "^6.0.3"
   },

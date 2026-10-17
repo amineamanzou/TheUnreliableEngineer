@@ -2,6 +2,7 @@
 title: "Comment j'ai benchmarké 5 approches de fleet management OpenTelemetry"
 locale: "fr"
 articleSlug: "opamp-fleet-management-benchmark"
+canonicalUrl: "https://amineamanzou.fr/blog/opamp-fleet-management-benchmark/"
 translationKey: "opamp-fleet-management-benchmark"
 publishedAt: "2026-07-06"
 label: "OpAMP / Benchmark"

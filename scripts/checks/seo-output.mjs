@@ -2,11 +2,25 @@ import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { parse } from "parse5";
 
 const distDir = path.resolve(process.cwd(), "dist");
 const siteUrl = "https://theunreliable.engineer";
 
 const failures = [];
+const opampSlugs = [
+  "opamp-fleet-management-agents",
+  "opamp-fleet-management-governance",
+  "opamp-fleet-management-benchmark",
+  "opamp-fleet-management-visibility-operation",
+  "opamp-fleet-management-control-plane",
+];
+const originalArticleUrls = new Map(
+  ["", "en/"].flatMap((locale) => opampSlugs.map((slug) => [
+    `${locale}blog/${slug}/index.html`,
+    `https://amineamanzou.fr/${locale}blog/${slug}/`,
+  ])),
+);
 
 function fail(message) {
   failures.push(message);
@@ -347,6 +361,18 @@ function getTagAttributes(html, tagName) {
   return tags;
 }
 
+function getInitialAnchorAttributes(html) {
+  const anchors = [];
+  const visit = (node) => {
+    if (node.tagName === "a") {
+      anchors.push(Object.fromEntries(node.attrs.map(({ name, value }) => [name, value])));
+    }
+    for (const child of node.childNodes ?? []) visit(child);
+  };
+  visit(parse(html ?? ""));
+  return anchors;
+}
+
 function getAlternateLinks(html) {
   return getTagAttributes(html, "link")
     .filter((attributes) => attributes.rel?.toLowerCase() === "alternate")
@@ -623,6 +649,12 @@ async function assertCompleteSitemapInventory(sitemap) {
     }
 
     const outputUrl = urlForDistHtml(relativePath);
+    if (originalArticleUrls.has(relativePath)) {
+      if (inventory.has(outputUrl)) {
+        fail(`republished output ${relativePath} must not be listed in sitemap.xml`);
+      }
+      continue;
+    }
     if (hasNoindex(html) && inventory.has(outputUrl)) {
       fail(
         `intentional noindex output ${relativePath} must not be listed in sitemap.xml as ${outputUrl}`,
@@ -760,16 +792,9 @@ assertNotIncludes(llms, "llms.txt", "/blog/internet-deleted/");
 assertMetaTags(homeHtml, "index.html");
 assertMetaTags(articleHtml, "blog/opamp-fleet-management-agents/index.html");
 assertMetaUrlOnSite(homeHtml, "index.html", "property", "og:url");
-assertMetaUrlOnSite(articleHtml, "blog/opamp-fleet-management-agents/index.html", "property", "og:url");
+
 assertLinkHref(homeHtml, "index.html", { rel: "canonical" }, `${siteUrl}/`);
 assertLinkHref(homeHtml, "index.html", { rel: "alternate", hreflang: "en" }, `${siteUrl}/en/`);
-assertLinkHref(articleHtml, "blog/opamp-fleet-management-agents/index.html", { rel: "canonical" }, `${siteUrl}/blog/opamp-fleet-management-agents/`);
-assertLinkHref(
-  articleHtml,
-  "blog/opamp-fleet-management-agents/index.html",
-  { rel: "alternate", hreflang: "en" },
-  `${siteUrl}/en/blog/opamp-fleet-management-agents/`,
-);
 
 assertJsonLdTypes(homeHtml, "index.html", ["WebSite", "WebPage", "Person", "ProfessionalService"]);
 assertJsonLdTypes(blogHtml, "blog/index.html", ["Blog"]);
@@ -786,6 +811,44 @@ assertIncludes(
   "en/blog/internet-deleted/index.html",
   '<meta name="robots" content="noindex,follow">',
 );
+
+// Check crawlability against built pages, including republications omitted from the sitemap.
+for (const prefix of ["", "en/"]) {
+  const indexPath = `${prefix}blog/index.html`;
+  const indexHtml = await readDistFile(indexPath);
+  const links = new Set(getInitialAnchorAttributes(indexHtml).map(({ href }) =>
+    href ? new URL(href, siteUrl).href : null,
+  ));
+  for (const relativePath of await listHtmlFiles()) {
+    if (!relativePath.startsWith(`${prefix}blog/`) || relativePath === indexPath) continue;
+    const html = await readDistFile(relativePath);
+    if (!hasNoindex(html) && !links.has(urlForDistHtml(relativePath))) {
+      fail(`${indexPath} must link to ${relativePath} without scrolling or running JavaScript`);
+    }
+  }
+}
+
+for (const [relativePath, originalUrl] of originalArticleUrls) {
+  const html = await readDistFile(relativePath);
+  assertLinkHref(html, relativePath, { rel: "canonical" }, originalUrl);
+  if (getMetaContent(html, relativePath, "property", "og:url") !== originalUrl) {
+    fail(`${relativePath} og:url must identify the original article`);
+  }
+  if (getJsonLdProperty(html, relativePath, "BlogPosting", "mainEntityOfPage")?.["@id"] !== `${originalUrl}#webpage`) {
+    fail(`${relativePath} BlogPosting.mainEntityOfPage must identify the original article`);
+  }
+  if (getJsonLdProperty(html, relativePath, "BlogPosting", "isBasedOn") !== originalUrl) {
+    fail(`${relativePath} BlogPosting.isBasedOn must identify the original article`);
+  }
+  const sourceLinks = getInitialAnchorAttributes(html);
+  if (!sourceLinks.some(({ href }) => href === originalUrl)) {
+    fail(`${relativePath} must visibly link to the original article`);
+  }
+  if (getAlternateLinks(html).length > 0) {
+    fail(`${relativePath} must not advertise noncanonical republications as hreflang alternates`);
+  }
+  if (hasNoindex(html)) fail(`${relativePath} must allow Google to read its canonical hint`);
+}
 
 if (failures.length > 0) {
   console.error(`SEO output check failed with ${failures.length} issue(s):`);

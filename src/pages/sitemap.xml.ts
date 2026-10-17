@@ -41,7 +41,8 @@ const getTranslatedArticlePairs = (articles: CollectionEntry<"articles">[]) => {
 };
 
 export async function GET({ site }: APIContext) {
-  const articles = getPublishedArticles(await getCollection("articles"));
+  const articles = getPublishedArticles(await getCollection("articles"))
+    .filter((article) => !article.data.canonicalUrl);
   const translatedArticles = getTranslatedArticlePairs(articles);
   const homeFr = localizedPath("fr", "/");
   const homeEn = localizedPath("en", "/");

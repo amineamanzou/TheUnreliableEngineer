@@ -2,6 +2,7 @@
 title: "Qui utilise vraiment OpAMP pour gérer ses agents ?"
 locale: "fr"
 articleSlug: "opamp-fleet-management-agents"
+canonicalUrl: "https://amineamanzou.fr/blog/opamp-fleet-management-agents/"
 translationKey: "opamp-fleet-management-agents"
 publishedAt: "2026-06-29"
 label: "OpAMP / Fleet management"

@@ -18,7 +18,9 @@ const ui = uiByLocale[locale];
 const { Content } = await render(article);
 const articleDate = formatArticleDate(article.data.publishedAt, locale);
 const heroImage = article.data.heroImage ? assetPath(article.data.heroImage) : undefined;
-const hasSource = Boolean(article.data.sourceUrl);
+const originalUrl = article.data.canonicalUrl;
+const sourceUrl = originalUrl ?? article.data.sourceUrl;
+const hasSource = Boolean(sourceUrl);
 const allArticles = getPublishedArticles(await getCollection("articles"));
 const alternates = allArticles
   .filter((candidate) => candidate.data.translationKey === article.data.translationKey)
@@ -36,7 +38,8 @@ const alternatePath = alternates.find((alternate) => alternate.locale !== locale
   description={article.data.seoDescription ?? article.data.excerpt}
   locale={locale}
   canonicalPath={currentPath}
-  alternates={alternates}
+  canonicalUrl={originalUrl}
+  alternates={originalUrl ? [] : alternates}
   image={article.data.heroImage}
   imageAlt={article.data.heroImageAlt}
   ogType="article"
@@ -79,25 +82,25 @@ const alternatePath = alternates.find((alternate) => alternate.locale !== locale
               )}
             </header>
 
-            {article.data.sourceUrl && (
+            {sourceUrl && (
               <aside class="article-source">
                 <div class="terminal-bar" aria-hidden="true">
                   <span></span>
                   <span></span>
                   <span></span>
-                  <strong>{article.data.articleSlug}.linkedin</strong>
+                  <strong>{originalUrl ? new URL(originalUrl).hostname : `${article.data.articleSlug}.linkedin`}</strong>
                 </div>
-                <p>{ui.article.sourceText}</p>
+                <p>{originalUrl ? ui.article.republicationText : ui.article.sourceText}</p>
                 <a
                   class="button button-primary"
-                  href={article.data.sourceUrl}
+                  href={sourceUrl}
                   target="_blank"
                   rel="noreferrer"
                   data-analytics-event="site.outbound_click"
                   data-analytics-placement="article_body"
                   data-analytics-destination="source_article"
                 >
-                  {ui.article.sourceCta}
+                  {originalUrl ? ui.article.originalCta : ui.article.sourceCta}
                 </a>
               </aside>
             )}

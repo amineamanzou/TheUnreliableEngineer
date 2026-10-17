@@ -69,6 +69,8 @@ export const uiByLocale = {
     article: {
       sourceText: "Commentaires, réactions et discussion restent ouverts sur le post d'origine.",
       sourceCta: "Réagir sur LinkedIn",
+      republicationText: "Cet article est republié sur The Unreliable Engineer. La version de référence est disponible sur le site d’Amine Amanzou.",
+      originalCta: "Lire l’article de référence",
     },
     deleted: {
       title: "Internet deleted | The Unreliable Engineer",
@@ -140,6 +142,8 @@ export const uiByLocale = {
     article: {
       sourceText: "Comments, reactions and discussion remain open on the original post.",
       sourceCta: "React on LinkedIn",
+      republicationText: "This article is republished on The Unreliable Engineer. The reference version is available on Amine Amanzou’s website.",
+      originalCta: "Read the original article",
     },
     deleted: {
       title: "Internet deleted | The Unreliable Engineer",

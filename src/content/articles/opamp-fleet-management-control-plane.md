@@ -2,6 +2,7 @@
 title: "Le control plane OpenTelemetry que je construirais"
 locale: "fr"
 articleSlug: "opamp-fleet-management-control-plane"
+canonicalUrl: "https://amineamanzou.fr/blog/opamp-fleet-management-control-plane/"
 translationKey: "opamp-fleet-management-control-plane"
 publishedAt: "2026-07-14"
 label: "OpAMP / Control plane"

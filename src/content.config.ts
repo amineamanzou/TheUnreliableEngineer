@@ -28,6 +28,7 @@ const articles = defineCollection({
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     sourceUrl: z.url().optional(),
+    canonicalUrl: z.url().optional(),
     heroImage: z.string().optional(),
     heroImageAlt: z.string(),
   }).refine((article) => !article.modifiedAt || article.modifiedAt >= article.publishedAt, {
