@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1240" viewBox="0 0 720 1240" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">Media Review: follow the evidence and keep hypotheses open</title>
+<desc id="desc">One failed job remains stable, the monitored queues are empty and operations succeed: the investigation points toward a previously recorded failure. During the same period, fifteen database errors, fifteen failed transactions and fifteen failed previews may concern the same operations; these categories must not be added together. The next check is to find the failed-operation traces and compare with a successful operation. The report stays within the available evidence and keeps hypotheses open. Decisions remain human. The investigation is read-only, with at most twenty-four tool calls and fifteen minutes.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#171714"/></marker></defs>
+<rect width="720" height="1240" fill="#fff9ed"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#171714" stroke-linecap="round" stroke-linejoin="round">
+<path d="M40 39 L40 91" stroke="#c9342d" stroke-width="9"/>
+<text x="60" y="58" font-size="34" font-weight="700" text-anchor="start" fill="#171714">Media Review</text>
+<text x="60" y="96" font-size="25" font-weight="400" text-anchor="start" fill="#59574f">Follow the evidence</text>
+<rect x="45" y="125" width="640" height="145" rx="18" fill="#171714"/>
+<rect x="40" y="120" width="640" height="145" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="68" y="160" font-size="31" font-weight="700" text-anchor="start" fill="#171714">1 failed job, unchanged</text>
+<text x="68" y="202" font-size="27" font-weight="400" text-anchor="start" fill="#171714">Empty queues + successful operations</text>
+<text x="68" y="240" font-size="27" font-weight="700" text-anchor="start" fill="#c9342d">A previously recorded failure?</text>
+<path d="M360 278 L360 298" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="45" y="315" width="640" height="300" rx="18" fill="#171714"/>
+<rect x="40" y="310" width="640" height="300" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="68" y="352" font-size="29" font-weight="700" text-anchor="start" fill="#171714">Three counts, same time period</text>
+<text x="68" y="396" font-size="33" font-weight="700" text-anchor="start" fill="#c9342d">15</text>
+<text x="124" y="396" font-size="27" font-weight="400" text-anchor="start" fill="#171714">database errors</text>
+<text x="68" y="440" font-size="33" font-weight="700" text-anchor="start" fill="#c9342d">15</text>
+<text x="124" y="440" font-size="27" font-weight="400" text-anchor="start" fill="#171714">failed transactions</text>
+<text x="68" y="484" font-size="33" font-weight="700" text-anchor="start" fill="#c9342d">15</text>
+<text x="124" y="484" font-size="27" font-weight="400" text-anchor="start" fill="#171714">failed previews</text>
+<path d="M68 509 L652 509" fill="none" stroke="#171714" stroke-width="2"/>
+<text x="68" y="548" font-size="27" font-weight="700" text-anchor="start" fill="#171714">Possibly the same operations.</text>
+<text x="68" y="585" font-size="27" font-weight="400" text-anchor="start" fill="#171714">Correlate before counting.</text>
+<path d="M360 623 L360 648" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="45" y="665" width="640" height="150" rx="18" fill="#171714"/>
+<rect x="40" y="660" width="640" height="150" rx="18" fill="#ffe17d" stroke="#171714" stroke-width="3.5"/>
+<text x="68" y="701" font-size="30" font-weight="700" text-anchor="start" fill="#171714">The next check</text>
+<text x="68" y="743" font-size="27" font-weight="400" text-anchor="start" fill="#171714">Find traces of the failed operations.</text>
+<text x="68" y="781" font-size="27" font-weight="400" text-anchor="start" fill="#171714">Compare with a successful operation.</text>
+<path d="M360 823 L360 848" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="105" y="865" width="520" height="110" rx="18" fill="#171714"/>
+<rect x="100" y="860" width="520" height="110" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="902" font-size="31" font-weight="700" text-anchor="middle" fill="#171714">Evidence-based report</text>
+<text x="360" y="944" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">Hypotheses remain open</text>
+<path d="M360 983 L360 1008" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="105" y="1025" width="520" height="95" rx="18" fill="#171714"/>
+<rect x="100" y="1020" width="520" height="95" rx="18" fill="#c9342d" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="1061" font-size="31" font-weight="700" text-anchor="middle" fill="#ffe17d">Human decision</text>
+<text x="360" y="1097" font-size="26" font-weight="400" text-anchor="middle" fill="#fffef8">Corrections under my control</text>
+<text x="360" y="1179" font-size="25" font-weight="700" text-anchor="middle" fill="#171714">Read-only · 24 tool calls</text>
+<text x="360" y="1214" font-size="25" font-weight="400" text-anchor="middle" fill="#171714">15 minutes maximum per investigation</text>
+</g></svg>

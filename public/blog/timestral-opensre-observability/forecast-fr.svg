@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1060" viewBox="0 0 720 1060" role="img" aria-labelledby="title desc" xml:lang="fr">
+<title id="title">Comparer six points prévus aux mesures réelles</title>
+<desc id="desc">Données illustratives, sans mesure issue de l’expérimentation. L’historique antérieur à t0 sert de contexte. La fenêtre suivante comporte six points espacés de cinq minutes, soit trente minutes. La médiane prévue et une bande de quantiles sont comparées aux mesures. Trois mesures consécutives dépassent la borne haute q99. Un dépassement significatif sur trois tranches de cinq minutes constitue un signal candidat, pas la preuve d’un incident ni une certitude à 99 pour cent.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#171714"/></marker></defs>
+<rect width="720" height="1060" fill="#fff9ed"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#171714" stroke-linecap="round" stroke-linejoin="round">
+<path d="M40 39 L40 91" stroke="#c9342d" stroke-width="9"/>
+<text x="60" y="58" font-size="34" font-weight="700" text-anchor="start" fill="#171714">Prévoir, puis comparer</text>
+<text x="60" y="96" font-size="25" font-weight="400" text-anchor="start" fill="#59574f">6 points × 5 minutes = 30 minutes</text>
+<rect x="40" y="123" width="640" height="49" rx="12" fill="#ffe17d" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="157" font-size="27" font-weight="700" text-anchor="middle" fill="#171714">Données illustratives</text>
+<text x="65" y="213" font-size="26" font-weight="700" text-anchor="start" fill="#171714">Contexte passé</text>
+<text x="485" y="213" font-size="26" font-weight="700" text-anchor="middle" fill="#171714">Fenêtre prévue</text>
+<path d="M64 300 L666 300" fill="none" stroke="#ddd5c7" stroke-width="1.6"/>
+<path d="M64 380 L666 380" fill="none" stroke="#ddd5c7" stroke-width="1.6"/>
+<path d="M64 460 L666 460" fill="none" stroke="#ddd5c7" stroke-width="1.6"/>
+<path d="M64 540 L666 540" fill="none" stroke="#ddd5c7" stroke-width="1.6"/>
+<path d="M64 553 L666 553" fill="none" stroke="#171714" stroke-width="3"/>
+<path d="M296 238 L296 553" fill="none" stroke="#59574f" stroke-width="2.5" stroke-dasharray="7 8"/>
+<text x="296" y="592" font-size="27" font-weight="700" text-anchor="middle" fill="#171714">t₀</text>
+<text x="410" y="592" font-size="25" font-weight="400" text-anchor="middle" fill="#171714">+10</text>
+<text x="530" y="592" font-size="25" font-weight="400" text-anchor="middle" fill="#171714">+20</text>
+<text x="650" y="592" font-size="25" font-weight="400" text-anchor="middle" fill="#171714">+30</text>
+<text x="664" y="627" font-size="25" font-weight="400" text-anchor="end" fill="#59574f">min</text>
+<path d="M350 553 L350 560" fill="none" stroke="#171714" stroke-width="2"/>
+<path d="M410 553 L410 560" fill="none" stroke="#171714" stroke-width="2"/>
+<path d="M470 553 L470 560" fill="none" stroke="#171714" stroke-width="2"/>
+<path d="M530 553 L530 560" fill="none" stroke="#171714" stroke-width="2"/>
+<path d="M590 553 L590 560" fill="none" stroke="#171714" stroke-width="2"/>
+<path d="M650 553 L650 560" fill="none" stroke="#171714" stroke-width="2"/>
+<polygon points="296,369 350,365 410,374 470,359 530,368 590,361 650,372 650,507 590,494 530,501 470,495 410,503 350,491 296,493" fill="#ffe17d"/>
+<polyline points="296,369 350,365 410,374 470,359 530,368 590,361 650,372" fill="none" stroke="#171714" stroke-width="2.5"/>
+<text x="660" y="349" font-size="25" font-weight="700" text-anchor="end" fill="#171714">q99</text>
+<path d="M296 431 L350 427 L410 438 L470 427 L530 436 L590 427 L650 441" fill="none" stroke="#171714" stroke-width="4" stroke-dasharray="9 9"/>
+<path d="M64 422 L92 406 L120 427 L148 414 L176 433 L204 402 L232 422 L260 415 L296 431" fill="none" stroke="#171714" stroke-width="4.5"/>
+<polyline points="296,431 350,428 410,415 470,320 530,289 590,310 650,427" fill="none" stroke="#c9342d" stroke-width="5"/>
+<circle cx="350" cy="428" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<circle cx="410" cy="415" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<circle cx="470" cy="320" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<circle cx="530" cy="289" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<circle cx="590" cy="310" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<circle cx="650" cy="427" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<path d="M470 268 L470 253 L590 253 L590 268" fill="none" stroke="#c9342d" stroke-width="3"/>
+<text x="530" y="243" font-size="25" font-weight="700" text-anchor="middle" fill="#c9342d">3 × 5 min</text>
+<path d="M60 658 L110 658" fill="none" stroke="#171714" stroke-width="4" stroke-dasharray="8 8"/>
+<text x="124" y="667" font-size="25" font-weight="400" text-anchor="start" fill="#171714">Médiane prévue</text>
+<rect x="389" y="641" width="38" height="25" fill="#ffe17d" stroke="#171714" stroke-width="1.5"/>
+<text x="440" y="667" font-size="25" font-weight="400" text-anchor="start" fill="#171714">Bande quantile</text>
+<path d="M60 706 L110 706" fill="none" stroke="#c9342d" stroke-width="5"/>
+<circle cx="85" cy="706" r="6" fill="#c9342d" stroke="#fffef8" stroke-width="2"/>
+<text x="124" y="715" font-size="25" font-weight="400" text-anchor="start" fill="#171714">Mesures réelles</text>
+<path d="M389 706 L427 706" fill="none" stroke="#171714" stroke-width="2.5"/>
+<text x="440" y="715" font-size="25" font-weight="400" text-anchor="start" fill="#171714">Borne haute q99</text>
+<rect x="45" y="757" width="640" height="198" rx="18" fill="#171714"/>
+<rect x="40" y="752" width="640" height="198" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="68" y="794" font-size="31" font-weight="700" text-anchor="start" fill="#171714">Un signal candidat</text>
+<text x="68" y="836" font-size="27" font-weight="400" text-anchor="start" fill="#171714">3 dépassements significatifs</text>
+<text x="68" y="871" font-size="27" font-weight="400" text-anchor="start" fill="#171714">sur 3 tranches de 5 minutes.</text>
+<text x="68" y="918" font-size="27" font-weight="700" text-anchor="start" fill="#c9342d">Un incident reste à qualifier.</text>
+<text x="360" y="999" font-size="25" font-weight="400" text-anchor="middle" fill="#171714">q99 décrit la distribution prévue.</text>
+<text x="360" y="1033" font-size="25" font-weight="400" text-anchor="middle" fill="#171714">Ce n’est pas une certitude à 99 %.</text>
+</g></svg>
