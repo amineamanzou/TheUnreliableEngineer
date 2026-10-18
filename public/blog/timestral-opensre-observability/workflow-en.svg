@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1140" viewBox="0 0 720 1140" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">The daily Timestral and OpenSRE workflow</title>
+<desc id="desc">Applications send telemetry to the existing ClickHouse. Timestral analyses metrics daily and produces candidate signals. The workflow starts a consolidated OpenSRE investigation every day, supplied with those signals, topology, runbooks and bounded read-only tools. OpenSRE produces a report; decisions, corrections and deployments remain with the human.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#171714"/></marker></defs>
+<rect width="720" height="1140" fill="#fff9ed"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#171714" stroke-linecap="round" stroke-linejoin="round">
+<path d="M40 39 L40 91" stroke="#c9342d" stroke-width="9"/>
+<text x="60" y="58" font-size="34" font-weight="700" text-anchor="start" fill="#171714">An investigation every day</text>
+<text x="60" y="96" font-size="25" font-weight="400" text-anchor="start" fill="#59574f">The daily path from telemetry to a report</text>
+<rect x="105" y="131" width="520" height="88" rx="18" fill="#171714"/>
+<rect x="100" y="126" width="520" height="88" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="163" font-size="31" font-weight="700" text-anchor="middle" fill="#171714">Applications</text>
+<text x="360" y="196" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">Metrics · logs · traces</text>
+<path d="M360 226 L360 246" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="105" y="262" width="520" height="88" rx="18" fill="#171714"/>
+<rect x="100" y="257" width="520" height="88" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="294" font-size="31" font-weight="700" text-anchor="middle" fill="#171714">ClickHouse</text>
+<text x="360" y="327" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">My existing telemetry</text>
+<path d="M360 357 L360 377" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="105" y="393" width="520" height="121" rx="18" fill="#171714"/>
+<rect x="100" y="388" width="520" height="121" rx="18" fill="#ffe17d" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="427" font-size="32" font-weight="700" text-anchor="middle" fill="#171714">Timestral</text>
+<text x="360" y="463" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">Daily analysis</text>
+<text x="360" y="495" font-size="27" font-weight="700" text-anchor="middle" fill="#171714">Candidate signals</text>
+<path d="M360 521 L360 675" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="45" y="553" width="290" height="98" rx="18" fill="#171714"/>
+<rect x="40" y="548" width="290" height="98" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="185" y="589" font-size="28" font-weight="700" text-anchor="middle" fill="#171714">Topology</text>
+<text x="185" y="623" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">+ runbooks</text>
+<rect x="395" y="553" width="290" height="98" rx="18" fill="#171714"/>
+<rect x="390" y="548" width="290" height="98" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="535" y="589" font-size="28" font-weight="700" text-anchor="middle" fill="#171714">Bounded tools</text>
+<text x="535" y="623" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">Read-only</text>
+<path d="M185 657 L185 675" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<path d="M535 657 L535 675" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="65" y="692" width="600" height="132" rx="18" fill="#171714"/>
+<rect x="60" y="687" width="600" height="132" rx="18" fill="#c9342d" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="729" font-size="34" font-weight="700" text-anchor="middle" fill="#ffe17d">OpenSRE</text>
+<text x="360" y="766" font-size="27" font-weight="700" text-anchor="middle" fill="#fffef8">Consolidated daily investigation</text>
+<text x="360" y="800" font-size="26" font-weight="400" text-anchor="middle" fill="#fffef8">using the available signals</text>
+<path d="M360 831 L360 851" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="105" y="868" width="520" height="91" rx="18" fill="#171714"/>
+<rect x="100" y="863" width="520" height="91" rx="18" fill="#fffef8" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="902" font-size="32" font-weight="700" text-anchor="middle" fill="#171714">Report</text>
+<text x="360" y="935" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">Findings + hypotheses</text>
+<path d="M360 966 L360 986" fill="none" stroke="#171714" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="105" y="1002" width="520" height="100" rx="18" fill="#171714"/>
+<rect x="100" y="997" width="520" height="100" rx="18" fill="#ffe17d" stroke="#171714" stroke-width="3.5"/>
+<text x="360" y="1038" font-size="31" font-weight="700" text-anchor="middle" fill="#171714">Human decision</text>
+<text x="360" y="1074" font-size="27" font-weight="400" text-anchor="middle" fill="#171714">Corrections and deployments</text>
+</g></svg>

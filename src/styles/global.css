@@ -705,6 +705,11 @@ h1,
   gap: 22px;
 }
 
+.article-head h1 {
+  font-size: clamp(2rem, 5vw, 5.2rem);
+  hyphens: auto;
+}
+
 .article-source {
   border: 5px solid var(--ink);
   background: var(--ink);
@@ -807,6 +812,15 @@ h1,
   background: var(--paper-soft);
   object-fit: contain;
   box-shadow: 8px 8px 0 var(--accent);
+}
+
+.article-body .explanatory-diagram {
+  max-width: 720px;
+}
+
+.article-body .explanatory-diagram img {
+  height: auto;
+  max-height: none;
 }
 
 .article-body figcaption {
