@@ -705,6 +705,11 @@ h1,
   gap: 22px;
 }
 
+.article-head h1 {
+  font-size: clamp(2rem, 5vw, 5.2rem);
+  hyphens: auto;
+}
+
 .article-source {
   border: 5px solid var(--ink);
   background: var(--ink);
