@@ -31,14 +31,14 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "astro": "^7.3.7",
+    "astro": "^7.4.0",
     "parse5": "8.0.1",
-    "playwright-core": "^1.64.0",
+    "playwright-core": "^1.64.1",
     "typescript": "^6.0.3"
   },
   "dependencies": {
     "@hyperdx/browser": "0.26.0",
-    "posthog-js": "1.438.2"
+    "posthog-js": "1.438.12"
   },
   "overrides": {
     "@hyperdx/otel-web-session-recorder": {
