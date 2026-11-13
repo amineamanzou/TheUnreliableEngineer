@@ -1,5 +1,5 @@
 ---
-title: "Does a tool that helps me make a viable product?"
+title: "Can a useful personal tool become a viable product?"
 locale: "en"
 articleSlug: "outil-personnel-produit-en"
 translationKey: "outil-personnel-produit"
@@ -7,9 +7,9 @@ publishedAt: "2026-12-24"
 label: "Experiments / SRE"
 readTime: "4 min"
 excerpt: "When I use my own tool, I bring the problem, the vocabulary and enough patience to work around its limitations. Somebody discovering it has no reason to bring all three."
-seoTitle: "Does a tool that helps me make a viable product?"
+seoTitle: "Can a useful personal tool become a viable product?"
 seoDescription: "When I use my own tool, I bring the problem, the vocabulary and enough patience to work around its limitations. Somebody discovering it has no reason to br"
-heroImageAlt: "Does a tool that helps me make a viable product?"
+heroImageAlt: "Can a useful personal tool become a viable product?"
 ---
 
 When I use my own tool, I bring the problem, the vocabulary and enough patience to work around its limitations. Somebody discovering it has no reason to bring all three.
