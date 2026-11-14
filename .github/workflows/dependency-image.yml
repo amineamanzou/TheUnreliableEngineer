@@ -1,0 +1,74 @@
+name: Dependency image validation
+
+on:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - ops/**
+      - package.json
+      - package-lock.json
+      - src/**
+      - public/**
+      - scripts/**
+      - .github/workflows/**
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    name: Dependency image build, smoke and scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+
+      - name: Build the final site image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
+        with:
+          context: .
+          no-cache-filters: build
+          load: true
+          push: false
+          tags: dependency-site:ci
+          build-args: |
+            SITE_URL=https://theunreliable.engineer
+            BASE_PATH=/
+            VCS_REF=${{ github.sha }}
+            PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false
+            PUBLIC_PRODUCT_ANALYTICS_ENABLED=false
+
+      - name: Exercise the final image HTTP contract
+        run: |
+          set -euo pipefail
+          docker run --detach --rm --name dependency-site \
+            --publish 127.0.0.1:18080:8080 dependency-site:ci
+          trap 'docker stop dependency-site >/dev/null 2>&1 || true' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:18080/healthz >/dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              docker logs dependency-site
+              exit 1
+            fi
+            sleep 1
+          done
+          curl --fail --silent --show-error http://127.0.0.1:18080/ > "$RUNNER_TEMP/dependency-home.html"
+          curl --fail --silent --show-error http://127.0.0.1:18080/en/ > "$RUNNER_TEMP/dependency-en.html"
+          grep -qi '<html' "$RUNNER_TEMP/dependency-home.html"
+          grep -qi '<html' "$RUNNER_TEMP/dependency-en.html"
+
+      - name: Scan the final image with the production vulnerability policy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: dependency-site:ci
+          format: table
+          severity: CRITICAL
+          vuln-type: os,library
+          exit-code: "1"
