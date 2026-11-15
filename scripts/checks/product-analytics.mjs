@@ -98,8 +98,9 @@ if (mode === "off") {
   ]) {
     assert(privacySource.includes(required), `Product analytics governance notice is missing: ${required}`);
   }
-  assert(deployWorkflow.includes("if: github.event_name == 'push' || inputs.product_analytics"), "Production pushes must verify the enabled product analytics contract");
-  assert(deployWorkflow.includes("(github.event_name == 'push' || inputs.product_analytics) && 'true' || 'false'"), "Production pushes must keep product analytics enabled while manual dispatch remains the rollback switch");
+  assert(deployWorkflow.includes("github.event_name != 'workflow_dispatch' || inputs.product_analytics"), "Push and weekly requests must preserve analytics while manual dispatch retains rollback");
+  assert(deployWorkflow.includes("release-qualification.mjs prepare") && deployWorkflow.includes("release-qualification.mjs recheck"), "Production must verify the exact qualified configuration");
+  assert(!deployWorkflow.includes("docker/build-push-action"), "Production must reuse the tested digest");
 }
 
 console.log(JSON.stringify({ ok: true, mode, files: textFiles.length }, null, 2));
