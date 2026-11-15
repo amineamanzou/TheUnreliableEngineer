@@ -9,7 +9,7 @@ readTime: "9 min"
 excerpt: "My data is already in ClickHouse. I connect Timestral to flag unusual behavior, then OpenSRE to start investigating. Here is what I am seeing on my applications and what I am keeping in my workflow."
 seoTitle: "Timestral and OpenSRE: adding an agent to my observability stack"
 seoDescription: "Testing Timestral forecasts and OpenSRE investigations with ClickHouse telemetry: initial observations, tool access, budgets, and the limits of my setup."
-heroImage: "/blog/timestral-opensre-observability/cover.png"
+heroImage: "/blog/timestral-opensre-observability/cover.webp"
 heroImageAlt: "The engineer examines a chart and the results of his investigation."
 ---
 
