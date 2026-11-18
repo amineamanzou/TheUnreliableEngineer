@@ -15,10 +15,10 @@ const dateInParis = (date: Date) => {
 };
 
 export const getContentBuildDate = () => {
-  const override = process.env.CONTENT_BUILD_DATE;
+  const override = process.env.PUBLICATION_DATE ?? process.env.CONTENT_BUILD_DATE;
 
   if (override !== undefined) {
-    if (!isoDatePattern.test(override)) {
+    if (!isoDatePattern.test(override) || !Number.isFinite(Date.parse(`${override}T00:00:00Z`)) || new Date(`${override}T00:00:00Z`).toISOString().slice(0, 10) !== override) {
       throw new Error("CONTENT_BUILD_DATE must use YYYY-MM-DD");
     }
 
