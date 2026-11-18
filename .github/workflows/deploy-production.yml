@@ -3,6 +3,9 @@ name: Deploy Production
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.github/workflows/build-staging.yml'
+      - '.github/workflows/deploy-production.yml'
   schedule:
     - cron: "15 4 * * 1"
   workflow_dispatch:
