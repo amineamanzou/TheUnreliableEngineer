@@ -1,4 +1,4 @@
-FROM node:26.13.0-alpine@sha256:c6ad9e9c1d80f6eb607c26b4b0a132ff7a2344fad1c78ea3baa2a7d4c8de6d94 AS build
+FROM node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS build
 WORKDIR /app
 
 ARG SITE_URL
@@ -67,13 +67,13 @@ RUN PUBLICATION_DATE="${PUBLICATION_DATE}" CONTENT_BUILD_DATE="${PUBLICATION_DAT
     RELEASE_VARIANT="${RELEASE_VARIANT}" RELEASE_CONFIGURATION="${RELEASE_CONFIGURATION}" \
     node scripts/qa/release-candidate.mjs metadata
 
-FROM golang:1.27.3-alpine@sha256:d200d2dd76b03a99b52651fd1325aff7dcd35422c35c01bac56571b0507f3deb AS caddy-build
+FROM golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 AS caddy-build
 WORKDIR /src
 
 RUN apk add --no-cache ca-certificates git
 RUN CGO_ENABLED=0 go install -trimpath -ldflags="-s -w -X github.com/caddyserver/caddy/v2.CustomVersion=v2.11.4" github.com/caddyserver/caddy/v2/cmd/caddy@v2.11.4
 
-FROM alpine:3.24@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 WORKDIR /srv
 
 ARG VCS_REF=unknown
