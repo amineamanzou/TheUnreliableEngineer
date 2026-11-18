@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { generateKeyPairSync, sign } from 'node:crypto';
+import { createHash, generateKeyPairSync, sign } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 const candidate = await import('../scripts/qa/release-candidate.mjs').catch(() => ({}));
 const qualification = await import('../scripts/qa/release-qualification.mjs').catch(() => ({}));
 const { publicKey, privateKey } = generateKeyPairSync('ed25519');
@@ -148,4 +148,83 @@ test('TUE preserves weekly request timing, production defaults and explicit manu
   const requested=workflow.jobs.route.steps.find(step=>step.name==='Emit qualification request').env;
   assert.equal(requested.REQUEST_RUM,"${{ github.event_name != 'workflow_dispatch' || inputs.browser_observability }}");
   assert.equal(requested.REQUEST_ANALYTICS,"${{ github.event_name != 'workflow_dispatch' || inputs.product_analytics }}");
+});
+
+test('RUM release identity binds path and query while publishing only the origin and endpoint hash', () => {
+  const endpoint = 'https://otel.example.test/collect?route=private-value';
+  const configurationFor = url => candidate.productionConfiguration({browserObservabilityUrl: url});
+  const configuration = configurationFor(endpoint);
+  assert.equal(configuration.browserEndpointSha256, createHash('sha256').update(endpoint).digest('hex'));
+  assert.ok(!JSON.stringify(configuration).includes(endpoint));
+  assert.ok(!JSON.stringify(configuration).includes('private-value'));
+  for (const changed of ['https://otel.example.test/other?route=private-value', 'https://otel.example.test/collect?route=changed']) {
+    const changedConfiguration = configurationFor(changed);
+    assert.equal(changedConfiguration.browserObservabilityOrigin, configuration.browserObservabilityOrigin);
+    assert.notEqual(candidate.configurationHash(changedConfiguration), candidate.configurationHash(configuration));
+  }
+});
+
+test('candidate build and publisher use the same effective RUM endpoint', () => {
+  const id = 'b'.repeat(32);
+  const env = {
+    GITHUB_EVENT_NAME: 'workflow_dispatch',
+    GITHUB_REF: `refs/heads/codex/factory-promotion/${id}`,
+    INPUT_PROFILE: 'production',
+    INPUT_CANDIDATE_ID: id,
+    INPUT_PUBLICATION_DATE: candidate.parisDate(),
+  };
+  const fallback = 'https://otel.theunreliable.engineer';
+  const configured = 'https://otel.example.test/collect?route=release';
+
+  for (const [input, effective] of [[undefined, fallback], ['', fallback], [` ${configured} `, configured]]) {
+    const build = candidate.prepareCandidate({...env, PUBLIC_BROWSER_OBSERVABILITY_URL: input});
+    assert.equal(build.BROWSER_OBSERVABILITY_ENABLED, 'true');
+    assert.equal(build.BROWSER_OBSERVABILITY_URL, effective);
+    const configuration = JSON.parse(build.RELEASE_CONFIGURATION);
+    const recheck = candidate.productionConfiguration({browserObservabilityUrl: input});
+    assert.deepEqual(configuration, recheck);
+    assert.equal(configuration.browserEndpointSha256, createHash('sha256').update(effective).digest('hex'));
+  }
+
+  const disabled = candidate.prepareCandidate({...env, INPUT_BROWSER_OBSERVABILITY: 'false', PUBLIC_BROWSER_OBSERVABILITY_URL: configured});
+  assert.equal(disabled.BROWSER_OBSERVABILITY_URL, '');
+  const configuration = JSON.parse(disabled.RELEASE_CONFIGURATION);
+  assert.equal(configuration.browserObservabilityOrigin, '');
+  assert.equal(configuration.browserEndpointSha256, createHash('sha256').update('').digest('hex'));
+  assert.deepEqual(configuration, candidate.productionConfiguration({browserObservability: false, browserObservabilityUrl: 'invalid'}));
+
+  for (const invalid of ['invalid-private-value', `${configured}\nBROWSER_OBSERVABILITY_ENABLED=false`, `${configured}\rmore`, `${configured}\tmore`]) {
+    assert.throws(() => candidate.prepareCandidate({...env, PUBLIC_BROWSER_OBSERVABILITY_URL: invalid}), {message: 'Expected public HTTPS endpoint'});
+  }
+});
+
+test('Actions masks the frozen RUM endpoint and keeps it out of release configuration JSON', () => {
+  const id = 'b'.repeat(32);
+  const endpoint = 'https://otel.example.test/collect%2Fprivate?route=fixture';
+  const dir = mkdtempSync(join(tmpdir(), 'candidate-env-'));
+  try {
+    const envFile = join(dir, 'env');
+    const output = execFileSync(process.execPath, [resolve('scripts/qa/release-candidate.mjs'), 'prepare'], {
+      cwd: dir,
+      encoding: 'utf8',
+      env: {
+        GITHUB_ACTIONS: 'true',
+        GITHUB_ENV: envFile,
+        GITHUB_EVENT_NAME: 'workflow_dispatch',
+        GITHUB_REF: `refs/heads/codex/factory-promotion/${id}`,
+        INPUT_PROFILE: 'production',
+        INPUT_CANDIDATE_ID: id,
+        INPUT_PUBLICATION_DATE: candidate.parisDate(),
+        PUBLIC_BROWSER_OBSERVABILITY_URL: endpoint,
+      },
+    });
+    assert.equal(output, '::add-mask::https://otel.example.test/collect%252Fprivate?route=fixture\n');
+    const environmentFile = readFileSync(envFile, 'utf8');
+    assert.ok(environmentFile.split('\n').includes(`BROWSER_OBSERVABILITY_URL=${endpoint}`));
+    const configuration = readFileSync(join(dir, 'release-configuration.json'), 'utf8');
+    assert.ok(!configuration.includes('route=fixture'));
+    assert.equal(JSON.parse(configuration).browserEndpointSha256, createHash('sha256').update(endpoint).digest('hex'));
+  } finally {
+    rmSync(dir, {recursive: true, force: true});
+  }
 });

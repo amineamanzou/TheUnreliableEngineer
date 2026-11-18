@@ -26,6 +26,13 @@ test('every app Docker workflow caller supplies all required release arguments',
   }
   assert.equal(callers,2,'Inventory a new Docker caller explicitly');
 });
+test('release candidate Docker build receives the frozen RUM endpoint', () => {
+  const steps = workflow('build-staging.yml').jobs.release.steps;
+  const freeze = steps.findIndex(step => step.run?.includes('release-candidate.mjs prepare'));
+  const build = steps.findIndex(step => step.id === 'push');
+  assert.ok(freeze >= 0 && freeze < build);
+  assert.ok(steps[build].with['build-args'].split('\n').includes('PUBLIC_BROWSER_OBSERVABILITY_URL=${{ env.BROWSER_OBSERVABILITY_URL }}'));
+});
 test('dependency image fixture freezes valid metadata before building without publishing',()=>{
   const steps=workflow('dependency-image.yml').jobs.image.steps;
   const freeze=steps.findIndex(s=>s.name==='Freeze image fixture build identity');

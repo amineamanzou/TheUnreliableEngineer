@@ -14,10 +14,34 @@ export function publicationDate(value) {
   return value;
 }
 function flag(value, fallback) { if (value===undefined || value==='') return fallback; if ([true,'true'].includes(value)) return true; if ([false,'false'].includes(value)) return false; throw new Error('Invalid boolean flag'); }
-function origin(value) { const url=new URL(value); if(url.protocol!=='https:'||url.username||url.password) throw new Error('Expected public HTTPS origin'); return url.origin; }
-export function productionConfiguration(input={}) {
-  const rum=flag(input.browserObservability,true), analytics=flag(input.productAnalytics,true);
-  return {siteUrl:'https://theunreliable.engineer',basePath:'/',deploymentEnvironment:'production',browserObservabilityEnabled:rum,productAnalyticsEnabled:analytics,browserObservabilityOrigin:rum?origin(input.browserObservabilityUrl ?? 'https://otel.theunreliable.engineer'):'',browserPublicKeySha256:sha256(rum?'browser-public':''),posthogOrigin:'https://eu.i.posthog.com',posthogPublicKeySha256:sha256(analytics?(input.posthogKey??''):'')};
+function endpointOrigin(endpoint) {
+  if (/[\p{Cc}\u2028\u2029]/u.test(endpoint) || !URL.canParse(endpoint)) throw new Error('Expected public HTTPS endpoint');
+  const url = new URL(endpoint);
+  if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Expected public HTTPS endpoint');
+  return url.origin;
+}
+function productionBuildConfiguration(input = {}) {
+  const rum = flag(input.browserObservability, true);
+  const analytics = flag(input.productAnalytics, true);
+  const endpoint = rum ? input.browserObservabilityUrl?.trim() || 'https://otel.theunreliable.engineer' : '';
+  return {
+    endpoint,
+    configuration: {
+      siteUrl: 'https://theunreliable.engineer',
+      basePath: '/',
+      deploymentEnvironment: 'production',
+      browserObservabilityEnabled: rum,
+      productAnalyticsEnabled: analytics,
+      browserObservabilityOrigin: rum ? endpointOrigin(endpoint) : '',
+      browserEndpointSha256: sha256(endpoint),
+      browserPublicKeySha256: sha256(rum ? 'browser-public' : ''),
+      posthogOrigin: 'https://eu.i.posthog.com',
+      posthogPublicKeySha256: sha256(analytics ? input.posthogKey ?? '' : ''),
+    },
+  };
+}
+export function productionConfiguration(input) {
+  return productionBuildConfiguration(input).configuration;
 }
 export function configurationHash(configuration) {return sha256(JSON.stringify(configuration));}
 export function releaseMetadata(env, directory='dist') {
@@ -33,12 +57,34 @@ export function prepareCandidate(env=process.env) {
   const production=env.INPUT_PROFILE==='production';
   if(production && (!/^[a-f0-9]{32}$/.test(env.INPUT_CANDIDATE_ID??'') || env.GITHUB_REF!==`refs/heads/codex/factory-promotion/${env.INPUT_CANDIDATE_ID}` || env.GITHUB_EVENT_NAME!=='workflow_dispatch')) throw new Error('Production candidates require their exact reserved ref');
   if(!production && env.GITHUB_REF!=='refs/heads/dev') throw new Error('Staging build requires dev');
-  const config=production?productionConfiguration({browserObservability:env.INPUT_BROWSER_OBSERVABILITY,productAnalytics:env.INPUT_PRODUCT_ANALYTICS,browserObservabilityUrl:env.PUBLIC_BROWSER_OBSERVABILITY_URL,posthogKey:env.PUBLIC_POSTHOG_KEY}):{...productionConfiguration({browserObservability:false,productAnalytics:false}),deploymentEnvironment:'staging'};
+  const {endpoint, configuration} = productionBuildConfiguration(production ? {
+    browserObservability: env.INPUT_BROWSER_OBSERVABILITY,
+    productAnalytics: env.INPUT_PRODUCT_ANALYTICS,
+    browserObservabilityUrl: env.PUBLIC_BROWSER_OBSERVABILITY_URL,
+    posthogKey: env.PUBLIC_POSTHOG_KEY,
+  } : {browserObservability: false, productAnalytics: false});
+  if (!production) configuration.deploymentEnvironment = 'staging';
   const date=publicationDate(production?env.INPUT_PUBLICATION_DATE:parisDate());
   if(production&&date!==parisDate())throw new Error('Candidate date must be the current Paris date');
-  return {PUBLICATION_DATE:date,RELEASE_VARIANT:production?'production':'staging',RELEASE_CONFIGURATION:JSON.stringify(config),BROWSER_OBSERVABILITY_ENABLED:String(config.browserObservabilityEnabled),PRODUCT_ANALYTICS_ENABLED:String(config.productAnalyticsEnabled),DEPLOYMENT_ENVIRONMENT:config.deploymentEnvironment};
+  return {
+    PUBLICATION_DATE: date,
+    RELEASE_VARIANT: production ? 'production' : 'staging',
+    RELEASE_CONFIGURATION: JSON.stringify(configuration),
+    BROWSER_OBSERVABILITY_ENABLED: String(configuration.browserObservabilityEnabled),
+    BROWSER_OBSERVABILITY_URL: endpoint,
+    PRODUCT_ANALYTICS_ENABLED: String(configuration.productAnalyticsEnabled),
+    DEPLOYMENT_ENVIRONMENT: configuration.deploymentEnvironment,
+  };
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   if(process.argv[2]==='metadata')releaseMetadata(process.env,process.argv[3]??'dist');
-  else {const values=prepareCandidate();if(!process.env.GITHUB_ENV)throw new Error('GITHUB_ENV is required');for(const [key,value] of Object.entries(values))appendFileSync(process.env.GITHUB_ENV,`${key}=${value}\n`);writeFileSync('release-configuration.json',values.RELEASE_CONFIGURATION+'\n');}
+  else {
+    const values = prepareCandidate();
+    if (!process.env.GITHUB_ENV) throw new Error('GITHUB_ENV is required');
+    if (process.env.GITHUB_ACTIONS === 'true' && values.BROWSER_OBSERVABILITY_URL) {
+      console.log(`::add-mask::${values.BROWSER_OBSERVABILITY_URL.replaceAll('%', '%25')}`);
+    }
+    for (const [key, value] of Object.entries(values)) appendFileSync(process.env.GITHUB_ENV, `${key}=${value}\n`);
+    writeFileSync('release-configuration.json', values.RELEASE_CONFIGURATION + '\n');
+  }
 }
