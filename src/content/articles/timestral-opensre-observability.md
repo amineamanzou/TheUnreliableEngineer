@@ -9,7 +9,7 @@ readTime: "10 min"
 excerpt: "J’ai déjà mes données dans ClickHouse. Je branche Timestral pour repérer des écarts, puis OpenSRE pour commencer les investigations. Voilà ce que ça donne sur mes applications et ce que je garde dans mon workflow."
 seoTitle: "Timestral et OpenSRE : un agent dans mon observabilité"
 seoDescription: "Mon expérimentation avec Timestral, ClickHouse et OpenSRE : prévisions, contexte, outils et investigations sur mes applications, avec des limites explicites."
-heroImage: "/blog/timestral-opensre-observability/cover.png"
+heroImage: "/blog/timestral-opensre-observability/cover.webp"
 heroImageAlt: "L’ingénieur en chemise à carreaux rouges examine une courbe et relie les preuves de son investigation."
 ---
 
