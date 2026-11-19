@@ -69,12 +69,13 @@ assert(dockerfile.includes("check:browser-observability -- --mode=off"), "Docker
 assert(dockerfile.includes("check:browser-observability -- --mode=on"), "Docker build must verify the exact on contract when requested");
 assert(dockerfile.includes("npm run review:static"), "Docker build must run the static review");
 assert(deployWorkflow.includes("browser_observability:"), "Production workflow must expose an explicit Browser RUM canary input");
-assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "Production workflow must verify the enabled Browser RUM canary contract");
-assert(deployWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "false"'), "Production workflow must explicitly force Browser RUM off");
-assert(deployWorkflow.includes("if: github.event_name == 'push' || inputs.browser_observability"), "Production pushes must verify the enabled Browser RUM contract during the canary");
-assert(deployWorkflow.includes("(github.event_name == 'push' || inputs.browser_observability) && 'true' || 'false'"), "Production pushes must preserve Browser RUM while the manual input remains the rollback switch");
-assert(deployWorkflow.includes("npm run audit:dependencies"), "Production workflow must enforce the full dependency audit policy");
-assert(deployWorkflow.includes("check:browser-observability -- --mode=off"), "Production workflow must verify the exact off contract");
+const stagingWorkflow = readFileSync(join(root, ".github/workflows/build-staging.yml"), "utf8");
+assert(stagingWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED=${{ env.BROWSER_OBSERVABILITY_ENABLED }}'), "Candidate must build the requested RUM configuration");
+assert(stagingWorkflow.includes("npm run audit:dependencies"), "Candidate must enforce dependency audit policy");
+assert(stagingWorkflow.includes("check:browser-observability -- --mode=off"), "Candidate quality gate must retain the off contract");
+assert(deployWorkflow.includes("release-qualification.mjs prepare") && deployWorkflow.includes("release-qualification.mjs recheck"), "Publisher must verify qualified configuration before publication");
+assert(!deployWorkflow.includes("docker/build-push-action"), "Publisher must promote the tested digest without rebuilding");
+assert(deployWorkflow.includes("github.event_name != 'workflow_dispatch' || inputs.browser_observability"), "Push and weekly requests must preserve RUM while explicit manual requests retain rollback");
 assert(ciWorkflow.includes('PUBLIC_BROWSER_OBSERVABILITY_ENABLED: "true"'), "CI must retain a non-publishing enabled contract build");
 assert(!ciWorkflow.includes("docker/build-push-action"), "Enabled CI contract must not publish an image");
 

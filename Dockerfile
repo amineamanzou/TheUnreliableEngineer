@@ -1,9 +1,15 @@
-FROM node:26.12.1-alpine@sha256:40cd011b55415bc894e45b02fdd5a5dfde056921b7d23a64c74f80497af48797 AS build
+FROM node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS build
 WORKDIR /app
 
 ARG SITE_URL
 ARG BASE_PATH=/
 ARG VCS_REF=unknown
+ARG TREE_SHA
+ARG BUILD_RUN_ID
+ARG BUILD_ATTEMPT
+ARG PUBLICATION_DATE
+ARG RELEASE_VARIANT=staging
+ARG RELEASE_CONFIGURATION
 ARG PUBLIC_BROWSER_OBSERVABILITY_ENABLED=false
 ARG PUBLIC_BROWSER_OBSERVABILITY_URL=
 ARG PUBLIC_BROWSER_OBSERVABILITY_API_KEY=
@@ -27,7 +33,8 @@ COPY scripts ./scripts
 COPY tests/publication-policy.test.mjs ./tests/publication-policy.test.mjs
 COPY src ./src
 
-RUN SITE_URL="${SITE_URL}" \
+RUN PUBLICATION_DATE="${PUBLICATION_DATE}" CONTENT_BUILD_DATE="${PUBLICATION_DATE}" \
+  SITE_URL="${SITE_URL}" \
   BASE_PATH="${BASE_PATH}" \
   PUBLIC_BROWSER_OBSERVABILITY_ENABLED="${PUBLIC_BROWSER_OBSERVABILITY_ENABLED}" \
   PUBLIC_BROWSER_OBSERVABILITY_URL="${PUBLIC_BROWSER_OBSERVABILITY_URL}" \
@@ -54,15 +61,19 @@ RUN SITE_URL="${SITE_URL}" \
   fi \
   && npm run check:i18n \
   && npm run check:seo \
-  && npm run review:static
+  && CONTENT_BUILD_DATE="${PUBLICATION_DATE}" npm run review:static \
+  && VCS_REF="${VCS_REF}" TREE_SHA="${TREE_SHA}" BUILD_RUN_ID="${BUILD_RUN_ID}" \
+    BUILD_ATTEMPT="${BUILD_ATTEMPT}" PUBLICATION_DATE="${PUBLICATION_DATE}" \
+    RELEASE_VARIANT="${RELEASE_VARIANT}" RELEASE_CONFIGURATION="${RELEASE_CONFIGURATION}" \
+    node scripts/qa/release-candidate.mjs metadata
 
-FROM golang:1.27.2-alpine@sha256:f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d AS caddy-build
+FROM golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 AS caddy-build
 WORKDIR /src
 
 RUN apk add --no-cache ca-certificates git
 RUN CGO_ENABLED=0 go install -trimpath -ldflags="-s -w -X github.com/caddyserver/caddy/v2.CustomVersion=v2.11.4" github.com/caddyserver/caddy/v2/cmd/caddy@v2.11.4
 
-FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 WORKDIR /srv
 
 ARG VCS_REF=unknown
