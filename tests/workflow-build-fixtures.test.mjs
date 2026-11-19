@@ -26,6 +26,14 @@ test('every app Docker workflow caller supplies all required release arguments',
   }
   assert.equal(callers,2,'Inventory a new Docker caller explicitly');
 });
+test('the production publisher enforces npm dependency age before promoting the digest', () => {
+  const steps = workflow('deploy-production.yml').jobs.release.steps;
+  const gate = steps.findIndex(step => step.run === 'npm run check:dependencies-age');
+  const promote = steps.findIndex(step => step.run?.includes('imagetools create'));
+  assert.ok(gate >= 0 && promote > gate, 'The age gate must run before tagging the digest');
+  assert.equal(steps[gate].if, undefined, 'The age gate must run on every publication');
+  assert.equal(steps[gate]['continue-on-error'], undefined, 'The age gate must stop publication on failure');
+});
 test('release candidate Docker build receives the frozen RUM endpoint', () => {
   const steps = workflow('build-staging.yml').jobs.release.steps;
   const freeze = steps.findIndex(step => step.run?.includes('release-candidate.mjs prepare'));
