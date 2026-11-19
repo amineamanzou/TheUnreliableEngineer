@@ -38,6 +38,9 @@
         "check:i18n"
       ],
       [
+        "env",
+        "SITE_URL=https://theunreliable.engineer",
+        "BASE_PATH=/",
         "npm",
         "run",
         "build"
